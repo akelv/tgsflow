@@ -85,7 +85,11 @@ show_project_types() {
 get_project_selection() {
     while true; do
         show_project_types
-        read -p "Select project type (1-5): " choice
+        if ! read -r -p "Select project type (1-5): " choice </dev/tty; then
+            log_warning "No TTY detected for input; defaulting to 'None'"
+            echo "none"
+            return
+        fi
         case $choice in
             1) echo "react"; return ;;
             2) echo "python"; return ;;
@@ -102,7 +106,9 @@ get_project_name() {
     local default_name="my-project"
     
     echo
-    read -p "Enter project name (default: $default_name): " project_name
+    if ! read -r -p "Enter project name (default: $default_name): " project_name </dev/tty; then
+        project_name=""
+    fi
     
     if [[ -z "$project_name" ]]; then
         project_name="$default_name"
@@ -184,7 +190,9 @@ main() {
     echo
     
     # Confirm before proceeding
-    read -p "Proceed with project creation? (y/N): " confirm
+    if ! read -r -p "Proceed with project creation? (y/N): " confirm </dev/tty; then
+        confirm="y"
+    fi
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
         log_info "Operation cancelled by user"
         exit 0
@@ -217,6 +225,9 @@ main() {
 }
 
 # Script entry point
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+# Handle invocation via 'bash <(curl ...)' where BASH_SOURCE may be unset when set -u is active
+if [[ "$0" == "bash" || "$0" == "-bash" ]]; then
+    main "$@"
+elif [[ "${BASH_SOURCE[0]:-}" == "$0" ]]; then
     main "$@"
 fi
