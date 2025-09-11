@@ -47,7 +47,7 @@ When starting a new thought/improvement in a decorated or bootstrapped repo:
 
 Or use the helper:
 ```bash
-make new-thought title="Your idea here"
+make new-thought title="Your idea here" spec="One-line idea spec (optional)"
 ```
 
 ## Bootstrapping vs Decorating
