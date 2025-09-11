@@ -21,7 +21,6 @@ Each thought directory contains:
 - **`plan.md`** - Detailed implementation plan with phases and technical specifications  
 - **`implementation.md`** - Complete implementation summary and integration guide
 - **`README.md`** - Navigation index and quick links to related files
-
 ## Purpose
 
 This organizational structure provides:
@@ -47,7 +46,7 @@ When starting a new thought/improvement in a decorated or bootstrapped repo:
 
 Or use the helper:
 ```bash
-make new-thought title="Your idea here"
+make new-thought title="Your idea here" spec="One-line idea spec (optional)"
 ```
 
 ## Bootstrapping vs Decorating
@@ -79,3 +78,12 @@ This structure supports the TGSFlow methodology:
 - **Traceability**: Every change links back to its thought process
 
 This ensures thoughtful development with clear human-AI collaboration boundaries.
+
+## Current Thoughts
+
+| Thought Directory | Base Hash | Date | Status | Description |
+|------------------|-----------|------|--------|-------------|
+| [4c34cb8-update-tgs-readme-index](./4c34cb8-update-tgs-readme-index/) | 4c34cb8 | 2025-09-11 | 🚧 In Progress | Update TGS README index with Current Thoughts table |
+| [612a57f-decorate-existing-software-project-repository](./612a57f-decorate-existing-software-project-repository/) | 612a57f | 2025-09-11 | ✅ Completed | Add decorate mode to inject TGS workflow into existing repos |
+| [b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought](./b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought/) | b4552ea | 2025-09-11 | ✅ Completed | Standardize AGENTOPS workflow and enrich new-thought scaffolding |
+| [f857d9e-test-tgs-workflow-creation](./f857d9e-test-tgs-workflow-creation/) | f857d9e | 2025-09-11 | 🧭 Research | Test TGS workflow creation |
