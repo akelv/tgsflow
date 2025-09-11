@@ -34,7 +34,7 @@ This organizational structure provides:
 
 ## Usage
 
-When starting a new thought/improvement:
+When starting a new thought/improvement in a decorated or bootstrapped repo:
 
 1. Get the current git HEAD hash: `git rev-parse --short HEAD`
 2. Create directory: `tgs/<hash>-<short-description>/`
@@ -49,6 +49,26 @@ Or use the helper:
 ```bash
 make new-thought title="Your idea here"
 ```
+
+## Bootstrapping vs Decorating
+
+- Use bootstrap for greenfield projects: 
+  ```bash
+  curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash
+  ```
+  Follow prompts to select a template and project name.
+
+- Use decorate for existing repositories (adds only the TGS workflow files to the current repo):
+  ```bash
+  curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash -s -- --decorate
+  ```
+
+Behavior:
+- If you run `bootstrap.sh` in a directory that already contains a `.git` folder without `--decorate`, the script will prompt you to choose:
+  - Decorate the current repository (recommended to adopt TGS in-place), or
+  - Initialize a new project in a subdirectory, or
+  - Quit.
+- `--dry-run` is supported to preview changes.
 
 ## TGSFlow Workflow
 

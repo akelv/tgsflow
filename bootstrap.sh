@@ -5,7 +5,7 @@ set -euo pipefail
 # Clones this repository and sets up a new project with selected template
 
 REPO_URL="https://github.com/akelv/tgsflow.git"
-SCRIPT_VERSION="1.1.1"
+SCRIPT_VERSION="1.2.0"
 
 # Colors for output
 RED='\033[0;31m'
@@ -48,6 +48,117 @@ error_exit() {
 
 trap cleanup EXIT
 trap 'error_exit "Script interrupted"' INT TERM
+
+# Global flags (can be set via CLI)
+DECORATE=0
+DRY_RUN=0
+FORCE=0
+WITH_TEMPLATES="none"
+
+# Helpers to handle dry-run copies
+safe_mkdir_p() {
+    local dir="$1"
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo -e "${BLUE}[DRY-RUN]${NC} mkdir -p \"$dir\""
+        return 0
+    fi
+    mkdir -p "$dir"
+}
+
+safe_copy() {
+    local src="$1"
+    local dst="$2"
+    local dst_dir
+    dst_dir=$(dirname "$dst")
+    if [[ ! -e "$src" ]]; then
+        log_warning "Source not found, skipping: $src"
+        return 0
+    fi
+    if [[ -e "$dst" && "$FORCE" -ne 1 ]]; then
+        log_info "Exists, skipping (use --force to overwrite): $dst"
+        return 0
+    fi
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo -e "${BLUE}[DRY-RUN]${NC} cp -a \"$src\" \"$dst\""
+        return 0
+    fi
+    safe_mkdir_p "$dst_dir"
+    cp -a "$src" "$dst"
+}
+
+append_if_missing() {
+    local file="$1"
+    local line="$2"
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo -e "${BLUE}[DRY-RUN]${NC} ensure line in $file: $line"
+        return 0
+    fi
+    if [[ ! -f "$file" ]]; then
+        printf "%s\n" "$line" > "$file"
+        return 0
+    fi
+    if ! grep -Fq "$line" "$file" 2>/dev/null; then
+        printf "%s\n" "$line" >> "$file"
+    fi
+}
+
+write_tgs_mk() {
+    local target="tgs.mk"
+    if [[ -f "$target" && "$FORCE" -ne 1 ]]; then
+        log_info "Exists, skipping tgs.mk (use --force to overwrite)"
+        return 0
+    fi
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo -e "${BLUE}[DRY-RUN]${NC} write $target with new-thought target"
+        return 0
+    fi
+    cat > "$target" <<'EOF'
+.PHONY: new-thought
+
+new-thought:
+	@if ! command -v git >/dev/null; then echo "git not found in PATH"; exit 2; fi; \
+	if [ -z "$(title)" ]; then echo "Usage: make new-thought title=\"short title\""; exit 1; fi; \
+	if [ ! -d "agentops/tgs" ]; then echo "Templates missing at agentops/tgs"; exit 2; fi; \
+	HASH=$$(git rev-parse --short HEAD); \
+	SLUG=$$(printf "%s" "$(title)" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$$//g'); \
+	DIR="tgs/$$HASH-$$SLUG"; \
+	mkdir -p "$$DIR"; \
+	for f in agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
+	if [ ! -f "$$DIR/README.md" ]; then echo "# $$HASH - $(title)" > "$$DIR/README.md"; fi; \
+	echo "Created $$DIR"
+EOF
+}
+
+ensure_makefile_includes_tgs() {
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        echo -e "${BLUE}[DRY-RUN]${NC} ensure Makefile includes tgs.mk or create minimal Makefile"
+        return 0
+    fi
+    if [[ ! -f "Makefile" ]]; then
+        echo "include tgs.mk" > Makefile
+        return 0
+    fi
+    if ! grep -Eq '^new-thought:' Makefile 2>/dev/null && ! grep -Fq 'include tgs.mk' Makefile 2>/dev/null; then
+        echo "" >> Makefile
+        echo "include tgs.mk" >> Makefile
+    fi
+}
+
+# Usage
+print_usage() {
+    cat >&2 <<USAGE
+Usage: ./bootstrap.sh [--decorate] [--dry-run] [--force] [--with-templates=<type>] [--help]
+
+Modes:
+  --decorate                Decorate the current directory with minimal TGS workflow files.
+
+Flags:
+  --dry-run                 Show actions without making changes.
+  --force                   Overwrite existing files when copying/writing.
+  --with-templates=TYPE     Optional template overlay (react|python|go|cli|none). Default: none.
+  -h, --help                Show this help.
+USAGE
+}
 
 # Validation functions
 validate_dependencies() {
@@ -257,6 +368,99 @@ clone_repository() {
     rm -rf "$target_dir/.git"
 }
 
+# Fetch repository into temporary directory only (no copy)
+fetch_repository_to_temp() {
+    log_info "Fetching repository contents..."
+    TEMP_DIR=$(mktemp -d)
+    if ! git clone --quiet "$REPO_URL" "$TEMP_DIR"; then
+        error_exit "Failed to clone repository from $REPO_URL"
+    fi
+}
+
+# Decorate mode implementation
+decorate_current_directory() {
+    log_info "Running decorate mode (minimal TGS workflow)"
+    validate_dependencies
+    fetch_repository_to_temp
+
+    local src_root="$TEMP_DIR"
+
+    # Essential files
+    safe_copy "$src_root/agentops/AGENTOPS.md" "agentops/AGENTOPS.md"
+    safe_copy "$src_root/tgs/README.md" "tgs/README.md"
+    safe_mkdir_p "agentops/tgs"
+    if [[ -d "$src_root/agentops/tgs" ]]; then
+        for f in "$src_root"/agentops/tgs/*; do
+            local_name=$(basename "$f")
+            safe_copy "$f" "agentops/tgs/$local_name"
+        done
+    fi
+
+    # Optional template overlay
+    if [[ "$WITH_TEMPLATES" != "none" ]]; then
+        local tmpl_dir="$src_root/templates/$WITH_TEMPLATES"
+        if [[ -d "$tmpl_dir" ]]; then
+            log_info "Applying template overlay: $WITH_TEMPLATES"
+            # Create directories first
+            if [[ "$DRY_RUN" -eq 1 ]]; then
+                echo -e "${BLUE}[DRY-RUN]${NC} overlay from $tmpl_dir"
+            fi
+            while IFS= read -r -d '' d; do
+                rel_path="${d#"$tmpl_dir/"}"
+                safe_mkdir_p "$rel_path"
+            done < <(find "$tmpl_dir" -type d -print0)
+            while IFS= read -r -d '' f; do
+                rel_path="${f#"$tmpl_dir/"}"
+                safe_copy "$f" "$rel_path"
+            done < <(find "$tmpl_dir" -type f -print0)
+        else
+            log_warning "Template directory not found: $tmpl_dir (skipping)"
+        fi
+    fi
+
+    # Generate tgs.mk and ensure Makefile includes it
+    write_tgs_mk
+    ensure_makefile_includes_tgs
+
+    log_success "Decoration complete"
+}
+
+# Prompt when existing repo is detected and not explicitly decorating
+prompt_decorate_or_new() {
+    if [[ -d ".git" && "$DECORATE" -eq 0 ]]; then
+        {
+            echo
+            echo -e "${YELLOW}[WARNING]${NC} Detected existing git repository in current directory."
+            echo "You can either decorate this repository with the minimal TGS workflow,"
+            echo "or initialize a new project in a subdirectory."
+            echo
+        } >&2
+        if ! read -r -p "Choose action: [d]ecorate current repo, [n]ew project, [q]uit [d/n/q]: " choice </dev/tty; then
+            >&2 echo -e "${YELLOW}[WARNING]${NC} No TTY detected for input; defaulting to 'decorate'"
+            DECORATE=1
+            return
+        fi
+        local normalized
+        normalized=$(echo "$choice" | tr '[:upper:]' '[:lower:]' | xargs)
+        case "$normalized" in
+            d|decorate)
+                DECORATE=1
+                ;;
+            n|new)
+                : # proceed with new project flow
+                ;;
+            q|quit|exit)
+                >&2 echo -e "${BLUE}[INFO]${NC} Operation cancelled by user"
+                exit 0
+                ;;
+            *)
+                >&2 echo -e "${YELLOW}[WARNING]${NC} Invalid selection. Defaulting to 'decorate'"
+                DECORATE=1
+                ;;
+        esac
+    fi
+}
+
 # Template application
 apply_template() {
     local template_type_raw="$1"
@@ -297,13 +501,63 @@ apply_template() {
 
 # Main execution
 main() {
+    # Parse arguments
+    for arg in "$@"; do
+        case "$arg" in
+            --decorate)
+                DECORATE=1
+                ;;
+            --dry-run)
+                DRY_RUN=1
+                ;;
+            --force)
+                FORCE=1
+                ;;
+            --with-templates=*)
+                WITH_TEMPLATES="${arg#*=}"
+                ;;
+            -h|--help)
+                print_usage
+                exit 0
+                ;;
+            *)
+                # ignore unknown to preserve backward compatibility
+                ;;
+        esac
+    done
+
     echo -e "${GREEN}Repository Bootstrap Script v${SCRIPT_VERSION}${NC}"
     echo "This script will help you create a new project with established tooling and workflows."
     echo
 
+    # Decorate mode: operate in current directory and exit
+    if [[ "$DECORATE" -eq 1 ]]; then
+        decorate_current_directory
+        return
+    fi
+
     # Validate environment
     validate_dependencies
     
+    # If an existing git repo is detected, prompt user to choose decorate vs new
+    prompt_decorate_or_new
+    if [[ "$DECORATE" -eq 1 ]]; then
+        decorate_current_directory
+        return
+    fi
+
+    # If dry-run, simulate and exit success
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+        if [[ -d ".git" ]]; then
+            echo -e "${BLUE}[DRY-RUN]${NC} Would detect existing git repo and prompt to choose decorate or new"
+        fi
+        echo -e "${BLUE}[DRY-RUN]${NC} Would prompt for template selection"
+        echo -e "${BLUE}[DRY-RUN]${NC} Would prompt for project name"
+        echo -e "${BLUE}[DRY-RUN]${NC} Would clone repository and apply selected template"
+        echo -e "${BLUE}[DRY-RUN]${NC} Would initialize a fresh git repository"
+        return
+    fi
+
     # Get user input
     project_type=$(get_project_selection)
     project_name=$(get_project_name)
