@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/kelvin/tgsflow/src/core/thoughts"
+	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
 )
 
@@ -22,11 +23,24 @@ func CmdPlan(args []string) int {
 		return 1
 	}
 	path := filepath.Join(active, "20_plan.md")
-	body := "Architecture\n\n- Components...\n\nNon-Functional Requirements\n\n- Performance: \n- Security: \n- Reliability: \n"
-	if err := thoughts.AppendSection(path, "Plan", body); err != nil {
-		logx.Errorf("update plan: %v", err)
-		return 1
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		content, rerr := templates.Render("thought/20_plan.md.tmpl", nil)
+		if rerr != nil {
+			logx.Errorf("render plan: %v", rerr)
+			return 1
+		}
+		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+			logx.Errorf("write plan: %v", err)
+			return 1
+		}
+		logx.Infof("created %s", path)
+	} else {
+		body := "Architecture\n\n- Components...\n\nNon-Functional Requirements\n\n- Performance:\n- Security:\n- Reliability:"
+		if err := thoughts.AppendSection(path, "Plan", body); err != nil {
+			logx.Errorf("update plan: %v", err)
+			return 1
+		}
+		logx.Infof("updated %s", path)
 	}
-	logx.Infof("updated %s", path)
 	return 0
 }

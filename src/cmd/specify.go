@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/kelvin/tgsflow/src/core/thoughts"
+	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
 )
 
@@ -31,7 +32,7 @@ func CmdSpecify(args []string) int {
 		}
 		return 0
 	}
-	// fallback minimal spec
+	// fallback minimal spec via template
 	active := thoughts.LocateActiveDir(".")
 	if err := os.MkdirAll(active, 0o755); err != nil {
 		logx.Errorf("mkdir thought: %v", err)
@@ -39,7 +40,11 @@ func CmdSpecify(args []string) int {
 	}
 	path := filepath.Join(active, "10_spec.md")
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		content := "# Requirements (Minimal)\n\n- As a user, the system shall ...\n"
+		content, rerr := templates.Render("thought/10_spec.md.tmpl", map[string]any{"Role": "user", "Outcome": "..."})
+		if rerr != nil {
+			logx.Errorf("render spec template: %v", rerr)
+			return 1
+		}
 		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
 			logx.Errorf("write 10_spec.md: %v", err)
 			return 1

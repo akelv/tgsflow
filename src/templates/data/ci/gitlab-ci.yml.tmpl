@@ -1,0 +1,9 @@
+stages: [approve]
+approve:
+  stage: approve
+  image: golang:1.22
+  script:
+    - go build -o tgs ./...
+    - ./tgs approve --ci
+
+

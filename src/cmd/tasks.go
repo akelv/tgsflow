@@ -9,6 +9,7 @@ import (
 	"regexp"
 
 	"github.com/kelvin/tgsflow/src/core/thoughts"
+	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
 )
 
@@ -23,9 +24,17 @@ func CmdTasks(args []string) int {
 		return 2
 	}
 	active := thoughts.LocateActiveDir(".")
+	if err := os.MkdirAll(active, 0o755); err != nil {
+		logx.Errorf("mkdir thought: %v", err)
+		return 1
+	}
 	path := filepath.Join(active, "30_tasks.md")
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		content := "# Tasks\n\n### T0.1 — Example\n- Scope: ...\n- Acceptance: ...\n"
+		content, rerr := templates.Render("thought/30_tasks.md.tmpl", nil)
+		if rerr != nil {
+			logx.Errorf("render tasks: %v", rerr)
+			return 1
+		}
 		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
 			logx.Errorf("write 30_tasks.md: %v", err)
 			return 1

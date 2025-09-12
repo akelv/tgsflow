@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/kelvin/tgsflow/src/core/thoughts"
+	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
 )
 
@@ -74,7 +75,9 @@ func CmdContext(args []string) int {
 	// seed research file if missing
 	researchPath := filepath.Join(active, "00_research.md")
 	if _, err := os.Stat(researchPath); os.IsNotExist(err) {
-		_ = os.WriteFile(researchPath, []byte("# Research\n\n"), 0o644)
+		if content, rerr := templates.Render("thought/00_research.md.tmpl", nil); rerr == nil {
+			_ = os.WriteFile(researchPath, []byte(content), 0o644)
+		}
 	}
 	logx.Infof("context written to %s/.context.json (%d files)", active, files)
 	return 0

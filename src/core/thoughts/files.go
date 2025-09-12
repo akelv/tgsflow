@@ -40,3 +40,6 @@ func AppendSection(path string, title string, body string) error {
 	_, err = f.WriteString(fmt.Sprintf("\n\n## %s\n\n%s\n", title, body))
 	return err
 }
+
+// StatFile returns os.Stat for path. Split for testability.
+func StatFile(path string) (os.FileInfo, error) { return os.Stat(path) }

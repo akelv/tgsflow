@@ -1,3 +1,16 @@
+SHELL := /bin/bash
+
+.PHONY: build test tidy
+
+build:
+	go build -o ./bin/tgs ./src
+
+test:
+	go test ./...
+
+tidy:
+	go mod tidy
+
 .PHONY: help new-thought bootstrap test-bootstrap clean-templates
 
 help:
