@@ -37,6 +37,7 @@ You are an AI code agent collaborating with a human. Follow this exact, approval
 
 6) Summarize (author `implementation.md`)
 - Include: What/Why, File changes, Commands, How to test, Integration steps, Migration/Rollback, Follow-ups/Next steps, Links to PR/commits.
+- Checkpoint: Ask the human to review the implementation and test the actual code and reply "Proceed to PR" or "Error: ..."
 
 7) Close-out & PR
 - Update `tgs/README.md` index with the new thought (Base Hash, Date, Status, Description).
@@ -46,6 +47,7 @@ You are an AI code agent collaborating with a human. Follow this exact, approval
 ### Checkpoint Prompts (copy/paste)
 - After research: “Please review `research.md` in `tgs/<dir>`. Reply: APPROVE research | REQUEST CHANGES: <notes>.”
 - After plan: “Please review `plan.md` in `tgs/<dir>`. Reply: APPROVE plan | REQUEST CHANGES: <notes>.”
+- After Summarize: "Please test and review the code `implementation.md` in `tgs/<dir>`. Reply: Proceed to PR | Error: <notes>."
 
 ### File Templates
 - Example templates available in `agentops/tgs/`.

@@ -1,0 +1,51 @@
+project_name: tgs
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: tgs
+    main: ./src
+    binary: tgs
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+archives:
+  - id: archive
+    builds: [tgs]
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  use: github
+
+release:
+  draft: false
+  prerelease: auto
+
+brews:
+  - name: tgs
+    homepage: https://github.com/akelv/tgsflow
+    description: Thought-Guided Software development workflow CLI
+    repository:
+      owner: akelv
+      name: homebrew-tgs
+      token: '{{ .Env.GORELEASER_GITHUB_TOKEN }}'
+    directory: Formula
+    commit_author:
+      name: TGSFlow Bot
+      email: bot@tgsflow.local
+    install: |
+      bin.install "tgs"
+    test: |
+      system "#{bin}/tgs", "--version"

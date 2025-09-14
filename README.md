@@ -21,6 +21,27 @@ Choose from pre-configured templates:
 
 Each template includes the complete TGS workflow for structured engineering.
 
+## Install the tgs CLI
+
+- Homebrew (macOS/Linux):
+
+```bash
+brew tap akelv/tgs
+brew install tgs
+```
+
+- Curl installer (portable):
+
+```bash
+curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/scripts/install.sh | bash
+```
+
+Once installed, verify:
+
+```bash
+tgs --version
+```
+
 ## The TGS Workflow
 
 **TGS (Thought-Guided Software)** is an approval-gated workflow that ensures thoughtful development:

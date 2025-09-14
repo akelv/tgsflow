@@ -62,9 +62,9 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 
 | Thought Directory | Base Hash | Date | Status | Description |
 |------------------|-----------|------|--------|-------------|
-| [4c34cb8-update-tgs-readme-index](./4c34cb8-update-tgs-readme-index/) | 4c34cb8 | 2025-09-11 | 🚧 In Progress | Update TGS README index with Current Thoughts table |
 | [612a57f-decorate-existing-software-project-repository](./612a57f-decorate-existing-software-project-repository/) | 612a57f | 2025-09-11 | ✅ Completed | Add decorate mode to inject TGS workflow into existing repos |
 | [b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought](./b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought/) | b4552ea | 2025-09-11 | ✅ Completed | Standardize AGENTOPS workflow and enrich new-thought scaffolding |
 | [f0d3f9a-add-agent-parent-command](./f0d3f9a-add-agent-parent-command/) | f0d3f9a | 2025-09-14 | ✅ Completed | Add `tgs agent` parent command delegating to `agent exec` |
 | [5d12c3a-tiny-invisible-tgs-cli-for-huge-teams](./5d12c3a-tiny-invisible-tgs-cli-for-huge-teams/) | 5d12c3a | (prior) | ✅ Completed | Minimal TGS CLI scaffolding for large teams |
 | [b48976e-refactor-cli-to-cobra-viper](./b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
+| [43ec077-automate-releases-with-goreleaser-and-homebrew](./43ec077-automate-releases-with-goreleaser-and-homebrew/) | 43ec077 | 2025-09-14 | ✅ Completed | Automate releases with GoReleaser, GitHub Actions and Homebrew |
