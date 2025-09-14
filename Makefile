@@ -11,7 +11,7 @@ test:
 tidy:
 	go mod tidy
 
-.PHONY: help new-thought bootstrap test-bootstrap clean-templates
+.PHONY: help new-thought bootstrap test-bootstrap clean-templates install-cli install-cli-dry-run test-install
 
 help:
 	@echo "Targets:"
@@ -19,6 +19,10 @@ help:
 	@echo "  bootstrap                          Test bootstrap script locally"
 	@echo "  test-bootstrap                     Test bootstrap with all templates"
 	@echo "  clean-templates                    Clean template artifacts"
+	@echo "  install-cli                        Install latest tgs via scripts/install.sh"
+	@echo "  install-cli TAG=vX.Y.Z             Install specific tag (requires published release)"
+	@echo "  install-cli-dry-run                Print resolved URL/paths without installing"
+	@echo "  test-install                       Dry-run + URL HEAD checks for installer"
 
 
 new-thought:
@@ -57,5 +61,14 @@ clean-templates:
 	@find templates/ -name "dist" -type d -exec rm -rf {} + 2>/dev/null || true
 	@find templates/ -name "*.log" -type f -delete 2>/dev/null || true
 	@echo "Template artifacts cleaned"
+
+install-cli:
+	@bash ./scripts/install.sh
+
+install-cli-dry-run:
+	@DRY_RUN=1 bash ./scripts/install.sh
+
+test-install:
+	@bash ./scripts/test-install.sh
 
 
