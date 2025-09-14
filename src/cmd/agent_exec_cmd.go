@@ -6,8 +6,10 @@ import (
 
 func newAgentExecCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "exec",
-		Short: "Execute an adapter with prompt and context",
+		Use:                "exec",
+		Short:              "Execute an adapter with prompt and context",
+		DisableFlagParsing: true, // let NewAgentExecCommand handle all flags
+		Args:               cobra.ArbitraryArgs,
 		RunE: func(c *cobra.Command, args []string) error {
 			code, err := NewAgentExecCommand(args)
 			if err != nil {
