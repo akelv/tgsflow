@@ -48,27 +48,6 @@ Or use the helper:
 ```bash
 make new-thought title="Your idea here" spec="One-line idea spec (optional)"
 ```
-
-## Bootstrapping vs Decorating
-
-- Use bootstrap for greenfield projects: 
-  ```bash
-  curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash
-  ```
-  Follow prompts to select a template and project name.
-
-- Use decorate for existing repositories (adds only the TGS workflow files to the current repo):
-  ```bash
-  curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash -s -- --decorate
-  ```
-
-Behavior:
-- If you run `bootstrap.sh` in a directory that already contains a `.git` folder without `--decorate`, the script will prompt you to choose:
-  - Decorate the current repository (recommended to adopt TGS in-place), or
-  - Initialize a new project in a subdirectory, or
-  - Quit.
-- `--dry-run` is supported to preview changes.
-
 ## TGSFlow Workflow
 
 This structure supports the TGSFlow methodology:
