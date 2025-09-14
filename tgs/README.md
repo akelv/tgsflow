@@ -88,3 +88,4 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 | [b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought](./b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought/) | b4552ea | 2025-09-11 | ✅ Completed | Standardize AGENTOPS workflow and enrich new-thought scaffolding |
 | [f0d3f9a-add-agent-parent-command](./f0d3f9a-add-agent-parent-command/) | f0d3f9a | 2025-09-14 | ✅ Completed | Add `tgs agent` parent command delegating to `agent exec` |
 | [5d12c3a-tiny-invisible-tgs-cli-for-huge-teams](./5d12c3a-tiny-invisible-tgs-cli-for-huge-teams/) | 5d12c3a | (prior) | ✅ Completed | Minimal TGS CLI scaffolding for large teams |
+| [b48976e-refactor-cli-to-cobra-viper](./b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
