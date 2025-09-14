@@ -139,9 +139,11 @@ if [ -n "$CONTEXT_LIST_FILE" ]; then
   done < <(grep -v '^[[:space:]]*$' "$CONTEXT_LIST_FILE")
 fi
 if [ -n "$CONTEXT_GLOB" ]; then
-  # Expand and sort
-  # shellcheck disable=SC2206
-  GLOB_EXPANDED=($CONTEXT_GLOB)
+  # Expand and sort (bash 3 compatible), handle no-match patterns via nullglob
+  shopt -s nullglob
+  # shellcheck disable=SC2206,SC2086
+  GLOB_EXPANDED=( $CONTEXT_GLOB )
+  shopt -u nullglob
   if [ ${#GLOB_EXPANDED[@]} -gt 0 ]; then
     tmp_glob="$(mktemp)"
     for g in "${GLOB_EXPANDED[@]}"; do
@@ -186,9 +188,9 @@ log "Context snapshot: CTX-${SNAP_HASH}"
 # Compose a combined prompt that includes the list of context file paths
 CTX_LIST=""
 for f in "${FINAL_CTX[@]:-}"; do
-  CTX_LIST+="$f\n"
+  CTX_LIST+="$f\\n"
 done
-FINAL_PROMPT="$PROMPT_TEXT\n\nContext files (paths):\n$CTX_LIST"
+FINAL_PROMPT="$PROMPT_TEXT\\n\\nContext files (paths):\\n$CTX_LIST"
 
 # Unique directories for --add-dir
 declare -a ADD_DIRS=()
