@@ -48,27 +48,6 @@ Or use the helper:
 ```bash
 make new-thought title="Your idea here" spec="One-line idea spec (optional)"
 ```
-
-## Bootstrapping vs Decorating
-
-- Use bootstrap for greenfield projects: 
-  ```bash
-  curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash
-  ```
-  Follow prompts to select a template and project name.
-
-- Use decorate for existing repositories (adds only the TGS workflow files to the current repo):
-  ```bash
-  curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash -s -- --decorate
-  ```
-
-Behavior:
-- If you run `bootstrap.sh` in a directory that already contains a `.git` folder without `--decorate`, the script will prompt you to choose:
-  - Decorate the current repository (recommended to adopt TGS in-place), or
-  - Initialize a new project in a subdirectory, or
-  - Quit.
-- `--dry-run` is supported to preview changes.
-
 ## TGSFlow Workflow
 
 This structure supports the TGSFlow methodology:
@@ -86,4 +65,6 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 | [4c34cb8-update-tgs-readme-index](./4c34cb8-update-tgs-readme-index/) | 4c34cb8 | 2025-09-11 | 🚧 In Progress | Update TGS README index with Current Thoughts table |
 | [612a57f-decorate-existing-software-project-repository](./612a57f-decorate-existing-software-project-repository/) | 612a57f | 2025-09-11 | ✅ Completed | Add decorate mode to inject TGS workflow into existing repos |
 | [b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought](./b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought/) | b4552ea | 2025-09-11 | ✅ Completed | Standardize AGENTOPS workflow and enrich new-thought scaffolding |
-| [f857d9e-test-tgs-workflow-creation](./f857d9e-test-tgs-workflow-creation/) | f857d9e | 2025-09-11 | 🧭 Research | Test TGS workflow creation |
+| [f0d3f9a-add-agent-parent-command](./f0d3f9a-add-agent-parent-command/) | f0d3f9a | 2025-09-14 | ✅ Completed | Add `tgs agent` parent command delegating to `agent exec` |
+| [5d12c3a-tiny-invisible-tgs-cli-for-huge-teams](./5d12c3a-tiny-invisible-tgs-cli-for-huge-teams/) | 5d12c3a | (prior) | ✅ Completed | Minimal TGS CLI scaffolding for large teams |
+| [b48976e-refactor-cli-to-cobra-viper](./b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
