@@ -37,6 +37,6 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: build --snapshot --skip=publish --clean
+          args: build --snapshot --clean
 
 
