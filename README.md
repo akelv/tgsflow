@@ -2,26 +2,34 @@
 
 **Thought-Guided Software development workflow for human-AI collaboration**
 
-TGSFlow enables structured, thoughtful software development through an approval-gated workflow where humans maintain strategic thinking while AI handles implementation. Perfect for use with Claude Code, Cursor, and other AI coding assistants.
+TGSFlow enables structured, thoughtful software development through an approval-gated workflow where humans maintain strategic thinking while AI handles implementation. Perfect for use with Claude Code or any other AI coding agent or interactive vibe code in Cursor or any other IDE. 
 
-## 🚀 Quick Start
+TGS aims at helping both small team and big organization with team of teams to apply spec driven developement with heavy use of AI code agent to solve aspect related to guardrails, quality gate approvals, audit trail for enterprise level.
 
-Bootstrap a new project with TGSFlow in seconds:
+## Introduction
+
+Our fundamental belief is that creating software with AI for human must requires structured, precise language and rigorous verification and validation to ensure that system behaviors are well-tracked, testable, and always traceable back to the original thought's intent. This ensure software continue to be safe for human use. 
+
+To achieve this, our project adopts two proven foundations from the world of systems engineering: **INCOSE** guidelines and the **EARS (Easy Approach to Requirements Syntax)** method.
+
+- INCOSE provides the discipline of writing well-formed needs and requirements that are clear, measurable, and verifiable, ensuring sets of requirements are consistent and complete across the system lifecycle. For more, see the [INCOSE Guide to Writing Requirements](https://www.incose.org/docs/default-source/working-groups/requirements-wg/gtwr/incose_rwg_gtwr_v4_040423_final_drafts.pdf).
+
+- EARS complements this by offering simple yet powerful patterns for expressing requirements in unambiguous, structured natural language. You can review the [EARS resource by Alistair Mavin](https://www.incose.org/docs/default-source/working-groups/requirements-wg/rwg_iw2022/mav_ears_incoserwg_jan22.pdf).
+
+These approaches were shaped in mission-critical domains like aircraft engines, environments where safety at scale, traceability, and team-wide alignment are non-negotiable. 
+
+By bringing them into our AI-driven software development, we treat our work with the same level of care: authoring systems where **precision**, **accountability**, and **human trust** are built in from the very start.
+
+
+## Quick Start 🚀 
+
+Bootstrap a new project or apply on top of any existing project with TGSFlow in seconds:
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash
 ```
 
-Choose from pre-configured templates:
-- **React** - Modern React app with TypeScript, Vite, and ESLint
-- **Python** - Python project with pyproject.toml and modern tooling
-- **Go** - Go application with modules and CLI framework
-- **CLI** - Cross-platform CLI tool with build scripts
-- **None** - Just the TGS workflow for any project
-
-Each template includes the complete TGS workflow for structured engineering.
-
-## Install the tgs CLI
+## Install the tiny invisible tgs cli to improve thought quality 
 
 - Homebrew (macOS/Linux):
 
@@ -64,7 +72,7 @@ tgs --version
 ### Claude Code / Cursor Integration
 
 1. Copy the system prompt from `agentops/AGENTOPS.md`
-2. Use it as your AI assistant's system prompt
+2. Use it as your AI assistant's system prompt (CLAUDE.md or AGENTS.md) 
 3. The AI will automatically follow the TGS workflow
 
 ### Manual TGS Setup
@@ -72,14 +80,14 @@ tgs --version
 Create a new thought for any feature or change:
 
 ```bash
-make new-thought title="Add user authentication"
+make new-thought title="Add user authentication" spec="A requirement specification" 
 ```
 
 This creates a structured directory with templates for research, planning, and implementation documentation.
 
 ## Project Templates
 
-Available in `templates/`:
+Simple bootstrap project to bootstrap new project available in `templates/`:
 - [React](./templates/react/) - Modern React application with TypeScript
 - [Python](./templates/python/) - Python project with modern packaging  
 - [Go](./templates/go/) - Go application with standard structure
@@ -93,6 +101,7 @@ Available in `templates/`:
 
 ## Why TGSFlow?
 
+- **Ensure transparent intention** from every thought to working software 
 - **Reduces AI hallucination** through structured planning
 - **Maintains human oversight** on important decisions  
 - **Creates audit trail** for all development decisions
@@ -103,16 +112,12 @@ Available in `templates/`:
 
 TGSFlow follows its own methodology. To contribute:
 
-1. Create a thought: `make new-thought title="Your improvement idea"`
+1. Create a thought: `make new-thought`
 2. Complete research and planning phases
 3. Get approval before implementation
-4. Submit PR with complete thought documentation
+4. Submit PR with complete thoughts documentation in **tgs/**
 
----
-
-**Start building better software with human-AI collaboration** ✨
-
-### EARS Linter (optional)
+### EARS Linter grammar update
 
 Generate the ANTLR Go parser for `src/core/ears/ears.g4` (requires Java and ANTLR):
 
@@ -136,3 +141,6 @@ Run verify (will lint Markdown bullets when enabled):
 ```bash
 ./bin/tgs verify --repo .
 ```
+---
+**Start engineering serious software for human and AI**
+
