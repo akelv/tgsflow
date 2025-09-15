@@ -10,9 +10,16 @@ import (
 )
 
 type Policies struct {
-	ForbidPaths []string `yaml:"forbid_paths"`
-	MaxPatchLOC int      `yaml:"max_patch_loc"`
-	EnforceNFR  bool     `yaml:"enforce_nfr"`
+	ForbidPaths []string   `yaml:"forbid_paths"`
+	MaxPatchLOC int        `yaml:"max_patch_loc"`
+	EnforceNFR  bool       `yaml:"enforce_nfr"`
+	EARS        EARSConfig `yaml:"ears"`
+}
+
+// EARSConfig controls EARS linter behavior.
+type EARSConfig struct {
+	Enable       bool `yaml:"enable"`
+	RequireShall bool `yaml:"require_shall"`
 }
 
 type Config struct {
@@ -31,6 +38,10 @@ func Default() Config {
 			ForbidPaths: []string{"infra/prod/", "secrets/"},
 			MaxPatchLOC: 300,
 			EnforceNFR:  false,
+			EARS: EARSConfig{
+				Enable:       false,
+				RequireShall: false,
+			},
 		},
 	}
 }

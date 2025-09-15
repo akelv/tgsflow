@@ -10,7 +10,10 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
+require golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
+
 require (
+	github.com/antlr4-go/antlr/v4 v4.13.1
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

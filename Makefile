@@ -11,7 +11,7 @@ test:
 tidy:
 	go mod tidy
 
-.PHONY: help new-thought bootstrap test-bootstrap clean-templates install-cli install-cli-dry-run test-install
+.PHONY: help new-thought bootstrap test-bootstrap clean-templates install-cli install-cli-dry-run test-install ears-gen
 
 help:
 	@echo "Targets:"
@@ -70,5 +70,15 @@ install-cli-dry-run:
 
 test-install:
 	@bash ./scripts/test-install.sh
+
+
+# Generate ANTLR4 Go lexer/parser for EARS grammar
+ears-gen:
+	@if ! command -v antlr4 >/dev/null && ! command -v antlr >/dev/null; then \
+		echo "antlr4 not found. Install via brew: brew install antlr && echo 'export CLASSPATH=\"$$CLASSPATH:$$(brew --prefix)/libexec/antlr-4.13.1-complete.jar\"' >> ~/.zshrc'"; exit 2; \
+	fi; \
+	GEN_DIR=src/core/ears/gen; mkdir -p $$GEN_DIR; \
+	ANTLR_CMD=$$(command -v antlr4 || command -v antlr); \
+	$$ANTLR_CMD -Dlanguage=Go -o $$GEN_DIR src/core/ears/ears.g4
 
 
