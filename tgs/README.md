@@ -68,3 +68,4 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 | [5d12c3a-tiny-invisible-tgs-cli-for-huge-teams](./5d12c3a-tiny-invisible-tgs-cli-for-huge-teams/) | 5d12c3a | (prior) | ✅ Completed | Minimal TGS CLI scaffolding for large teams |
 | [b48976e-refactor-cli-to-cobra-viper](./b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
 | [43ec077-automate-releases-with-goreleaser-and-homebrew](./43ec077-automate-releases-with-goreleaser-and-homebrew/) | 43ec077 | 2025-09-14 | ✅ Completed | Automate releases with GoReleaser, GitHub Actions and Homebrew |
+| [f71f872-ears-linter-core-and-verify-integration](./f71f872-ears-linter-core-and-verify-integration/) | f71f872 | 2025-09-15 | ✅ Completed | Implement EARS linter and integrate with verify |

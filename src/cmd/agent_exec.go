@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/spf13/cobra"
 )
 
 // AgentExecOpts holds CLI options.
@@ -219,4 +221,25 @@ func buildContextList(direct multiFlag, listFile, glob string) ([]string, error)
 		final = append(final, p)
 	}
 	return final, nil
+}
+
+// Cobra command constructor colocated for cleanliness
+func newAgentExecCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                "exec",
+		Short:              "Execute an adapter with prompt and context",
+		DisableFlagParsing: true, // let NewAgentExecCommand handle all flags
+		Args:               cobra.ArbitraryArgs,
+		RunE: func(c *cobra.Command, args []string) error {
+			code, err := NewAgentExecCommand(args)
+			if err != nil {
+				if code == 2 {
+					return exitCodeError{code: 2}
+				}
+				return exitCodeError{code: 1}
+			}
+			return codeToErr(code)
+		},
+	}
+	return cmd
 }

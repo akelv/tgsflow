@@ -11,6 +11,7 @@ import (
 	"github.com/kelvin/tgsflow/src/core/thoughts"
 	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
+	"github.com/spf13/cobra"
 )
 
 // CmdInit implements `tgs init --decorate [--ci-template github|gitlab|none]`.
@@ -111,4 +112,17 @@ func CmdInit(args []string) int {
 	}
 	logx.Infof("tgs init complete (idempotent)")
 	return 0
+}
+
+// Cobra command constructor colocated for cleanliness
+func newInitCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "init",
+		Short: "Initialize TGS layout (idempotent)",
+		RunE: func(c *cobra.Command, args []string) error {
+			code := CmdInit(args)
+			return codeToErr(code)
+		},
+	}
+	return cmd
 }

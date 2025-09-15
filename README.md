@@ -117,6 +117,30 @@ TGSFlow follows its own methodology. To contribute:
 3. Get approval before implementation
 4. Submit PR with complete thoughts documentation in **tgs/**
 
----
+### EARS Linter grammar update
 
+Generate the ANTLR Go parser for `src/core/ears/ears.g4` (requires Java and ANTLR):
+
+```bash
+brew install openjdk antlr
+export CLASSPATH="$(brew --prefix)/libexec/antlr-4.13.1-complete.jar:$CLASSPATH"
+make ears-gen
+```
+
+Enable in `tgs.yaml`:
+
+```yaml
+policies:
+  ears:
+    enable: true
+    require_shall: false
+```
+
+Run verify (will lint Markdown bullets when enabled):
+
+```bash
+./bin/tgs verify --repo .
+```
+---
 **Start engineering serious software for human and AI**
+

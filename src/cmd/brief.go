@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/kelvin/tgsflow/src/core/thoughts"
+	"github.com/spf13/cobra"
 )
 
 // CmdBrief prints a compact brief for a given task string (best-effort),
@@ -121,4 +122,15 @@ func extractTask(tasks string, needle string) string {
 		return headLines(tasks, 60)
 	}
 	return strings.Join(out, "\n") + "\n"
+}
+
+func newBriefCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "brief",
+		Short: "Emit a compact task brief for IDE use",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdBrief(args))
+		},
+	}
+	return cmd
 }

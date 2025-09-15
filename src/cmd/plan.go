@@ -8,6 +8,7 @@ import (
 	"github.com/kelvin/tgsflow/src/core/thoughts"
 	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
+	"github.com/spf13/cobra"
 )
 
 // CmdPlan appends minimal plan with NFR placeholders.
@@ -43,4 +44,15 @@ func CmdPlan(args []string) int {
 		logx.Infof("updated %s", path)
 	}
 	return 0
+}
+
+func newPlanCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "plan",
+		Short: "Append or create 20_plan.md with NFR placeholders",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdPlan(args))
+		},
+	}
+	return cmd
 }

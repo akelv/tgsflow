@@ -9,6 +9,7 @@ import (
 
 	"github.com/kelvin/tgsflow/src/core/config"
 	"github.com/kelvin/tgsflow/src/core/thoughts"
+	"github.com/spf13/cobra"
 )
 
 // CmdApprove validates presence of required files and optional roles.
@@ -81,4 +82,15 @@ func CmdApprove(args []string) int {
 	}
 	fmt.Fprintln(os.Stderr, "approve: checks passed")
 	return 0
+}
+
+func newApproveCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "approve",
+		Short: "Validate approval gate (10/20/30/40)",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdApprove(args))
+		},
+	}
+	return cmd
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/kelvin/tgsflow/src/core/thoughts"
 	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
+	"github.com/spf13/cobra"
 )
 
 type repoContext struct {
@@ -81,4 +82,15 @@ func CmdContext(args []string) int {
 	}
 	logx.Infof("context written to %s/.context.json (%d files)", active, files)
 	return 0
+}
+
+func newContextCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "context",
+		Short: "Scan repo context and seed research",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdContext(args))
+		},
+	}
+	return cmd
 }
