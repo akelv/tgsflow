@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/spf13/cobra"
 )
 
 // CmdVerify runs repo-local hooks if available.
@@ -42,3 +44,14 @@ func runHook(path string) error {
 }
 
 // in future we may add scoped args like --since
+
+func newVerifyCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "verify",
+		Short: "Run hooks/policy/drift checks",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdVerify(args))
+		},
+	}
+	return cmd
+}

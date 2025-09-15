@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 // CmdAgent is the parent command for agent-related subcommands.
@@ -49,4 +51,18 @@ func printAgentHelp() {
 	fmt.Fprintln(os.Stderr, "\nExamples:")
 	fmt.Fprintln(os.Stderr, "  tgs agent exec --prompt-text \"...\" --context README.md")
 	fmt.Fprintln(os.Stderr, "\nRun 'tgs agent exec -h' to see exec-specific flags.")
+}
+
+// Cobra `agent` parent builder colocated
+func newAgentCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "agent",
+		Short: "Agent-related subcommands",
+		RunE: func(c *cobra.Command, args []string) error {
+			printAgentHelp()
+			return nil
+		},
+	}
+	cmd.AddCommand(newAgentExecCommand())
+	return cmd
 }

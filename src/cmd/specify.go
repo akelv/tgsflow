@@ -9,6 +9,7 @@ import (
 	"github.com/kelvin/tgsflow/src/core/thoughts"
 	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
+	"github.com/spf13/cobra"
 )
 
 // CmdSpecify proxies to Spec Kit if available, else creates minimal 10_spec.md.
@@ -54,4 +55,15 @@ func CmdSpecify(args []string) int {
 		logx.Infof("%s exists; leaving as is", path)
 	}
 	return 0
+}
+
+func newSpecifyCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "specify",
+		Short: "Generate or proxy to Spec Kit for 10_spec.md",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdSpecify(args))
+		},
+	}
+	return cmd
 }

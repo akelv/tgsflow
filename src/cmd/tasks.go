@@ -11,6 +11,7 @@ import (
 	"github.com/kelvin/tgsflow/src/core/thoughts"
 	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
+	"github.com/spf13/cobra"
 )
 
 var taskIDRe = regexp.MustCompile("(?m)^###\\s+T[0-9]+\\.[0-9]+\\s+—\\s+")
@@ -69,4 +70,15 @@ func CmdTasks(args []string) int {
 		logx.Infof("%s exists; use --validate to check formatting", path)
 	}
 	return 0
+}
+
+func newTasksCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "tasks",
+		Short: "Create or validate 30_tasks.md",
+		RunE: func(c *cobra.Command, args []string) error {
+			return codeToErr(CmdTasks(args))
+		},
+	}
+	return cmd
 }
