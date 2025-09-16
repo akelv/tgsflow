@@ -47,10 +47,10 @@ func earslexerLexerInit() {
 	}
 	staticData.SymbolicNames = []string{
 		"", "WHILE", "WHEN", "IF", "THEN", "THE", "SHALL", "PRONOUN", "COMMA",
-		"TEXT_NOCOMMA", "WS", "NEWLINE",
+		"WORD", "WS", "NEWLINE",
 	}
 	staticData.RuleNames = []string{
-		"WHILE", "WHEN", "IF", "THEN", "THE", "SHALL", "PRONOUN", "COMMA", "TEXT_NOCOMMA",
+		"WHILE", "WHEN", "IF", "THEN", "THE", "SHALL", "PRONOUN", "COMMA", "WORD",
 		"WS", "NEWLINE",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
@@ -131,15 +131,15 @@ func NewearsLexer(input antlr.CharStream) *earsLexer {
 
 // earsLexer tokens.
 const (
-	earsLexerWHILE        = 1
-	earsLexerWHEN         = 2
-	earsLexerIF           = 3
-	earsLexerTHEN         = 4
-	earsLexerTHE          = 5
-	earsLexerSHALL        = 6
-	earsLexerPRONOUN      = 7
-	earsLexerCOMMA        = 8
-	earsLexerTEXT_NOCOMMA = 9
-	earsLexerWS           = 10
-	earsLexerNEWLINE      = 11
+	earsLexerWHILE   = 1
+	earsLexerWHEN    = 2
+	earsLexerIF      = 3
+	earsLexerTHEN    = 4
+	earsLexerTHE     = 5
+	earsLexerSHALL   = 6
+	earsLexerPRONOUN = 7
+	earsLexerCOMMA   = 8
+	earsLexerWORD    = 9
+	earsLexerWS      = 10
+	earsLexerNEWLINE = 11
 )

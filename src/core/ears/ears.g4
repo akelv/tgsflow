@@ -57,9 +57,9 @@ system
   : token_word+
   ;
 
-// Response is the remainder of the line (zero or more token words)
+// Response is the remainder of the line
 response
-  : (token_word+)?
+  : (token_word | COMMA)*
   ;
 
 // A clause is a sequence of token words (allow EARS keywords inside free text)
@@ -67,14 +67,14 @@ clause
   : token_word+
   ;
 
-// token_word may be any non-comma text or selected EARS keyword tokens
+// token_word may be any non-comma word or selected EARS keyword tokens
 // (exclude SHALL so it remains the modal before response)
 token_word
-  : TEXT_NOCOMMA
-  | THE
+  : THE
   | WHEN
   | IF
   | THEN
+  | WORD
   ;
 
 // --------------------
@@ -93,8 +93,8 @@ PRONOUN : [Ii][Tt] ;
 // Punctuation
 COMMA : ',' ;
 
-// Free-text tokens (no spaces, comma, or newline)
-TEXT_NOCOMMA : (~[ \t,\r\n])+ ;
+// Free-text tokens
+WORD : ~[ \t,\r\n]+ ;
 
 // Whitespace & newlines
 WS      : [ \t]+ -> skip ;

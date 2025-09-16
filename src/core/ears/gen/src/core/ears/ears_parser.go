@@ -37,7 +37,7 @@ func earsParserInit() {
 	}
 	staticData.SymbolicNames = []string{
 		"", "WHILE", "WHEN", "IF", "THEN", "THE", "SHALL", "PRONOUN", "COMMA",
-		"TEXT_NOCOMMA", "WS", "NEWLINE",
+		"WORD", "WS", "NEWLINE",
 	}
 	staticData.RuleNames = []string{
 		"requirement", "complexReq", "eventReq", "stateReq", "unwantedReq",
@@ -56,47 +56,47 @@ func earsParserInit() {
 		1, 4, 1, 4, 3, 4, 82, 8, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 3,
 		4, 91, 8, 4, 1, 4, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 3, 5, 99, 8, 5, 1, 5,
 		1, 5, 1, 5, 1, 6, 1, 6, 1, 7, 1, 7, 1, 8, 4, 8, 109, 8, 8, 11, 8, 12, 8,
-		110, 1, 9, 4, 9, 114, 8, 9, 11, 9, 12, 9, 115, 3, 9, 118, 8, 9, 1, 10,
-		4, 10, 121, 8, 10, 11, 10, 12, 10, 122, 1, 11, 1, 11, 1, 11, 0, 0, 12,
-		0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 0, 1, 2, 0, 2, 5, 9, 9, 128,
-		0, 39, 1, 0, 0, 0, 2, 41, 1, 0, 0, 0, 4, 55, 1, 0, 0, 0, 6, 66, 1, 0, 0,
-		0, 8, 81, 1, 0, 0, 0, 10, 98, 1, 0, 0, 0, 12, 103, 1, 0, 0, 0, 14, 105,
-		1, 0, 0, 0, 16, 108, 1, 0, 0, 0, 18, 117, 1, 0, 0, 0, 20, 120, 1, 0, 0,
-		0, 22, 124, 1, 0, 0, 0, 24, 25, 3, 2, 1, 0, 25, 26, 5, 0, 0, 1, 26, 40,
-		1, 0, 0, 0, 27, 28, 3, 4, 2, 0, 28, 29, 5, 0, 0, 1, 29, 40, 1, 0, 0, 0,
-		30, 31, 3, 6, 3, 0, 31, 32, 5, 0, 0, 1, 32, 40, 1, 0, 0, 0, 33, 34, 3,
-		8, 4, 0, 34, 35, 5, 0, 0, 1, 35, 40, 1, 0, 0, 0, 36, 37, 3, 10, 5, 0, 37,
-		38, 5, 0, 0, 1, 38, 40, 1, 0, 0, 0, 39, 24, 1, 0, 0, 0, 39, 27, 1, 0, 0,
-		0, 39, 30, 1, 0, 0, 0, 39, 33, 1, 0, 0, 0, 39, 36, 1, 0, 0, 0, 40, 1, 1,
-		0, 0, 0, 41, 42, 5, 1, 0, 0, 42, 43, 3, 12, 6, 0, 43, 44, 5, 8, 0, 0, 44,
-		45, 5, 2, 0, 0, 45, 46, 3, 14, 7, 0, 46, 50, 5, 8, 0, 0, 47, 48, 5, 5,
-		0, 0, 48, 51, 3, 16, 8, 0, 49, 51, 5, 7, 0, 0, 50, 47, 1, 0, 0, 0, 50,
-		49, 1, 0, 0, 0, 51, 52, 1, 0, 0, 0, 52, 53, 5, 6, 0, 0, 53, 54, 3, 18,
-		9, 0, 54, 3, 1, 0, 0, 0, 55, 56, 5, 2, 0, 0, 56, 57, 3, 14, 7, 0, 57, 61,
-		5, 8, 0, 0, 58, 59, 5, 5, 0, 0, 59, 62, 3, 16, 8, 0, 60, 62, 5, 7, 0, 0,
-		61, 58, 1, 0, 0, 0, 61, 60, 1, 0, 0, 0, 62, 63, 1, 0, 0, 0, 63, 64, 5,
-		6, 0, 0, 64, 65, 3, 18, 9, 0, 65, 5, 1, 0, 0, 0, 66, 67, 5, 1, 0, 0, 67,
-		68, 3, 12, 6, 0, 68, 72, 5, 8, 0, 0, 69, 70, 5, 5, 0, 0, 70, 73, 3, 16,
-		8, 0, 71, 73, 5, 7, 0, 0, 72, 69, 1, 0, 0, 0, 72, 71, 1, 0, 0, 0, 73, 74,
-		1, 0, 0, 0, 74, 75, 5, 6, 0, 0, 75, 76, 3, 18, 9, 0, 76, 7, 1, 0, 0, 0,
-		77, 78, 5, 1, 0, 0, 78, 79, 3, 12, 6, 0, 79, 80, 5, 8, 0, 0, 80, 82, 1,
-		0, 0, 0, 81, 77, 1, 0, 0, 0, 81, 82, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83,
-		84, 5, 3, 0, 0, 84, 85, 3, 14, 7, 0, 85, 86, 5, 8, 0, 0, 86, 90, 5, 4,
-		0, 0, 87, 88, 5, 5, 0, 0, 88, 91, 3, 16, 8, 0, 89, 91, 5, 7, 0, 0, 90,
-		87, 1, 0, 0, 0, 90, 89, 1, 0, 0, 0, 91, 92, 1, 0, 0, 0, 92, 93, 5, 6, 0,
-		0, 93, 94, 3, 18, 9, 0, 94, 9, 1, 0, 0, 0, 95, 96, 5, 5, 0, 0, 96, 99,
-		3, 16, 8, 0, 97, 99, 5, 7, 0, 0, 98, 95, 1, 0, 0, 0, 98, 97, 1, 0, 0, 0,
-		99, 100, 1, 0, 0, 0, 100, 101, 5, 6, 0, 0, 101, 102, 3, 18, 9, 0, 102,
-		11, 1, 0, 0, 0, 103, 104, 3, 20, 10, 0, 104, 13, 1, 0, 0, 0, 105, 106,
-		3, 20, 10, 0, 106, 15, 1, 0, 0, 0, 107, 109, 3, 22, 11, 0, 108, 107, 1,
-		0, 0, 0, 109, 110, 1, 0, 0, 0, 110, 108, 1, 0, 0, 0, 110, 111, 1, 0, 0,
-		0, 111, 17, 1, 0, 0, 0, 112, 114, 3, 22, 11, 0, 113, 112, 1, 0, 0, 0, 114,
-		115, 1, 0, 0, 0, 115, 113, 1, 0, 0, 0, 115, 116, 1, 0, 0, 0, 116, 118,
-		1, 0, 0, 0, 117, 113, 1, 0, 0, 0, 117, 118, 1, 0, 0, 0, 118, 19, 1, 0,
-		0, 0, 119, 121, 3, 22, 11, 0, 120, 119, 1, 0, 0, 0, 121, 122, 1, 0, 0,
-		0, 122, 120, 1, 0, 0, 0, 122, 123, 1, 0, 0, 0, 123, 21, 1, 0, 0, 0, 124,
-		125, 7, 0, 0, 0, 125, 23, 1, 0, 0, 0, 11, 39, 50, 61, 72, 81, 90, 98, 110,
-		115, 117, 122,
+		110, 1, 9, 1, 9, 5, 9, 115, 8, 9, 10, 9, 12, 9, 118, 9, 9, 1, 10, 4, 10,
+		121, 8, 10, 11, 10, 12, 10, 122, 1, 11, 1, 11, 1, 11, 0, 0, 12, 0, 2, 4,
+		6, 8, 10, 12, 14, 16, 18, 20, 22, 0, 1, 2, 0, 2, 5, 9, 9, 128, 0, 39, 1,
+		0, 0, 0, 2, 41, 1, 0, 0, 0, 4, 55, 1, 0, 0, 0, 6, 66, 1, 0, 0, 0, 8, 81,
+		1, 0, 0, 0, 10, 98, 1, 0, 0, 0, 12, 103, 1, 0, 0, 0, 14, 105, 1, 0, 0,
+		0, 16, 108, 1, 0, 0, 0, 18, 116, 1, 0, 0, 0, 20, 120, 1, 0, 0, 0, 22, 124,
+		1, 0, 0, 0, 24, 25, 3, 2, 1, 0, 25, 26, 5, 0, 0, 1, 26, 40, 1, 0, 0, 0,
+		27, 28, 3, 4, 2, 0, 28, 29, 5, 0, 0, 1, 29, 40, 1, 0, 0, 0, 30, 31, 3,
+		6, 3, 0, 31, 32, 5, 0, 0, 1, 32, 40, 1, 0, 0, 0, 33, 34, 3, 8, 4, 0, 34,
+		35, 5, 0, 0, 1, 35, 40, 1, 0, 0, 0, 36, 37, 3, 10, 5, 0, 37, 38, 5, 0,
+		0, 1, 38, 40, 1, 0, 0, 0, 39, 24, 1, 0, 0, 0, 39, 27, 1, 0, 0, 0, 39, 30,
+		1, 0, 0, 0, 39, 33, 1, 0, 0, 0, 39, 36, 1, 0, 0, 0, 40, 1, 1, 0, 0, 0,
+		41, 42, 5, 1, 0, 0, 42, 43, 3, 12, 6, 0, 43, 44, 5, 8, 0, 0, 44, 45, 5,
+		2, 0, 0, 45, 46, 3, 14, 7, 0, 46, 50, 5, 8, 0, 0, 47, 48, 5, 5, 0, 0, 48,
+		51, 3, 16, 8, 0, 49, 51, 5, 7, 0, 0, 50, 47, 1, 0, 0, 0, 50, 49, 1, 0,
+		0, 0, 51, 52, 1, 0, 0, 0, 52, 53, 5, 6, 0, 0, 53, 54, 3, 18, 9, 0, 54,
+		3, 1, 0, 0, 0, 55, 56, 5, 2, 0, 0, 56, 57, 3, 14, 7, 0, 57, 61, 5, 8, 0,
+		0, 58, 59, 5, 5, 0, 0, 59, 62, 3, 16, 8, 0, 60, 62, 5, 7, 0, 0, 61, 58,
+		1, 0, 0, 0, 61, 60, 1, 0, 0, 0, 62, 63, 1, 0, 0, 0, 63, 64, 5, 6, 0, 0,
+		64, 65, 3, 18, 9, 0, 65, 5, 1, 0, 0, 0, 66, 67, 5, 1, 0, 0, 67, 68, 3,
+		12, 6, 0, 68, 72, 5, 8, 0, 0, 69, 70, 5, 5, 0, 0, 70, 73, 3, 16, 8, 0,
+		71, 73, 5, 7, 0, 0, 72, 69, 1, 0, 0, 0, 72, 71, 1, 0, 0, 0, 73, 74, 1,
+		0, 0, 0, 74, 75, 5, 6, 0, 0, 75, 76, 3, 18, 9, 0, 76, 7, 1, 0, 0, 0, 77,
+		78, 5, 1, 0, 0, 78, 79, 3, 12, 6, 0, 79, 80, 5, 8, 0, 0, 80, 82, 1, 0,
+		0, 0, 81, 77, 1, 0, 0, 0, 81, 82, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 84,
+		5, 3, 0, 0, 84, 85, 3, 14, 7, 0, 85, 86, 5, 8, 0, 0, 86, 90, 5, 4, 0, 0,
+		87, 88, 5, 5, 0, 0, 88, 91, 3, 16, 8, 0, 89, 91, 5, 7, 0, 0, 90, 87, 1,
+		0, 0, 0, 90, 89, 1, 0, 0, 0, 91, 92, 1, 0, 0, 0, 92, 93, 5, 6, 0, 0, 93,
+		94, 3, 18, 9, 0, 94, 9, 1, 0, 0, 0, 95, 96, 5, 5, 0, 0, 96, 99, 3, 16,
+		8, 0, 97, 99, 5, 7, 0, 0, 98, 95, 1, 0, 0, 0, 98, 97, 1, 0, 0, 0, 99, 100,
+		1, 0, 0, 0, 100, 101, 5, 6, 0, 0, 101, 102, 3, 18, 9, 0, 102, 11, 1, 0,
+		0, 0, 103, 104, 3, 20, 10, 0, 104, 13, 1, 0, 0, 0, 105, 106, 3, 20, 10,
+		0, 106, 15, 1, 0, 0, 0, 107, 109, 3, 22, 11, 0, 108, 107, 1, 0, 0, 0, 109,
+		110, 1, 0, 0, 0, 110, 108, 1, 0, 0, 0, 110, 111, 1, 0, 0, 0, 111, 17, 1,
+		0, 0, 0, 112, 115, 3, 22, 11, 0, 113, 115, 5, 8, 0, 0, 114, 112, 1, 0,
+		0, 0, 114, 113, 1, 0, 0, 0, 115, 118, 1, 0, 0, 0, 116, 114, 1, 0, 0, 0,
+		116, 117, 1, 0, 0, 0, 117, 19, 1, 0, 0, 0, 118, 116, 1, 0, 0, 0, 119, 121,
+		3, 22, 11, 0, 120, 119, 1, 0, 0, 0, 121, 122, 1, 0, 0, 0, 122, 120, 1,
+		0, 0, 0, 122, 123, 1, 0, 0, 0, 123, 21, 1, 0, 0, 0, 124, 125, 7, 0, 0,
+		0, 125, 23, 1, 0, 0, 0, 11, 39, 50, 61, 72, 81, 90, 98, 110, 114, 116,
+		122,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -134,18 +134,18 @@ func NewearsParser(input antlr.TokenStream) *earsParser {
 
 // earsParser tokens.
 const (
-	earsParserEOF          = antlr.TokenEOF
-	earsParserWHILE        = 1
-	earsParserWHEN         = 2
-	earsParserIF           = 3
-	earsParserTHEN         = 4
-	earsParserTHE          = 5
-	earsParserSHALL        = 6
-	earsParserPRONOUN      = 7
-	earsParserCOMMA        = 8
-	earsParserTEXT_NOCOMMA = 9
-	earsParserWS           = 10
-	earsParserNEWLINE      = 11
+	earsParserEOF     = antlr.TokenEOF
+	earsParserWHILE   = 1
+	earsParserWHEN    = 2
+	earsParserIF      = 3
+	earsParserTHEN    = 4
+	earsParserTHE     = 5
+	earsParserSHALL   = 6
+	earsParserPRONOUN = 7
+	earsParserCOMMA   = 8
+	earsParserWORD    = 9
+	earsParserWS      = 10
+	earsParserNEWLINE = 11
 )
 
 // earsParser rules.
@@ -1989,6 +1989,8 @@ type IResponseContext interface {
 	// Getter signatures
 	AllToken_word() []IToken_wordContext
 	Token_word(i int) IToken_wordContext
+	AllCOMMA() []antlr.TerminalNode
+	COMMA(i int) antlr.TerminalNode
 
 	// IsResponseContext differentiates from other interfaces.
 	IsResponseContext()
@@ -2067,6 +2069,14 @@ func (s *ResponseContext) Token_word(i int) IToken_wordContext {
 	return t.(IToken_wordContext)
 }
 
+func (s *ResponseContext) AllCOMMA() []antlr.TerminalNode {
+	return s.GetTokens(earsParserCOMMA)
+}
+
+func (s *ResponseContext) COMMA(i int) antlr.TerminalNode {
+	return s.GetToken(earsParserCOMMA, i)
+}
+
 func (s *ResponseContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -2093,35 +2103,48 @@ func (p *earsParser) Response() (localctx IResponseContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(117)
+	p.SetState(116)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&572) != 0 {
-		p.SetState(113)
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&828) != 0 {
+		p.SetState(114)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_la = p.GetTokenStream().LA(1)
 
-		for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&572) != 0) {
+		switch p.GetTokenStream().LA(1) {
+		case earsParserWHEN, earsParserIF, earsParserTHEN, earsParserTHE, earsParserWORD:
 			{
 				p.SetState(112)
 				p.Token_word()
 			}
 
-			p.SetState(115)
-			p.GetErrorHandler().Sync(p)
-			if p.HasError() {
-				goto errorExit
+		case earsParserCOMMA:
+			{
+				p.SetState(113)
+				p.Match(earsParserCOMMA)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
-			_la = p.GetTokenStream().LA(1)
+
+		default:
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
 		}
 
+		p.SetState(118)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:
@@ -2293,11 +2316,11 @@ type IToken_wordContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	TEXT_NOCOMMA() antlr.TerminalNode
 	THE() antlr.TerminalNode
 	WHEN() antlr.TerminalNode
 	IF() antlr.TerminalNode
 	THEN() antlr.TerminalNode
+	WORD() antlr.TerminalNode
 
 	// IsToken_wordContext differentiates from other interfaces.
 	IsToken_wordContext()
@@ -2335,10 +2358,6 @@ func NewToken_wordContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 
 func (s *Token_wordContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *Token_wordContext) TEXT_NOCOMMA() antlr.TerminalNode {
-	return s.GetToken(earsParserTEXT_NOCOMMA, 0)
-}
-
 func (s *Token_wordContext) THE() antlr.TerminalNode {
 	return s.GetToken(earsParserTHE, 0)
 }
@@ -2353,6 +2372,10 @@ func (s *Token_wordContext) IF() antlr.TerminalNode {
 
 func (s *Token_wordContext) THEN() antlr.TerminalNode {
 	return s.GetToken(earsParserTHEN, 0)
+}
+
+func (s *Token_wordContext) WORD() antlr.TerminalNode {
+	return s.GetToken(earsParserWORD, 0)
 }
 
 func (s *Token_wordContext) GetRuleContext() antlr.RuleContext {
