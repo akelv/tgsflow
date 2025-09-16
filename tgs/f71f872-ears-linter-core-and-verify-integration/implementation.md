@@ -65,3 +65,24 @@
 ## 8. Links
 - Thought: `tgs/f71f872-ears-linter-core-and-verify-integration/`
 - Key sources: `src/core/ears/lint.go`, `src/cmd/verify.go`, `src/core/config/loader.go`
+
+## 9. Tests: Unit & Regression Suites
+- Locations:
+  - Unit: `src/core/ears/lint_test.go`
+  - Regression (fixtures): `src/core/ears/testdata/*.md`
+  - Verify integration: `src/cmd/verify_ears_test.go`
+- Unit suite asserts:
+  - Each EARS shape parses correctly and extracts `System`, `Trigger`, `Preconditions`, `Response`.
+  - Negative inputs are rejected (`does not match an allowed EARS form`).
+  - Batch linting returns issues with correct line indices.
+- Regression suite (`src/core/ears/regression_test.go`):
+  - Table-driven; resolves fixture path via `runtime.Caller` → `testdata` (hermetic, repo-relative).
+  - For each fixture, asserts exact line numbers and expected shapes or expected parse failures.
+  - Ignores fenced code blocks and non-candidate lines; candidates start with `WHEN | WHILE | IF | THE`.
+- Verify integration tests:
+  - Create a temp repo dir, write `tgs.yaml` enabling EARS, place markdown files, run `CmdVerify(--repo, --ci)`.
+  - Asserts exit code 0 for all-valid; 1 when violations exist.
+- How to extend:
+  - Add a new `.md` under `src/core/ears/testdata/`.
+  - Update `cases` in `src/core/ears/regression_test.go` with expected `line -> shape` or `line -> invalid`.
+  - For new syntactic forms, adjust `ears.g4` and re-generate: `make ears-gen`.

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -24,7 +25,8 @@ func isCandidate(trimmed string) bool {
 }
 
 func Test_EARS_Fixtures_Matrix(t *testing.T) {
-	root := "/Users/kelvin/github/tgsflow/tgs/suggestions/ears_fixtures"
+	_, thisFile, _, _ := runtime.Caller(0)
+	root := filepath.Join(filepath.Dir(thisFile), "testdata")
 	cases := []expectedCase{
 		{file: "positive_ubiquitous.md", expectShapes: map[int]Shape{2: ShapeUbiquitous, 4: ShapeUbiquitous, 6: ShapeUbiquitous, 8: ShapeUbiquitous, 10: ShapeUbiquitous}},
 		{file: "positive_event.md", expectShapes: map[int]Shape{2: ShapeEvent, 4: ShapeEvent, 6: ShapeEvent, 8: ShapeEvent}},
