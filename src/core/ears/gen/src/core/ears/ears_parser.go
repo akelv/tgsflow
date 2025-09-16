@@ -36,61 +36,67 @@ func earsParserInit() {
 		"", "", "", "", "", "", "", "", "','",
 	}
 	staticData.SymbolicNames = []string{
-		"", "WHILE", "WHEN", "IF", "THEN", "THE", "SHALL", "CONJ", "COMMA",
-		"TEXT_NOCOMMA", "WS", "NEWLINE",
+		"", "WHILE", "WHEN", "IF", "THEN", "THE", "SHALL", "PRONOUN", "COMMA",
+		"WORD", "WS", "NEWLINE",
 	}
 	staticData.RuleNames = []string{
 		"requirement", "complexReq", "eventReq", "stateReq", "unwantedReq",
 		"ubiquitousReq", "preconditions", "trigger", "system", "response", "clause",
+		"token_word",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 11, 120, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 11, 127, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
-		10, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
-		0, 1, 0, 1, 0, 1, 0, 3, 0, 38, 8, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,
-		1, 2, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4,
-		1, 4, 3, 4, 71, 8, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1,
-		4, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 6, 1, 6, 1, 6, 5, 6, 90, 8, 6, 10,
-		6, 12, 6, 93, 9, 6, 1, 7, 1, 7, 1, 8, 1, 8, 5, 8, 99, 8, 8, 10, 8, 12,
-		8, 102, 9, 8, 1, 9, 1, 9, 5, 9, 106, 8, 9, 10, 9, 12, 9, 109, 9, 9, 3,
-		9, 111, 8, 9, 1, 10, 1, 10, 5, 10, 115, 8, 10, 10, 10, 12, 10, 118, 9,
-		10, 1, 10, 0, 0, 11, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 0, 0, 118,
-		0, 37, 1, 0, 0, 0, 2, 39, 1, 0, 0, 0, 4, 50, 1, 0, 0, 0, 6, 58, 1, 0, 0,
-		0, 8, 70, 1, 0, 0, 0, 10, 81, 1, 0, 0, 0, 12, 86, 1, 0, 0, 0, 14, 94, 1,
-		0, 0, 0, 16, 96, 1, 0, 0, 0, 18, 110, 1, 0, 0, 0, 20, 112, 1, 0, 0, 0,
-		22, 23, 3, 2, 1, 0, 23, 24, 5, 0, 0, 1, 24, 38, 1, 0, 0, 0, 25, 26, 3,
-		4, 2, 0, 26, 27, 5, 0, 0, 1, 27, 38, 1, 0, 0, 0, 28, 29, 3, 6, 3, 0, 29,
-		30, 5, 0, 0, 1, 30, 38, 1, 0, 0, 0, 31, 32, 3, 8, 4, 0, 32, 33, 5, 0, 0,
-		1, 33, 38, 1, 0, 0, 0, 34, 35, 3, 10, 5, 0, 35, 36, 5, 0, 0, 1, 36, 38,
-		1, 0, 0, 0, 37, 22, 1, 0, 0, 0, 37, 25, 1, 0, 0, 0, 37, 28, 1, 0, 0, 0,
-		37, 31, 1, 0, 0, 0, 37, 34, 1, 0, 0, 0, 38, 1, 1, 0, 0, 0, 39, 40, 5, 1,
-		0, 0, 40, 41, 3, 12, 6, 0, 41, 42, 5, 8, 0, 0, 42, 43, 5, 2, 0, 0, 43,
-		44, 3, 14, 7, 0, 44, 45, 5, 8, 0, 0, 45, 46, 5, 5, 0, 0, 46, 47, 3, 16,
-		8, 0, 47, 48, 5, 6, 0, 0, 48, 49, 3, 18, 9, 0, 49, 3, 1, 0, 0, 0, 50, 51,
-		5, 2, 0, 0, 51, 52, 3, 14, 7, 0, 52, 53, 5, 8, 0, 0, 53, 54, 5, 5, 0, 0,
-		54, 55, 3, 16, 8, 0, 55, 56, 5, 6, 0, 0, 56, 57, 3, 18, 9, 0, 57, 5, 1,
-		0, 0, 0, 58, 59, 5, 1, 0, 0, 59, 60, 3, 12, 6, 0, 60, 61, 5, 8, 0, 0, 61,
-		62, 5, 5, 0, 0, 62, 63, 3, 16, 8, 0, 63, 64, 5, 6, 0, 0, 64, 65, 3, 18,
-		9, 0, 65, 7, 1, 0, 0, 0, 66, 67, 5, 1, 0, 0, 67, 68, 3, 12, 6, 0, 68, 69,
-		5, 8, 0, 0, 69, 71, 1, 0, 0, 0, 70, 66, 1, 0, 0, 0, 70, 71, 1, 0, 0, 0,
-		71, 72, 1, 0, 0, 0, 72, 73, 5, 3, 0, 0, 73, 74, 3, 14, 7, 0, 74, 75, 5,
-		8, 0, 0, 75, 76, 5, 4, 0, 0, 76, 77, 5, 5, 0, 0, 77, 78, 3, 16, 8, 0, 78,
-		79, 5, 6, 0, 0, 79, 80, 3, 18, 9, 0, 80, 9, 1, 0, 0, 0, 81, 82, 5, 5, 0,
-		0, 82, 83, 3, 16, 8, 0, 83, 84, 5, 6, 0, 0, 84, 85, 3, 18, 9, 0, 85, 11,
-		1, 0, 0, 0, 86, 91, 3, 20, 10, 0, 87, 88, 5, 7, 0, 0, 88, 90, 3, 20, 10,
-		0, 89, 87, 1, 0, 0, 0, 90, 93, 1, 0, 0, 0, 91, 89, 1, 0, 0, 0, 91, 92,
-		1, 0, 0, 0, 92, 13, 1, 0, 0, 0, 93, 91, 1, 0, 0, 0, 94, 95, 3, 20, 10,
-		0, 95, 15, 1, 0, 0, 0, 96, 100, 5, 9, 0, 0, 97, 99, 5, 9, 0, 0, 98, 97,
-		1, 0, 0, 0, 99, 102, 1, 0, 0, 0, 100, 98, 1, 0, 0, 0, 100, 101, 1, 0, 0,
-		0, 101, 17, 1, 0, 0, 0, 102, 100, 1, 0, 0, 0, 103, 107, 5, 9, 0, 0, 104,
-		106, 5, 9, 0, 0, 105, 104, 1, 0, 0, 0, 106, 109, 1, 0, 0, 0, 107, 105,
-		1, 0, 0, 0, 107, 108, 1, 0, 0, 0, 108, 111, 1, 0, 0, 0, 109, 107, 1, 0,
-		0, 0, 110, 103, 1, 0, 0, 0, 110, 111, 1, 0, 0, 0, 111, 19, 1, 0, 0, 0,
-		112, 116, 5, 9, 0, 0, 113, 115, 5, 9, 0, 0, 114, 113, 1, 0, 0, 0, 115,
-		118, 1, 0, 0, 0, 116, 114, 1, 0, 0, 0, 116, 117, 1, 0, 0, 0, 117, 21, 1,
-		0, 0, 0, 118, 116, 1, 0, 0, 0, 7, 37, 70, 91, 100, 107, 110, 116,
+		10, 2, 11, 7, 11, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
+		1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 3, 0, 40, 8, 0, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 51, 8, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+		1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 62, 8, 2, 1, 2, 1, 2, 1, 2, 1, 3, 1,
+		3, 1, 3, 1, 3, 1, 3, 1, 3, 3, 3, 73, 8, 3, 1, 3, 1, 3, 1, 3, 1, 4, 1, 4,
+		1, 4, 1, 4, 3, 4, 82, 8, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 3,
+		4, 91, 8, 4, 1, 4, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 3, 5, 99, 8, 5, 1, 5,
+		1, 5, 1, 5, 1, 6, 1, 6, 1, 7, 1, 7, 1, 8, 4, 8, 109, 8, 8, 11, 8, 12, 8,
+		110, 1, 9, 1, 9, 5, 9, 115, 8, 9, 10, 9, 12, 9, 118, 9, 9, 1, 10, 4, 10,
+		121, 8, 10, 11, 10, 12, 10, 122, 1, 11, 1, 11, 1, 11, 0, 0, 12, 0, 2, 4,
+		6, 8, 10, 12, 14, 16, 18, 20, 22, 0, 1, 2, 0, 2, 5, 9, 9, 128, 0, 39, 1,
+		0, 0, 0, 2, 41, 1, 0, 0, 0, 4, 55, 1, 0, 0, 0, 6, 66, 1, 0, 0, 0, 8, 81,
+		1, 0, 0, 0, 10, 98, 1, 0, 0, 0, 12, 103, 1, 0, 0, 0, 14, 105, 1, 0, 0,
+		0, 16, 108, 1, 0, 0, 0, 18, 116, 1, 0, 0, 0, 20, 120, 1, 0, 0, 0, 22, 124,
+		1, 0, 0, 0, 24, 25, 3, 2, 1, 0, 25, 26, 5, 0, 0, 1, 26, 40, 1, 0, 0, 0,
+		27, 28, 3, 4, 2, 0, 28, 29, 5, 0, 0, 1, 29, 40, 1, 0, 0, 0, 30, 31, 3,
+		6, 3, 0, 31, 32, 5, 0, 0, 1, 32, 40, 1, 0, 0, 0, 33, 34, 3, 8, 4, 0, 34,
+		35, 5, 0, 0, 1, 35, 40, 1, 0, 0, 0, 36, 37, 3, 10, 5, 0, 37, 38, 5, 0,
+		0, 1, 38, 40, 1, 0, 0, 0, 39, 24, 1, 0, 0, 0, 39, 27, 1, 0, 0, 0, 39, 30,
+		1, 0, 0, 0, 39, 33, 1, 0, 0, 0, 39, 36, 1, 0, 0, 0, 40, 1, 1, 0, 0, 0,
+		41, 42, 5, 1, 0, 0, 42, 43, 3, 12, 6, 0, 43, 44, 5, 8, 0, 0, 44, 45, 5,
+		2, 0, 0, 45, 46, 3, 14, 7, 0, 46, 50, 5, 8, 0, 0, 47, 48, 5, 5, 0, 0, 48,
+		51, 3, 16, 8, 0, 49, 51, 5, 7, 0, 0, 50, 47, 1, 0, 0, 0, 50, 49, 1, 0,
+		0, 0, 51, 52, 1, 0, 0, 0, 52, 53, 5, 6, 0, 0, 53, 54, 3, 18, 9, 0, 54,
+		3, 1, 0, 0, 0, 55, 56, 5, 2, 0, 0, 56, 57, 3, 14, 7, 0, 57, 61, 5, 8, 0,
+		0, 58, 59, 5, 5, 0, 0, 59, 62, 3, 16, 8, 0, 60, 62, 5, 7, 0, 0, 61, 58,
+		1, 0, 0, 0, 61, 60, 1, 0, 0, 0, 62, 63, 1, 0, 0, 0, 63, 64, 5, 6, 0, 0,
+		64, 65, 3, 18, 9, 0, 65, 5, 1, 0, 0, 0, 66, 67, 5, 1, 0, 0, 67, 68, 3,
+		12, 6, 0, 68, 72, 5, 8, 0, 0, 69, 70, 5, 5, 0, 0, 70, 73, 3, 16, 8, 0,
+		71, 73, 5, 7, 0, 0, 72, 69, 1, 0, 0, 0, 72, 71, 1, 0, 0, 0, 73, 74, 1,
+		0, 0, 0, 74, 75, 5, 6, 0, 0, 75, 76, 3, 18, 9, 0, 76, 7, 1, 0, 0, 0, 77,
+		78, 5, 1, 0, 0, 78, 79, 3, 12, 6, 0, 79, 80, 5, 8, 0, 0, 80, 82, 1, 0,
+		0, 0, 81, 77, 1, 0, 0, 0, 81, 82, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 84,
+		5, 3, 0, 0, 84, 85, 3, 14, 7, 0, 85, 86, 5, 8, 0, 0, 86, 90, 5, 4, 0, 0,
+		87, 88, 5, 5, 0, 0, 88, 91, 3, 16, 8, 0, 89, 91, 5, 7, 0, 0, 90, 87, 1,
+		0, 0, 0, 90, 89, 1, 0, 0, 0, 91, 92, 1, 0, 0, 0, 92, 93, 5, 6, 0, 0, 93,
+		94, 3, 18, 9, 0, 94, 9, 1, 0, 0, 0, 95, 96, 5, 5, 0, 0, 96, 99, 3, 16,
+		8, 0, 97, 99, 5, 7, 0, 0, 98, 95, 1, 0, 0, 0, 98, 97, 1, 0, 0, 0, 99, 100,
+		1, 0, 0, 0, 100, 101, 5, 6, 0, 0, 101, 102, 3, 18, 9, 0, 102, 11, 1, 0,
+		0, 0, 103, 104, 3, 20, 10, 0, 104, 13, 1, 0, 0, 0, 105, 106, 3, 20, 10,
+		0, 106, 15, 1, 0, 0, 0, 107, 109, 3, 22, 11, 0, 108, 107, 1, 0, 0, 0, 109,
+		110, 1, 0, 0, 0, 110, 108, 1, 0, 0, 0, 110, 111, 1, 0, 0, 0, 111, 17, 1,
+		0, 0, 0, 112, 115, 3, 22, 11, 0, 113, 115, 5, 8, 0, 0, 114, 112, 1, 0,
+		0, 0, 114, 113, 1, 0, 0, 0, 115, 118, 1, 0, 0, 0, 116, 114, 1, 0, 0, 0,
+		116, 117, 1, 0, 0, 0, 117, 19, 1, 0, 0, 0, 118, 116, 1, 0, 0, 0, 119, 121,
+		3, 22, 11, 0, 120, 119, 1, 0, 0, 0, 121, 122, 1, 0, 0, 0, 122, 120, 1,
+		0, 0, 0, 122, 123, 1, 0, 0, 0, 123, 21, 1, 0, 0, 0, 124, 125, 7, 0, 0,
+		0, 125, 23, 1, 0, 0, 0, 11, 39, 50, 61, 72, 81, 90, 98, 110, 114, 116,
+		122,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -128,18 +134,18 @@ func NewearsParser(input antlr.TokenStream) *earsParser {
 
 // earsParser tokens.
 const (
-	earsParserEOF          = antlr.TokenEOF
-	earsParserWHILE        = 1
-	earsParserWHEN         = 2
-	earsParserIF           = 3
-	earsParserTHEN         = 4
-	earsParserTHE          = 5
-	earsParserSHALL        = 6
-	earsParserCONJ         = 7
-	earsParserCOMMA        = 8
-	earsParserTEXT_NOCOMMA = 9
-	earsParserWS           = 10
-	earsParserNEWLINE      = 11
+	earsParserEOF     = antlr.TokenEOF
+	earsParserWHILE   = 1
+	earsParserWHEN    = 2
+	earsParserIF      = 3
+	earsParserTHEN    = 4
+	earsParserTHE     = 5
+	earsParserSHALL   = 6
+	earsParserPRONOUN = 7
+	earsParserCOMMA   = 8
+	earsParserWORD    = 9
+	earsParserWS      = 10
+	earsParserNEWLINE = 11
 )
 
 // earsParser rules.
@@ -155,6 +161,7 @@ const (
 	earsParserRULE_system        = 8
 	earsParserRULE_response      = 9
 	earsParserRULE_clause        = 10
+	earsParserRULE_token_word    = 11
 )
 
 // IRequirementContext is an interface to support dynamic dispatch.
@@ -315,7 +322,7 @@ func (s *RequirementContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *earsParser) Requirement() (localctx IRequirementContext) {
 	localctx = NewRequirementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 0, earsParserRULE_requirement)
-	p.SetState(37)
+	p.SetState(39)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -325,11 +332,11 @@ func (p *earsParser) Requirement() (localctx IRequirementContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(22)
+			p.SetState(24)
 			p.ComplexReq()
 		}
 		{
-			p.SetState(23)
+			p.SetState(25)
 			p.Match(earsParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -340,11 +347,11 @@ func (p *earsParser) Requirement() (localctx IRequirementContext) {
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(25)
+			p.SetState(27)
 			p.EventReq()
 		}
 		{
-			p.SetState(26)
+			p.SetState(28)
 			p.Match(earsParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -355,11 +362,11 @@ func (p *earsParser) Requirement() (localctx IRequirementContext) {
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(28)
+			p.SetState(30)
 			p.StateReq()
 		}
 		{
-			p.SetState(29)
+			p.SetState(31)
 			p.Match(earsParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -370,11 +377,11 @@ func (p *earsParser) Requirement() (localctx IRequirementContext) {
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(31)
+			p.SetState(33)
 			p.UnwantedReq()
 		}
 		{
-			p.SetState(32)
+			p.SetState(34)
 			p.Match(earsParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -385,11 +392,11 @@ func (p *earsParser) Requirement() (localctx IRequirementContext) {
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(34)
+			p.SetState(36)
 			p.UbiquitousReq()
 		}
 		{
-			p.SetState(35)
+			p.SetState(37)
 			p.Match(earsParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -428,10 +435,11 @@ type IComplexReqContext interface {
 	COMMA(i int) antlr.TerminalNode
 	WHEN() antlr.TerminalNode
 	Trigger() ITriggerContext
-	THE() antlr.TerminalNode
-	System() ISystemContext
 	SHALL() antlr.TerminalNode
 	Response() IResponseContext
+	THE() antlr.TerminalNode
+	System() ISystemContext
+	PRONOUN() antlr.TerminalNode
 
 	// IsComplexReqContext differentiates from other interfaces.
 	IsComplexReqContext()
@@ -517,6 +525,26 @@ func (s *ComplexReqContext) Trigger() ITriggerContext {
 	return t.(ITriggerContext)
 }
 
+func (s *ComplexReqContext) SHALL() antlr.TerminalNode {
+	return s.GetToken(earsParserSHALL, 0)
+}
+
+func (s *ComplexReqContext) Response() IResponseContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IResponseContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IResponseContext)
+}
+
 func (s *ComplexReqContext) THE() antlr.TerminalNode {
 	return s.GetToken(earsParserTHE, 0)
 }
@@ -537,24 +565,8 @@ func (s *ComplexReqContext) System() ISystemContext {
 	return t.(ISystemContext)
 }
 
-func (s *ComplexReqContext) SHALL() antlr.TerminalNode {
-	return s.GetToken(earsParserSHALL, 0)
-}
-
-func (s *ComplexReqContext) Response() IResponseContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IResponseContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IResponseContext)
+func (s *ComplexReqContext) PRONOUN() antlr.TerminalNode {
+	return s.GetToken(earsParserPRONOUN, 0)
 }
 
 func (s *ComplexReqContext) GetRuleContext() antlr.RuleContext {
@@ -582,7 +594,7 @@ func (p *earsParser) ComplexReq() (localctx IComplexReqContext) {
 	p.EnterRule(localctx, 2, earsParserRULE_complexReq)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(39)
+		p.SetState(41)
 		p.Match(earsParserWHILE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -590,11 +602,11 @@ func (p *earsParser) ComplexReq() (localctx IComplexReqContext) {
 		}
 	}
 	{
-		p.SetState(40)
+		p.SetState(42)
 		p.Preconditions()
 	}
 	{
-		p.SetState(41)
+		p.SetState(43)
 		p.Match(earsParserCOMMA)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -602,7 +614,7 @@ func (p *earsParser) ComplexReq() (localctx IComplexReqContext) {
 		}
 	}
 	{
-		p.SetState(42)
+		p.SetState(44)
 		p.Match(earsParserWHEN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -610,31 +622,54 @@ func (p *earsParser) ComplexReq() (localctx IComplexReqContext) {
 		}
 	}
 	{
-		p.SetState(43)
+		p.SetState(45)
 		p.Trigger()
 	}
 	{
-		p.SetState(44)
+		p.SetState(46)
 		p.Match(earsParserCOMMA)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	{
-		p.SetState(45)
-		p.Match(earsParserTHE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+	p.SetState(50)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case earsParserTHE:
+		{
+			p.SetState(47)
+			p.Match(earsParserTHE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
+		{
+			p.SetState(48)
+			p.System()
+		}
+
+	case earsParserPRONOUN:
+		{
+			p.SetState(49)
+			p.Match(earsParserPRONOUN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
-		p.SetState(46)
-		p.System()
-	}
-	{
-		p.SetState(47)
+		p.SetState(52)
 		p.Match(earsParserSHALL)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -642,7 +677,7 @@ func (p *earsParser) ComplexReq() (localctx IComplexReqContext) {
 		}
 	}
 	{
-		p.SetState(48)
+		p.SetState(53)
 		p.Response()
 	}
 
@@ -670,10 +705,11 @@ type IEventReqContext interface {
 	WHEN() antlr.TerminalNode
 	Trigger() ITriggerContext
 	COMMA() antlr.TerminalNode
-	THE() antlr.TerminalNode
-	System() ISystemContext
 	SHALL() antlr.TerminalNode
 	Response() IResponseContext
+	THE() antlr.TerminalNode
+	System() ISystemContext
+	PRONOUN() antlr.TerminalNode
 
 	// IsEventReqContext differentiates from other interfaces.
 	IsEventReqContext()
@@ -735,6 +771,26 @@ func (s *EventReqContext) COMMA() antlr.TerminalNode {
 	return s.GetToken(earsParserCOMMA, 0)
 }
 
+func (s *EventReqContext) SHALL() antlr.TerminalNode {
+	return s.GetToken(earsParserSHALL, 0)
+}
+
+func (s *EventReqContext) Response() IResponseContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IResponseContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IResponseContext)
+}
+
 func (s *EventReqContext) THE() antlr.TerminalNode {
 	return s.GetToken(earsParserTHE, 0)
 }
@@ -755,24 +811,8 @@ func (s *EventReqContext) System() ISystemContext {
 	return t.(ISystemContext)
 }
 
-func (s *EventReqContext) SHALL() antlr.TerminalNode {
-	return s.GetToken(earsParserSHALL, 0)
-}
-
-func (s *EventReqContext) Response() IResponseContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IResponseContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IResponseContext)
+func (s *EventReqContext) PRONOUN() antlr.TerminalNode {
+	return s.GetToken(earsParserPRONOUN, 0)
 }
 
 func (s *EventReqContext) GetRuleContext() antlr.RuleContext {
@@ -800,7 +840,7 @@ func (p *earsParser) EventReq() (localctx IEventReqContext) {
 	p.EnterRule(localctx, 4, earsParserRULE_eventReq)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(50)
+		p.SetState(55)
 		p.Match(earsParserWHEN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -808,31 +848,54 @@ func (p *earsParser) EventReq() (localctx IEventReqContext) {
 		}
 	}
 	{
-		p.SetState(51)
+		p.SetState(56)
 		p.Trigger()
 	}
 	{
-		p.SetState(52)
+		p.SetState(57)
 		p.Match(earsParserCOMMA)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	{
-		p.SetState(53)
-		p.Match(earsParserTHE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+	p.SetState(61)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case earsParserTHE:
+		{
+			p.SetState(58)
+			p.Match(earsParserTHE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
+		{
+			p.SetState(59)
+			p.System()
+		}
+
+	case earsParserPRONOUN:
+		{
+			p.SetState(60)
+			p.Match(earsParserPRONOUN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
-		p.SetState(54)
-		p.System()
-	}
-	{
-		p.SetState(55)
+		p.SetState(63)
 		p.Match(earsParserSHALL)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -840,7 +903,7 @@ func (p *earsParser) EventReq() (localctx IEventReqContext) {
 		}
 	}
 	{
-		p.SetState(56)
+		p.SetState(64)
 		p.Response()
 	}
 
@@ -868,10 +931,11 @@ type IStateReqContext interface {
 	WHILE() antlr.TerminalNode
 	Preconditions() IPreconditionsContext
 	COMMA() antlr.TerminalNode
-	THE() antlr.TerminalNode
-	System() ISystemContext
 	SHALL() antlr.TerminalNode
 	Response() IResponseContext
+	THE() antlr.TerminalNode
+	System() ISystemContext
+	PRONOUN() antlr.TerminalNode
 
 	// IsStateReqContext differentiates from other interfaces.
 	IsStateReqContext()
@@ -933,6 +997,26 @@ func (s *StateReqContext) COMMA() antlr.TerminalNode {
 	return s.GetToken(earsParserCOMMA, 0)
 }
 
+func (s *StateReqContext) SHALL() antlr.TerminalNode {
+	return s.GetToken(earsParserSHALL, 0)
+}
+
+func (s *StateReqContext) Response() IResponseContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IResponseContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IResponseContext)
+}
+
 func (s *StateReqContext) THE() antlr.TerminalNode {
 	return s.GetToken(earsParserTHE, 0)
 }
@@ -953,24 +1037,8 @@ func (s *StateReqContext) System() ISystemContext {
 	return t.(ISystemContext)
 }
 
-func (s *StateReqContext) SHALL() antlr.TerminalNode {
-	return s.GetToken(earsParserSHALL, 0)
-}
-
-func (s *StateReqContext) Response() IResponseContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IResponseContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IResponseContext)
+func (s *StateReqContext) PRONOUN() antlr.TerminalNode {
+	return s.GetToken(earsParserPRONOUN, 0)
 }
 
 func (s *StateReqContext) GetRuleContext() antlr.RuleContext {
@@ -998,7 +1066,7 @@ func (p *earsParser) StateReq() (localctx IStateReqContext) {
 	p.EnterRule(localctx, 6, earsParserRULE_stateReq)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(58)
+		p.SetState(66)
 		p.Match(earsParserWHILE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1006,31 +1074,54 @@ func (p *earsParser) StateReq() (localctx IStateReqContext) {
 		}
 	}
 	{
-		p.SetState(59)
+		p.SetState(67)
 		p.Preconditions()
 	}
 	{
-		p.SetState(60)
+		p.SetState(68)
 		p.Match(earsParserCOMMA)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	{
-		p.SetState(61)
-		p.Match(earsParserTHE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+	p.SetState(72)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case earsParserTHE:
+		{
+			p.SetState(69)
+			p.Match(earsParserTHE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
+		{
+			p.SetState(70)
+			p.System()
+		}
+
+	case earsParserPRONOUN:
+		{
+			p.SetState(71)
+			p.Match(earsParserPRONOUN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
-		p.SetState(62)
-		p.System()
-	}
-	{
-		p.SetState(63)
+		p.SetState(74)
 		p.Match(earsParserSHALL)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1038,7 +1129,7 @@ func (p *earsParser) StateReq() (localctx IStateReqContext) {
 		}
 	}
 	{
-		p.SetState(64)
+		p.SetState(75)
 		p.Response()
 	}
 
@@ -1068,10 +1159,11 @@ type IUnwantedReqContext interface {
 	AllCOMMA() []antlr.TerminalNode
 	COMMA(i int) antlr.TerminalNode
 	THEN() antlr.TerminalNode
-	THE() antlr.TerminalNode
-	System() ISystemContext
 	SHALL() antlr.TerminalNode
 	Response() IResponseContext
+	THE() antlr.TerminalNode
+	System() ISystemContext
+	PRONOUN() antlr.TerminalNode
 	WHILE() antlr.TerminalNode
 	Preconditions() IPreconditionsContext
 
@@ -1143,6 +1235,26 @@ func (s *UnwantedReqContext) THEN() antlr.TerminalNode {
 	return s.GetToken(earsParserTHEN, 0)
 }
 
+func (s *UnwantedReqContext) SHALL() antlr.TerminalNode {
+	return s.GetToken(earsParserSHALL, 0)
+}
+
+func (s *UnwantedReqContext) Response() IResponseContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IResponseContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IResponseContext)
+}
+
 func (s *UnwantedReqContext) THE() antlr.TerminalNode {
 	return s.GetToken(earsParserTHE, 0)
 }
@@ -1163,24 +1275,8 @@ func (s *UnwantedReqContext) System() ISystemContext {
 	return t.(ISystemContext)
 }
 
-func (s *UnwantedReqContext) SHALL() antlr.TerminalNode {
-	return s.GetToken(earsParserSHALL, 0)
-}
-
-func (s *UnwantedReqContext) Response() IResponseContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IResponseContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IResponseContext)
+func (s *UnwantedReqContext) PRONOUN() antlr.TerminalNode {
+	return s.GetToken(earsParserPRONOUN, 0)
 }
 
 func (s *UnwantedReqContext) WHILE() antlr.TerminalNode {
@@ -1229,7 +1325,7 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(70)
+	p.SetState(81)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1238,7 +1334,7 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 
 	if _la == earsParserWHILE {
 		{
-			p.SetState(66)
+			p.SetState(77)
 			p.Match(earsParserWHILE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1246,11 +1342,11 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 			}
 		}
 		{
-			p.SetState(67)
+			p.SetState(78)
 			p.Preconditions()
 		}
 		{
-			p.SetState(68)
+			p.SetState(79)
 			p.Match(earsParserCOMMA)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1260,7 +1356,7 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 
 	}
 	{
-		p.SetState(72)
+		p.SetState(83)
 		p.Match(earsParserIF)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1268,11 +1364,11 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 		}
 	}
 	{
-		p.SetState(73)
+		p.SetState(84)
 		p.Trigger()
 	}
 	{
-		p.SetState(74)
+		p.SetState(85)
 		p.Match(earsParserCOMMA)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1280,27 +1376,50 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 		}
 	}
 	{
-		p.SetState(75)
+		p.SetState(86)
 		p.Match(earsParserTHEN)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	{
-		p.SetState(76)
-		p.Match(earsParserTHE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+	p.SetState(90)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case earsParserTHE:
+		{
+			p.SetState(87)
+			p.Match(earsParserTHE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
+		{
+			p.SetState(88)
+			p.System()
+		}
+
+	case earsParserPRONOUN:
+		{
+			p.SetState(89)
+			p.Match(earsParserPRONOUN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
-		p.SetState(77)
-		p.System()
-	}
-	{
-		p.SetState(78)
+		p.SetState(92)
 		p.Match(earsParserSHALL)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1308,7 +1427,7 @@ func (p *earsParser) UnwantedReq() (localctx IUnwantedReqContext) {
 		}
 	}
 	{
-		p.SetState(79)
+		p.SetState(93)
 		p.Response()
 	}
 
@@ -1333,10 +1452,11 @@ type IUbiquitousReqContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	THE() antlr.TerminalNode
-	System() ISystemContext
 	SHALL() antlr.TerminalNode
 	Response() IResponseContext
+	THE() antlr.TerminalNode
+	System() ISystemContext
+	PRONOUN() antlr.TerminalNode
 
 	// IsUbiquitousReqContext differentiates from other interfaces.
 	IsUbiquitousReqContext()
@@ -1374,6 +1494,26 @@ func NewUbiquitousReqContext(parser antlr.Parser, parent antlr.ParserRuleContext
 
 func (s *UbiquitousReqContext) GetParser() antlr.Parser { return s.parser }
 
+func (s *UbiquitousReqContext) SHALL() antlr.TerminalNode {
+	return s.GetToken(earsParserSHALL, 0)
+}
+
+func (s *UbiquitousReqContext) Response() IResponseContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IResponseContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IResponseContext)
+}
+
 func (s *UbiquitousReqContext) THE() antlr.TerminalNode {
 	return s.GetToken(earsParserTHE, 0)
 }
@@ -1394,24 +1534,8 @@ func (s *UbiquitousReqContext) System() ISystemContext {
 	return t.(ISystemContext)
 }
 
-func (s *UbiquitousReqContext) SHALL() antlr.TerminalNode {
-	return s.GetToken(earsParserSHALL, 0)
-}
-
-func (s *UbiquitousReqContext) Response() IResponseContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IResponseContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IResponseContext)
+func (s *UbiquitousReqContext) PRONOUN() antlr.TerminalNode {
+	return s.GetToken(earsParserPRONOUN, 0)
 }
 
 func (s *UbiquitousReqContext) GetRuleContext() antlr.RuleContext {
@@ -1438,20 +1562,43 @@ func (p *earsParser) UbiquitousReq() (localctx IUbiquitousReqContext) {
 	localctx = NewUbiquitousReqContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 10, earsParserRULE_ubiquitousReq)
 	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(81)
-		p.Match(earsParserTHE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+	p.SetState(98)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case earsParserTHE:
+		{
+			p.SetState(95)
+			p.Match(earsParserTHE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
+		{
+			p.SetState(96)
+			p.System()
+		}
+
+	case earsParserPRONOUN:
+		{
+			p.SetState(97)
+			p.Match(earsParserPRONOUN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
-		p.SetState(82)
-		p.System()
-	}
-	{
-		p.SetState(83)
+		p.SetState(100)
 		p.Match(earsParserSHALL)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1459,7 +1606,7 @@ func (p *earsParser) UbiquitousReq() (localctx IUbiquitousReqContext) {
 		}
 	}
 	{
-		p.SetState(84)
+		p.SetState(101)
 		p.Response()
 	}
 
@@ -1484,10 +1631,7 @@ type IPreconditionsContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllClause() []IClauseContext
-	Clause(i int) IClauseContext
-	AllCONJ() []antlr.TerminalNode
-	CONJ(i int) antlr.TerminalNode
+	Clause() IClauseContext
 
 	// IsPreconditionsContext differentiates from other interfaces.
 	IsPreconditionsContext()
@@ -1525,37 +1669,12 @@ func NewPreconditionsContext(parser antlr.Parser, parent antlr.ParserRuleContext
 
 func (s *PreconditionsContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *PreconditionsContext) AllClause() []IClauseContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IClauseContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IClauseContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IClauseContext); ok {
-			tst[i] = t.(IClauseContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *PreconditionsContext) Clause(i int) IClauseContext {
+func (s *PreconditionsContext) Clause() IClauseContext {
 	var t antlr.RuleContext
-	j := 0
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IClauseContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
+			t = ctx.(antlr.RuleContext)
+			break
 		}
 	}
 
@@ -1564,14 +1683,6 @@ func (s *PreconditionsContext) Clause(i int) IClauseContext {
 	}
 
 	return t.(IClauseContext)
-}
-
-func (s *PreconditionsContext) AllCONJ() []antlr.TerminalNode {
-	return s.GetTokens(earsParserCONJ)
-}
-
-func (s *PreconditionsContext) CONJ(i int) antlr.TerminalNode {
-	return s.GetToken(earsParserCONJ, i)
 }
 
 func (s *PreconditionsContext) GetRuleContext() antlr.RuleContext {
@@ -1597,40 +1708,10 @@ func (s *PreconditionsContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *earsParser) Preconditions() (localctx IPreconditionsContext) {
 	localctx = NewPreconditionsContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 12, earsParserRULE_preconditions)
-	var _la int
-
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(86)
+		p.SetState(103)
 		p.Clause()
-	}
-	p.SetState(91)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == earsParserCONJ {
-		{
-			p.SetState(87)
-			p.Match(earsParserCONJ)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(88)
-			p.Clause()
-		}
-
-		p.SetState(93)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:
@@ -1733,7 +1814,7 @@ func (p *earsParser) Trigger() (localctx ITriggerContext) {
 	p.EnterRule(localctx, 14, earsParserRULE_trigger)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(94)
+		p.SetState(105)
 		p.Clause()
 	}
 
@@ -1758,8 +1839,8 @@ type ISystemContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllTEXT_NOCOMMA() []antlr.TerminalNode
-	TEXT_NOCOMMA(i int) antlr.TerminalNode
+	AllToken_word() []IToken_wordContext
+	Token_word(i int) IToken_wordContext
 
 	// IsSystemContext differentiates from other interfaces.
 	IsSystemContext()
@@ -1797,12 +1878,45 @@ func NewSystemContext(parser antlr.Parser, parent antlr.ParserRuleContext, invok
 
 func (s *SystemContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *SystemContext) AllTEXT_NOCOMMA() []antlr.TerminalNode {
-	return s.GetTokens(earsParserTEXT_NOCOMMA)
+func (s *SystemContext) AllToken_word() []IToken_wordContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IToken_wordContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IToken_wordContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IToken_wordContext); ok {
+			tst[i] = t.(IToken_wordContext)
+			i++
+		}
+	}
+
+	return tst
 }
 
-func (s *SystemContext) TEXT_NOCOMMA(i int) antlr.TerminalNode {
-	return s.GetToken(earsParserTEXT_NOCOMMA, i)
+func (s *SystemContext) Token_word(i int) IToken_wordContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IToken_wordContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IToken_wordContext)
 }
 
 func (s *SystemContext) GetRuleContext() antlr.RuleContext {
@@ -1831,32 +1945,20 @@ func (p *earsParser) System() (localctx ISystemContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(96)
-		p.Match(earsParserTEXT_NOCOMMA)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(100)
+	p.SetState(108)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == earsParserTEXT_NOCOMMA {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&572) != 0) {
 		{
-			p.SetState(97)
-			p.Match(earsParserTEXT_NOCOMMA)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(107)
+			p.Token_word()
 		}
 
-		p.SetState(102)
+		p.SetState(110)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1885,8 +1987,10 @@ type IResponseContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllTEXT_NOCOMMA() []antlr.TerminalNode
-	TEXT_NOCOMMA(i int) antlr.TerminalNode
+	AllToken_word() []IToken_wordContext
+	Token_word(i int) IToken_wordContext
+	AllCOMMA() []antlr.TerminalNode
+	COMMA(i int) antlr.TerminalNode
 
 	// IsResponseContext differentiates from other interfaces.
 	IsResponseContext()
@@ -1924,12 +2028,53 @@ func NewResponseContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 
 func (s *ResponseContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *ResponseContext) AllTEXT_NOCOMMA() []antlr.TerminalNode {
-	return s.GetTokens(earsParserTEXT_NOCOMMA)
+func (s *ResponseContext) AllToken_word() []IToken_wordContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IToken_wordContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IToken_wordContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IToken_wordContext); ok {
+			tst[i] = t.(IToken_wordContext)
+			i++
+		}
+	}
+
+	return tst
 }
 
-func (s *ResponseContext) TEXT_NOCOMMA(i int) antlr.TerminalNode {
-	return s.GetToken(earsParserTEXT_NOCOMMA, i)
+func (s *ResponseContext) Token_word(i int) IToken_wordContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IToken_wordContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IToken_wordContext)
+}
+
+func (s *ResponseContext) AllCOMMA() []antlr.TerminalNode {
+	return s.GetTokens(earsParserCOMMA)
+}
+
+func (s *ResponseContext) COMMA(i int) antlr.TerminalNode {
+	return s.GetToken(earsParserCOMMA, i)
 }
 
 func (s *ResponseContext) GetRuleContext() antlr.RuleContext {
@@ -1958,47 +2103,48 @@ func (p *earsParser) Response() (localctx IResponseContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(110)
+	p.SetState(116)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == earsParserTEXT_NOCOMMA {
-		{
-			p.SetState(103)
-			p.Match(earsParserTEXT_NOCOMMA)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		p.SetState(107)
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&828) != 0 {
+		p.SetState(114)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_la = p.GetTokenStream().LA(1)
 
-		for _la == earsParserTEXT_NOCOMMA {
+		switch p.GetTokenStream().LA(1) {
+		case earsParserWHEN, earsParserIF, earsParserTHEN, earsParserTHE, earsParserWORD:
 			{
-				p.SetState(104)
-				p.Match(earsParserTEXT_NOCOMMA)
+				p.SetState(112)
+				p.Token_word()
+			}
+
+		case earsParserCOMMA:
+			{
+				p.SetState(113)
+				p.Match(earsParserCOMMA)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
 
-			p.SetState(109)
-			p.GetErrorHandler().Sync(p)
-			if p.HasError() {
-				goto errorExit
-			}
-			_la = p.GetTokenStream().LA(1)
+		default:
+			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+			goto errorExit
 		}
 
+		p.SetState(118)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:
@@ -2022,8 +2168,8 @@ type IClauseContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllTEXT_NOCOMMA() []antlr.TerminalNode
-	TEXT_NOCOMMA(i int) antlr.TerminalNode
+	AllToken_word() []IToken_wordContext
+	Token_word(i int) IToken_wordContext
 
 	// IsClauseContext differentiates from other interfaces.
 	IsClauseContext()
@@ -2061,12 +2207,45 @@ func NewClauseContext(parser antlr.Parser, parent antlr.ParserRuleContext, invok
 
 func (s *ClauseContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *ClauseContext) AllTEXT_NOCOMMA() []antlr.TerminalNode {
-	return s.GetTokens(earsParserTEXT_NOCOMMA)
+func (s *ClauseContext) AllToken_word() []IToken_wordContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IToken_wordContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IToken_wordContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IToken_wordContext); ok {
+			tst[i] = t.(IToken_wordContext)
+			i++
+		}
+	}
+
+	return tst
 }
 
-func (s *ClauseContext) TEXT_NOCOMMA(i int) antlr.TerminalNode {
-	return s.GetToken(earsParserTEXT_NOCOMMA, i)
+func (s *ClauseContext) Token_word(i int) IToken_wordContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IToken_wordContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IToken_wordContext)
 }
 
 func (s *ClauseContext) GetRuleContext() antlr.RuleContext {
@@ -2095,37 +2274,146 @@ func (p *earsParser) Clause() (localctx IClauseContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(112)
-		p.Match(earsParserTEXT_NOCOMMA)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(116)
+	p.SetState(120)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == earsParserTEXT_NOCOMMA {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&572) != 0) {
 		{
-			p.SetState(113)
-			p.Match(earsParserTEXT_NOCOMMA)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
+			p.SetState(119)
+			p.Token_word()
 		}
 
-		p.SetState(118)
+		p.SetState(122)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IToken_wordContext is an interface to support dynamic dispatch.
+type IToken_wordContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	THE() antlr.TerminalNode
+	WHEN() antlr.TerminalNode
+	IF() antlr.TerminalNode
+	THEN() antlr.TerminalNode
+	WORD() antlr.TerminalNode
+
+	// IsToken_wordContext differentiates from other interfaces.
+	IsToken_wordContext()
+}
+
+type Token_wordContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyToken_wordContext() *Token_wordContext {
+	var p = new(Token_wordContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = earsParserRULE_token_word
+	return p
+}
+
+func InitEmptyToken_wordContext(p *Token_wordContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = earsParserRULE_token_word
+}
+
+func (*Token_wordContext) IsToken_wordContext() {}
+
+func NewToken_wordContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Token_wordContext {
+	var p = new(Token_wordContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = earsParserRULE_token_word
+
+	return p
+}
+
+func (s *Token_wordContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Token_wordContext) THE() antlr.TerminalNode {
+	return s.GetToken(earsParserTHE, 0)
+}
+
+func (s *Token_wordContext) WHEN() antlr.TerminalNode {
+	return s.GetToken(earsParserWHEN, 0)
+}
+
+func (s *Token_wordContext) IF() antlr.TerminalNode {
+	return s.GetToken(earsParserIF, 0)
+}
+
+func (s *Token_wordContext) THEN() antlr.TerminalNode {
+	return s.GetToken(earsParserTHEN, 0)
+}
+
+func (s *Token_wordContext) WORD() antlr.TerminalNode {
+	return s.GetToken(earsParserWORD, 0)
+}
+
+func (s *Token_wordContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Token_wordContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Token_wordContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(earsListener); ok {
+		listenerT.EnterToken_word(s)
+	}
+}
+
+func (s *Token_wordContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(earsListener); ok {
+		listenerT.ExitToken_word(s)
+	}
+}
+
+func (p *earsParser) Token_word() (localctx IToken_wordContext) {
+	localctx = NewToken_wordContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 22, earsParserRULE_token_word)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(124)
+		_la = p.GetTokenStream().LA(1)
+
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&572) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
 	}
 
 errorExit:

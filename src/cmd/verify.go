@@ -103,13 +103,53 @@ func verifyEARS(repoRoot string) []string {
 				return nil
 			}
 			lines := strings.Split(string(data), "\n")
+			inFence := false
+			bulletResponseMode := false
 			for i, ln := range lines {
-				trimmed := strings.TrimSpace(ln)
-				if strings.HasPrefix(trimmed, "- ") || strings.HasPrefix(trimmed, "* ") || strings.HasPrefix(trimmed, "1. ") {
+				raw := ln
+				trimmed := strings.TrimSpace(raw)
+				// toggle code fence
+				if strings.HasPrefix(trimmed, "```") {
+					inFence = !inFence
+					continue
+				}
+				if inFence || trimmed == "" || strings.HasPrefix(trimmed, "#") {
+					if trimmed == "" {
+						bulletResponseMode = false
+					}
+					continue
+				}
+
+				isBullet := strings.HasPrefix(trimmed, "- ") || strings.HasPrefix(trimmed, "* ") || strings.HasPrefix(trimmed, "1. ")
+				if isBullet && bulletResponseMode {
+					// Treat as continuation of prior requirement response; skip linting this line
+					continue
+				}
+
+				// Non-bullet candidate lines that start with EARS keywords
+				if !isBullet {
+					upper := strings.ToUpper(trimmed)
+					if strings.HasPrefix(upper, "WHEN ") || strings.HasPrefix(upper, "WHILE ") || strings.HasPrefix(upper, "IF ") || strings.HasPrefix(upper, "THE ") {
+						if _, err := ears.ParseRequirement(trimmed); err != nil {
+							issues = append(issues, fmt.Sprintf("%s:%d: %s", path, i+1, err.Error()))
+						}
+						// If this line ends with ":" and contains " shall" before it, enable bullet response mode
+						if strings.HasSuffix(trimmed, ":") && strings.Contains(strings.ToLower(trimmed), " shall") {
+							bulletResponseMode = true
+						} else {
+							bulletResponseMode = false
+						}
+						continue
+					}
+				}
+
+				// Bullet candidate lines (top-level bullets only)
+				if isBullet {
 					candidate := strings.TrimSpace(trimmed[2:])
 					if _, err := ears.ParseRequirement(candidate); err != nil {
 						issues = append(issues, fmt.Sprintf("%s:%d: %s", path, i+1, err.Error()))
 					}
+					continue
 				}
 			}
 		}

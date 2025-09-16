@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -20,9 +21,24 @@ func TestVerify_EARS_AllValid(t *testing.T) {
 	dir := t.TempDir()
 	// Enable EARS
 	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
-	// Markdown with valid EARS bullets
-	md := "# Requirements\n\n- The payment service shall record transactions\n- When button is pressed, the controller shall start\n- While in armed mode, the system shall alert\n- While battery is low, when charger is connected, the device shall charge\n- If overheating, then the system shall shutdown\n"
-	writeFile(t, filepath.Join(dir, "REQS.md"), md)
+	// Use fixture files from core testdata
+	fixtures := []string{
+		"src/core/ears/testdata/positive_ubiquitous.md",
+		"src/core/ears/testdata/positive_event.md",
+		"src/core/ears/testdata/positive_state.md",
+		"src/core/ears/testdata/positive_complex.md",
+		"src/core/ears/testdata/positive_unwanted.md",
+		"src/core/ears/testdata/formatting_bullets_and_skip_blocks.md",
+	}
+	_, thisFile, _, _ := runtime.Caller(0)
+	repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
+	for _, f := range fixtures {
+		data, err := os.ReadFile(filepath.Join(repoRoot, f))
+		if err != nil {
+			t.Fatalf("read fixture: %v", err)
+		}
+		writeFile(t, filepath.Join(dir, filepath.Base(f)), string(data))
+	}
 
 	// CI mode should still succeed (no issues)
 	code := CmdVerify([]string{"--repo", dir, "--ci"})
@@ -34,8 +50,20 @@ func TestVerify_EARS_AllValid(t *testing.T) {
 func TestVerify_EARS_WithInvalid(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
-	md := "# Requirements\n\n- The system shall record events\n- Because of X the system might respond\n"
-	writeFile(t, filepath.Join(dir, "REQS.md"), md)
+	fixtures := []string{
+		"src/core/ears/testdata/negative_missing_system.md",
+		"src/core/ears/testdata/negative_wrong_order.md",
+		"src/core/ears/testdata/negative_multiple_when.md",
+	}
+	_, thisFile, _, _ := runtime.Caller(0)
+	repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
+	for _, f := range fixtures {
+		data, err := os.ReadFile(filepath.Join(repoRoot, f))
+		if err != nil {
+			t.Fatalf("read fixture: %v", err)
+		}
+		writeFile(t, filepath.Join(dir, filepath.Base(f)), string(data))
+	}
 
 	code := CmdVerify([]string{"--repo", dir, "--ci"})
 	if code != 1 {

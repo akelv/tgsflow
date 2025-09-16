@@ -2,6 +2,7 @@ package ears
 
 import (
 	"errors"
+	"regexp"
 	"strings"
 
 	antlr "github.com/antlr4-go/antlr/v4"
@@ -46,28 +47,68 @@ func ParseRequirement(line string) (Result, error) {
 	parser := earsp.NewearsParser(stream)
 
 	root := parser.Requirement()
+	if parser.HasError() {
+		return Result{}, errors.New("syntax error")
+	}
 
 	res := Result{}
 	req := root.(*earsp.RequirementContext)
 	if ctx := req.ComplexReq(); ctx != nil {
 		res.Shape = ShapeComplex
 		res.Preconditions = extractPreconditions(ctx.Preconditions())
-		res.Trigger = extractClauseText(ctx.Trigger().Clause())
-		res.System = extractSystemText(ctx.System())
+		res.Trigger = extractClauseText(ctx.Trigger())
+		if err := validateTriggerCtx(ctx.Trigger()); err != nil {
+			return Result{}, err
+		}
+		// text-level system checks (after second comma, before 'shall')
+		if err := validateSystemSegment(line, 2); err != nil {
+			return Result{}, err
+		}
+		if ctx.System() != nil {
+			res.System = extractSystemText(ctx.System())
+		} else {
+			res.System = "it"
+		}
+		if err := ensureHasShall(line); err != nil {
+			return Result{}, err
+		}
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
 	}
 	if ctx := req.EventReq(); ctx != nil {
 		res.Shape = ShapeEvent
-		res.Trigger = extractClauseText(ctx.Trigger().Clause())
-		res.System = extractSystemText(ctx.System())
+		res.Trigger = extractClauseText(ctx.Trigger())
+		if err := validateTriggerCtx(ctx.Trigger()); err != nil {
+			return Result{}, err
+		}
+		if err := validateSystemSegment(line, 1); err != nil {
+			return Result{}, err
+		}
+		if ctx.System() != nil {
+			res.System = extractSystemText(ctx.System())
+		} else {
+			res.System = "it"
+		}
+		if err := ensureHasShall(line); err != nil {
+			return Result{}, err
+		}
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
 	}
 	if ctx := req.StateReq(); ctx != nil {
 		res.Shape = ShapeState
 		res.Preconditions = extractPreconditions(ctx.Preconditions())
-		res.System = extractSystemText(ctx.System())
+		if err := validateSystemSegment(line, 1); err != nil {
+			return Result{}, err
+		}
+		if ctx.System() != nil {
+			res.System = extractSystemText(ctx.System())
+		} else {
+			res.System = "it"
+		}
+		if err := ensureHasShall(line); err != nil {
+			return Result{}, err
+		}
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
 	}
@@ -76,14 +117,37 @@ func ParseRequirement(line string) (Result, error) {
 		if pc := ctx.Preconditions(); pc != nil {
 			res.Preconditions = extractPreconditions(pc)
 		}
-		res.Trigger = extractClauseText(ctx.Trigger().Clause())
-		res.System = extractSystemText(ctx.System())
+		res.Trigger = extractClauseText(ctx.Trigger())
+		if err := validateTriggerCtx(ctx.Trigger()); err != nil {
+			return Result{}, err
+		}
+		if err := validateSystemSegment(line, 1); err != nil {
+			return Result{}, err
+		}
+		if ctx.System() != nil {
+			res.System = extractSystemText(ctx.System())
+		} else {
+			res.System = "it"
+		}
+		if err := ensureHasShall(line); err != nil {
+			return Result{}, err
+		}
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
 	}
 	if ctx := req.UbiquitousReq(); ctx != nil {
 		res.Shape = ShapeUbiquitous
-		res.System = extractSystemText(ctx.System())
+		if err := validateSystemSegment(line, 0); err != nil {
+			return Result{}, err
+		}
+		if ctx.System() != nil {
+			res.System = extractSystemText(ctx.System())
+		} else {
+			res.System = "it"
+		}
+		if err := ensureHasShall(line); err != nil {
+			return Result{}, err
+		}
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
 	}
@@ -91,49 +155,169 @@ func ParseRequirement(line string) (Result, error) {
 	return Result{}, errors.New("does not match an allowed EARS form")
 }
 
-func extractSystemText(s earsp.ISystemContext) string {
-	if s == nil {
+func textFrom(ctx antlr.ParserRuleContext) string {
+	if ctx == nil {
 		return ""
 	}
-	toks := s.(*earsp.SystemContext).AllTEXT_NOCOMMA()
-	parts := make([]string, 0, len(toks))
-	for _, t := range toks {
-		parts = append(parts, t.GetText())
-	}
-	return strings.TrimSpace(strings.Join(parts, " "))
+	return strings.TrimSpace(ctx.GetText())
 }
+
+func extractSystemText(s earsp.ISystemContext) string { return textFrom(s) }
 func extractResponseText(r earsp.IResponseContext) string {
 	if r == nil {
 		return ""
 	}
-	// Response: zero or more TEXT_NOCOMMA
-	// We iterate tokens from the underlying token stream between rule bounds; however,
-	// the generated context does not expose them directly, so we can reconstruct via Clause helper
-	// by temporarily treating response as a sequence of TEXT_NOCOMMA tokens using the same accessor.
-	// Generated context provides no direct AllTEXT_NOCOMMA, so we fallback to rule text minus leading spaces.
-	return strings.TrimSpace(r.(*earsp.ResponseContext).GetParser().GetTokenStream().GetTextFromRuleContext(r.(antlr.RuleContext)))
+	return textFrom(r)
 }
-func extractClauseText(c earsp.IClauseContext) string {
-	if c == nil {
-		return ""
-	}
-	toks := c.(*earsp.ClauseContext).AllTEXT_NOCOMMA()
-	parts := make([]string, 0, len(toks))
-	for _, t := range toks {
-		parts = append(parts, t.GetText())
-	}
-	return strings.TrimSpace(strings.Join(parts, " "))
-}
+func extractClauseText(c earsp.ITriggerContext) string { return textFrom(c) }
+
 func extractPreconditions(pc earsp.IPreconditionsContext) []string {
 	if pc == nil {
 		return nil
 	}
-	clauses := pc.AllClause()
-	out := make([]string, 0, len(clauses))
-	for _, c := range clauses {
-		out = append(out, extractClauseText(c))
+	clause := pc.Clause()
+	words := wordsFromRule(clause.(antlr.RuleContext))
+	var segments [][]string
+	var cur []string
+	for _, w := range words {
+		lw := strings.ToLower(w)
+		if lw == "and" || lw == "or" {
+			if len(cur) > 0 {
+				segments = append(segments, cur)
+				cur = nil
+			}
+			continue
+		}
+		cur = append(cur, w)
+	}
+	if len(cur) > 0 {
+		segments = append(segments, cur)
+	}
+	out := make([]string, 0, len(segments))
+	for _, seg := range segments {
+		p := strings.TrimSpace(strings.Join(seg, " "))
+		if p != "" {
+			out = append(out, p)
+		}
+	}
+	if len(out) == 0 {
+		if s := textFrom(clause); s != "" {
+			return []string{s}
+		}
 	}
 	return out
+}
+
+// validateTrigger adds semantic checks beyond the grammar
+func validateTrigger(trigger string) error {
+	s := strings.ToLower(" " + trigger + " ")
+	if strings.Contains(s, " when ") {
+		return errors.New("multiple when clauses in trigger")
+	}
+	if strings.Contains(s, " while ") {
+		return errors.New("mixed 'while' inside trigger")
+	}
+	return nil
+}
+
+func validateTriggerCtx(t earsp.ITriggerContext) error {
+	words := wordsFromRule(t.(antlr.RuleContext))
+	countWhen := 0
+	for _, w := range words {
+		lw := strings.ToLower(w)
+		if lw == "when" {
+			countWhen++
+		}
+		if lw == "while" {
+			return errors.New("mixed 'while' inside trigger")
+		}
+	}
+	if countWhen > 0 {
+		return errors.New("multiple when clauses in trigger")
+	}
+	return nil
+}
+
+// validate the segment between the Nth comma and the word 'shall'
+// nComma: 0 = start of line, 1 = after first comma, 2 = after second comma
+func validateSystemSegment(line string, nComma int) error {
+	low := strings.ToLower(line)
+	idx := 0
+	for i := 0; i < nComma; i++ {
+		p := strings.Index(low[idx:], ",")
+		if p < 0 {
+			break
+		}
+		idx += p + 1
+	}
+	rest := strings.TrimSpace(low[idx:])
+	// Allow optional leading "then" (for unwanted form: ", then the <system> shall ...")
+	if strings.HasPrefix(rest, "then ") {
+		rest = strings.TrimSpace(strings.TrimPrefix(rest, "then "))
+	}
+	shallPos := strings.Index(rest, " shall")
+	seg := rest
+	if shallPos >= 0 {
+		seg = strings.TrimSpace(rest[:shallPos])
+	}
+	if nComma > 0 {
+		// must start with 'the <name>' or pronoun 'it'
+		if strings.HasPrefix(seg, "the ") {
+			// ok, 'the' followed by a name
+		} else if seg == "it" || strings.HasPrefix(seg, "it ") {
+			// ok, pronoun only or pronoun followed by words (rare)
+		} else {
+			return errors.New("missing system name")
+		}
+	}
+	// disallow keywords in system segment
+	if strings.Contains(seg, " when ") || strings.Contains(seg, " while ") {
+		return errors.New("invalid keyword in system")
+	}
+	return nil
+}
+
+func ensureHasShall(line string) error {
+	if !strings.Contains(strings.ToLower(line), " shall") {
+		return errors.New("missing shall")
+	}
+	return nil
+}
+
+var conjSplit = regexp.MustCompile(`(?i)\s+(and|or)\s+`)
+
+func splitPreconditions(text string) []string {
+	parts := conjSplit.Split(text, -1)
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		if p != "" {
+			out = append(out, p)
+		}
+	}
+	if len(out) == 0 {
+		if s := strings.TrimSpace(text); s != "" {
+			return []string{s}
+		}
+	}
+	return out
+}
+
+func wordsFromRule(rc antlr.RuleContext) []string {
+	var words []string
+	var walk func(n antlr.Tree)
+	walk = func(n antlr.Tree) {
+		switch t := n.(type) {
+		case antlr.TerminalNode:
+			words = append(words, t.GetText())
+		case antlr.RuleContext:
+			for _, ch := range t.GetChildren() {
+				walk(ch)
+			}
+		}
+	}
+	walk(rc)
+	return words
 }
 
 // Lint parses multiple requirement lines and returns issues for those that don't match EARS shapes.

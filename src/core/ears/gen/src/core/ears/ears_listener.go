@@ -41,6 +41,9 @@ type earsListener interface {
 	// EnterClause is called when entering the clause production.
 	EnterClause(c *ClauseContext)
 
+	// EnterToken_word is called when entering the token_word production.
+	EnterToken_word(c *Token_wordContext)
+
 	// ExitRequirement is called when exiting the requirement production.
 	ExitRequirement(c *RequirementContext)
 
@@ -73,4 +76,7 @@ type earsListener interface {
 
 	// ExitClause is called when exiting the clause production.
 	ExitClause(c *ClauseContext)
+
+	// ExitToken_word is called when exiting the token_word production.
+	ExitToken_word(c *Token_wordContext)
 }
