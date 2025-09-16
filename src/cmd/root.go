@@ -74,13 +74,10 @@ func NewRootCommand(version, commit, date string) *cobra.Command {
 		newInitCommand(),
 		newContextCommand(),
 		newSpecifyCommand(),
-		newPlanCommand(),
 		newTasksCommand(),
 		newApproveCommand(),
 		newVerifyCommand(),
-		newBriefCommand(),
 		newAgentCommand(),
-		newCompletionCommand(root),
 	)
 
 	// Also support `help` explicitly (Cobra handles by default too)
