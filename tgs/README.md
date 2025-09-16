@@ -59,6 +59,9 @@ This structure supports the TGSFlow methodology:
 This ensures thoughtful development with clear human-AI collaboration boundaries.
 
 ## Current Thoughts
+- Base `be75a85` — Fix EARS regression tests — 2025-09-16 — Status: Implemented
+  - Dir: `tgs/3829798-fix-ears-regression-tests/`
+  - Docs: `research.md`, `plan.md`, `implementation.md`
 
 | Thought Directory | Base Hash | Date | Status | Description |
 |------------------|-----------|------|--------|-------------|
