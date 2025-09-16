@@ -86,3 +86,9 @@ func (s *BaseearsListener) EnterClause(ctx *ClauseContext) {}
 
 // ExitClause is called when production clause is exited.
 func (s *BaseearsListener) ExitClause(ctx *ClauseContext) {}
+
+// EnterToken_word is called when production token_word is entered.
+func (s *BaseearsListener) EnterToken_word(ctx *Token_wordContext) {}
+
+// ExitToken_word is called when production token_word is exited.
+func (s *BaseearsListener) ExitToken_word(ctx *Token_wordContext) {}

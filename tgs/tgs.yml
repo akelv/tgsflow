@@ -1,0 +1,18 @@
+# tgs.yaml
+approver_roles:
+  - EM
+  - TechLead
+
+agent_order:
+  - claude
+  - gemini
+
+branch_prefix: "tgs/"
+
+policies:
+  max_patch_loc: 300
+  enforce_nfr: false
+
+  ears:
+    enable: true          # enable EARS linting during `tgs verify`
+    require_shall: false  # future semantic rule toggle

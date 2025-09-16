@@ -20,9 +20,22 @@ func TestVerify_EARS_AllValid(t *testing.T) {
 	dir := t.TempDir()
 	// Enable EARS
 	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
-	// Markdown with valid EARS bullets
-	md := "# Requirements\n\n- The payment service shall record transactions\n- When button is pressed, the controller shall start\n- While in armed mode, the system shall alert\n- While battery is low, when charger is connected, the device shall charge\n- If overheating, then the system shall shutdown\n"
-	writeFile(t, filepath.Join(dir, "REQS.md"), md)
+	// Use fixture files
+	fixtures := []string{
+		"tgs/suggestions/ears_fixtures/positive_ubiquitous.md",
+		"tgs/suggestions/ears_fixtures/positive_event.md",
+		"tgs/suggestions/ears_fixtures/positive_state.md",
+		"tgs/suggestions/ears_fixtures/positive_complex.md",
+		"tgs/suggestions/ears_fixtures/positive_unwanted.md",
+		"tgs/suggestions/ears_fixtures/formatting_bullets_and_skip_blocks.md",
+	}
+	for _, f := range fixtures {
+		data, err := os.ReadFile(filepath.Join("/Users/kelvin/github/tgsflow", f))
+		if err != nil {
+			t.Fatalf("read fixture: %v", err)
+		}
+		writeFile(t, filepath.Join(dir, filepath.Base(f)), string(data))
+	}
 
 	// CI mode should still succeed (no issues)
 	code := CmdVerify([]string{"--repo", dir, "--ci"})
@@ -34,8 +47,18 @@ func TestVerify_EARS_AllValid(t *testing.T) {
 func TestVerify_EARS_WithInvalid(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
-	md := "# Requirements\n\n- The system shall record events\n- Because of X the system might respond\n"
-	writeFile(t, filepath.Join(dir, "REQS.md"), md)
+	fixtures := []string{
+		"tgs/suggestions/ears_fixtures/negative_missing_system.md",
+		"tgs/suggestions/ears_fixtures/negative_wrong_order.md",
+		"tgs/suggestions/ears_fixtures/negative_multiple_when.md",
+	}
+	for _, f := range fixtures {
+		data, err := os.ReadFile(filepath.Join("/Users/kelvin/github/tgsflow", f))
+		if err != nil {
+			t.Fatalf("read fixture: %v", err)
+		}
+		writeFile(t, filepath.Join(dir, filepath.Base(f)), string(data))
+	}
 
 	code := CmdVerify([]string{"--repo", dir, "--ci"})
 	if code != 1 {

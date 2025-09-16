@@ -15,27 +15,27 @@ requirement
 
 // While <preconditions>, when <trigger>, the <system> shall <response>
 complexReq
-  : WHILE preconditions COMMA WHEN trigger COMMA THE system SHALL response
+  : WHILE preconditions COMMA WHEN trigger COMMA (THE system | PRONOUN) SHALL response
   ;
 
 // When <trigger>, the <system> shall <response>
 eventReq
-  : WHEN trigger COMMA THE system SHALL response
+  : WHEN trigger COMMA (THE system | PRONOUN) SHALL response
   ;
 
 // While <preconditions>, the <system> shall <response>
 stateReq
-  : WHILE preconditions COMMA THE system SHALL response
+  : WHILE preconditions COMMA (THE system | PRONOUN) SHALL response
   ;
 
 // (While <preconditions>,) if <unwanted trigger>, then the <system> shall <response>
 unwantedReq
-  : (WHILE preconditions COMMA)? IF trigger COMMA THEN THE system SHALL response
+  : (WHILE preconditions COMMA)? IF trigger COMMA THEN (THE system | PRONOUN) SHALL response
   ;
 
 // The <system> shall <response>
 ubiquitousReq
-  : THE system SHALL response
+  : (THE system | PRONOUN) SHALL response
   ;
 
 // --------------------
@@ -44,7 +44,7 @@ ubiquitousReq
 
 // One or more precondition clauses joined by "and/or" (comma is the separator between major clauses)
 preconditions
-  : clause (CONJ clause)*
+  : clause
   ;
 
 // Single trigger clause (no comma inside)
@@ -52,19 +52,29 @@ trigger
   : clause
   ;
 
-// System name: one or more TEXT_NOCOMMA tokens (spaces are skipped)
+// System name: one or more token words (allowing keywords inside names)
 system
-  : TEXT_NOCOMMA (TEXT_NOCOMMA)*
+  : token_word+
   ;
 
-// Response is zero or more TEXT_NOCOMMA tokens to end of line
+// Response is the remainder of the line (zero or more token words)
 response
-  : (TEXT_NOCOMMA (TEXT_NOCOMMA)*)?
+  : (token_word+)?
   ;
 
-// A clause is one or more TEXT_NOCOMMA tokens (no comma, spaces skipped)
+// A clause is a sequence of token words (allow EARS keywords inside free text)
 clause
-  : TEXT_NOCOMMA (TEXT_NOCOMMA)*
+  : token_word+
+  ;
+
+// token_word may be any non-comma text or selected EARS keyword tokens
+// (exclude SHALL so it remains the modal before response)
+token_word
+  : TEXT_NOCOMMA
+  | THE
+  | WHEN
+  | IF
+  | THEN
   ;
 
 // --------------------
@@ -78,15 +88,12 @@ IF    : [Ii][Ff] ;
 THEN  : [Tt][Hh][Ee][Nn] ;
 THE   : [Tt][Hh][Ee] ;
 SHALL : [Ss][Hh][Aa][Ll][Ll] ;
-
-// Conjunction between multiple preconditions
-CONJ  : (WS? COMMA WS?)? WS+ ([Aa][Nn][Dd] | [Oo][Rr]) WS+ ;
+PRONOUN : [Ii][Tt] ;
 
 // Punctuation
 COMMA : ',' ;
 
-// Free-text tokens
-// - TEXT_NOCOMMA: any run of non-space chars that does not include comma or newline
+// Free-text tokens (no spaces, comma, or newline)
 TEXT_NOCOMMA : (~[ \t,\r\n])+ ;
 
 // Whitespace & newlines

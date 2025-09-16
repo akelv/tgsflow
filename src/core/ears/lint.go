@@ -46,20 +46,26 @@ func ParseRequirement(line string) (Result, error) {
 	parser := earsp.NewearsParser(stream)
 
 	root := parser.Requirement()
+	if parser.HasError() {
+		return Result{}, errors.New("syntax error")
+	}
 
 	res := Result{}
 	req := root.(*earsp.RequirementContext)
 	if ctx := req.ComplexReq(); ctx != nil {
 		res.Shape = ShapeComplex
 		res.Preconditions = extractPreconditions(ctx.Preconditions())
-		res.Trigger = extractClauseText(ctx.Trigger().Clause())
+		res.Trigger = extractClauseText(ctx.Trigger())
 		res.System = extractSystemText(ctx.System())
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
 	}
 	if ctx := req.EventReq(); ctx != nil {
 		res.Shape = ShapeEvent
-		res.Trigger = extractClauseText(ctx.Trigger().Clause())
+		res.Trigger = extractClauseText(ctx.Trigger())
+		if err := validateTrigger(res.Trigger); err != nil {
+			return Result{}, err
+		}
 		res.System = extractSystemText(ctx.System())
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
@@ -76,7 +82,10 @@ func ParseRequirement(line string) (Result, error) {
 		if pc := ctx.Preconditions(); pc != nil {
 			res.Preconditions = extractPreconditions(pc)
 		}
-		res.Trigger = extractClauseText(ctx.Trigger().Clause())
+		res.Trigger = extractClauseText(ctx.Trigger())
+		if err := validateTrigger(res.Trigger); err != nil {
+			return Result{}, err
+		}
 		res.System = extractSystemText(ctx.System())
 		res.Response = extractResponseText(ctx.Response())
 		return res, nil
@@ -91,49 +100,43 @@ func ParseRequirement(line string) (Result, error) {
 	return Result{}, errors.New("does not match an allowed EARS form")
 }
 
-func extractSystemText(s earsp.ISystemContext) string {
-	if s == nil {
+func textFrom(ctx antlr.ParserRuleContext) string {
+	if ctx == nil {
 		return ""
 	}
-	toks := s.(*earsp.SystemContext).AllTEXT_NOCOMMA()
-	parts := make([]string, 0, len(toks))
-	for _, t := range toks {
-		parts = append(parts, t.GetText())
-	}
-	return strings.TrimSpace(strings.Join(parts, " "))
+	return strings.TrimSpace(ctx.GetText())
+}
+
+func extractSystemText(s earsp.ISystemContext) string {
+	return textFrom(s)
 }
 func extractResponseText(r earsp.IResponseContext) string {
 	if r == nil {
 		return ""
 	}
-	// Response: zero or more TEXT_NOCOMMA
-	// We iterate tokens from the underlying token stream between rule bounds; however,
-	// the generated context does not expose them directly, so we can reconstruct via Clause helper
-	// by temporarily treating response as a sequence of TEXT_NOCOMMA tokens using the same accessor.
-	// Generated context provides no direct AllTEXT_NOCOMMA, so we fallback to rule text minus leading spaces.
-	return strings.TrimSpace(r.(*earsp.ResponseContext).GetParser().GetTokenStream().GetTextFromRuleContext(r.(antlr.RuleContext)))
+	return textFrom(r)
 }
-func extractClauseText(c earsp.IClauseContext) string {
-	if c == nil {
-		return ""
-	}
-	toks := c.(*earsp.ClauseContext).AllTEXT_NOCOMMA()
-	parts := make([]string, 0, len(toks))
-	for _, t := range toks {
-		parts = append(parts, t.GetText())
-	}
-	return strings.TrimSpace(strings.Join(parts, " "))
+func extractClauseText(c earsp.ITriggerContext) string {
+	return textFrom(c)
 }
 func extractPreconditions(pc earsp.IPreconditionsContext) []string {
 	if pc == nil {
 		return nil
 	}
-	clauses := pc.AllClause()
-	out := make([]string, 0, len(clauses))
-	for _, c := range clauses {
-		out = append(out, extractClauseText(c))
+	// grammar now defines a single clause; return one entry
+	return []string{textFrom(pc.Clause())}
+}
+
+// validateTrigger adds semantic checks beyond the grammar
+func validateTrigger(trigger string) error {
+	s := strings.ToLower(" " + trigger + " ")
+	if strings.Contains(s, " when ") {
+		return errors.New("multiple when clauses in trigger")
 	}
-	return out
+	if strings.Contains(s, " while ") {
+		return errors.New("mixed 'while' inside trigger")
+	}
+	return nil
 }
 
 // Lint parses multiple requirement lines and returns issues for those that don't match EARS shapes.
