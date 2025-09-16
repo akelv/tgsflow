@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -20,17 +21,19 @@ func TestVerify_EARS_AllValid(t *testing.T) {
 	dir := t.TempDir()
 	// Enable EARS
 	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
-	// Use fixture files
+	// Use fixture files from core testdata
 	fixtures := []string{
-		"tgs/suggestions/ears_fixtures/positive_ubiquitous.md",
-		"tgs/suggestions/ears_fixtures/positive_event.md",
-		"tgs/suggestions/ears_fixtures/positive_state.md",
-		"tgs/suggestions/ears_fixtures/positive_complex.md",
-		"tgs/suggestions/ears_fixtures/positive_unwanted.md",
-		"tgs/suggestions/ears_fixtures/formatting_bullets_and_skip_blocks.md",
+		"src/core/ears/testdata/positive_ubiquitous.md",
+		"src/core/ears/testdata/positive_event.md",
+		"src/core/ears/testdata/positive_state.md",
+		"src/core/ears/testdata/positive_complex.md",
+		"src/core/ears/testdata/positive_unwanted.md",
+		"src/core/ears/testdata/formatting_bullets_and_skip_blocks.md",
 	}
+	_, thisFile, _, _ := runtime.Caller(0)
+	repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 	for _, f := range fixtures {
-		data, err := os.ReadFile(filepath.Join("/Users/kelvin/github/tgsflow", f))
+		data, err := os.ReadFile(filepath.Join(repoRoot, f))
 		if err != nil {
 			t.Fatalf("read fixture: %v", err)
 		}
@@ -48,12 +51,14 @@ func TestVerify_EARS_WithInvalid(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
 	fixtures := []string{
-		"tgs/suggestions/ears_fixtures/negative_missing_system.md",
-		"tgs/suggestions/ears_fixtures/negative_wrong_order.md",
-		"tgs/suggestions/ears_fixtures/negative_multiple_when.md",
+		"src/core/ears/testdata/negative_missing_system.md",
+		"src/core/ears/testdata/negative_wrong_order.md",
+		"src/core/ears/testdata/negative_multiple_when.md",
 	}
+	_, thisFile, _, _ := runtime.Caller(0)
+	repoRoot := filepath.Clean(filepath.Join(filepath.Dir(thisFile), "..", ".."))
 	for _, f := range fixtures {
-		data, err := os.ReadFile(filepath.Join("/Users/kelvin/github/tgsflow", f))
+		data, err := os.ReadFile(filepath.Join(repoRoot, f))
 		if err != nil {
 			t.Fatalf("read fixture: %v", err)
 		}
