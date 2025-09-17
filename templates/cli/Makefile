@@ -95,11 +95,11 @@ install:
 new-thought:
 	@if ! command -v git >/dev/null; then echo "git not found in PATH"; exit 2; fi; \
 	if [ -z "$(title)" ]; then echo "Usage: make new-thought title=\"short title\""; exit 1; fi; \
-	if [ ! -d "agentops/tgs" ]; then echo "Templates missing at agentops/tgs"; exit 2; fi; \
+	if [ ! -d "tgs/agentops/tgs" ]; then echo "Templates missing at tgs/agentops/tgs"; exit 2; fi; \
 	HASH=$$(git rev-parse --short HEAD); \
 	SLUG=$$(printf "%s" "$(title)" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$$//g'); \
 	DIR="tgs/$$HASH-$$SLUG"; \
 	mkdir -p "$$DIR"; \
-	for f in agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
+	for f in tgs/agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
 	if [ ! -f "$$DIR/README.md" ]; then echo "# $$HASH - $(title)" > "$$DIR/README.md"; fi; \
 	echo "Created $$DIR"

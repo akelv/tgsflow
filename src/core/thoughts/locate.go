@@ -22,8 +22,16 @@ func LocateActiveDir(repoRoot string) string {
 		}
 	}
 	tgsRoot := filepath.Join(repoRoot, "tgs")
-	entries, err := os.ReadDir(tgsRoot)
-	if err == nil {
+	// Prefer new layout tgs/thoughts/*, fallback to legacy tgs/*
+	thoughtsRoot := filepath.Join(tgsRoot, "thoughts")
+	scanRoots := []string{thoughtsRoot, tgsRoot}
+	var entries []os.DirEntry
+	var err error
+	for _, root := range scanRoots {
+		entries, err = os.ReadDir(root)
+		if err != nil {
+			continue
+		}
 		type cand struct {
 			path string
 			mod  time.Time
@@ -37,7 +45,7 @@ func LocateActiveDir(repoRoot string) string {
 			if !thoughtDirRe.MatchString(name) {
 				continue
 			}
-			p := filepath.Join(tgsRoot, name)
+			p := filepath.Join(root, name)
 			st, err := os.Stat(p)
 			if err != nil {
 				continue

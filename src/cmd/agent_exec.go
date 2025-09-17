@@ -46,7 +46,7 @@ func (m *multiFlag) Set(v string) error {
 func NewAgentExecCommand(args []string) (int, error) {
 	var opt AgentExecOpts
 	fs := flag.NewFlagSet("tgs agent exec", flag.ContinueOnError)
-	fs.StringVar(&opt.AdapterPath, "adapter-path", "adapters/claude-code.sh", "Path to claude-code adapter script")
+	fs.StringVar(&opt.AdapterPath, "adapter-path", "tgs/adapters/claude-code.sh", "Path to claude-code adapter script")
 	fs.StringVar(&opt.PromptFile, "prompt-file", "", "Prompt template/text file")
 	fs.StringVar(&opt.PromptText, "prompt-text", "", "Prompt text (overrides --prompt-file)")
 	fs.Var(&opt.ContextFiles, "context", "Path to a context file (repeatable)")

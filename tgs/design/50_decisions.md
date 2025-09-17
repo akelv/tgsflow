@@ -53,7 +53,7 @@
 ## ADR-0006: Agent integration via adapter process
 
 - **Context:** Need a flexible way to integrate with external AI agents/tools without coupling CLI to vendor APIs.
-- **Decision:** Implement `tgs agent exec` that shells out to an adapter (`adapters/claude-code.sh`) with prompt/context via flags and env, returning patches or text.
+- **Decision:** Implement `tgs agent exec` that shells out to an adapter (`tgs/adapters/claude-code.sh`) with prompt/context via flags and env, returning patches or text.
 - **Status:** accepted
 - **Consequences:**
   - Pros: Vendor-agnostic, replaceable adapters, controlled IO and timeouts.

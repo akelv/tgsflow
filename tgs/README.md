@@ -4,14 +4,25 @@ This directory contains organized thought processes, research, planning, and imp
 
 ## Directory Structure
 
-Each thought is organized in a subdirectory with the naming convention:
-```
-<BASE_GIT_HASH>-<short-title-description>/
-```
+This `tgs/` area is organized into two primary subdirectories:
 
-Where:
-- **BASE_GIT_HASH**: The git commit hash at the moment the thought/research began
-- **short-title-description**: A brief description of the thought/improvement
+- `thoughts/` — Per-thought working directories created by `make new-thought`.
+  - Naming: `<BASE_GIT_HASH>-<short-title-description>/`
+  - Where:
+    - **BASE_GIT_HASH**: The git commit hash at the moment the thought/research began
+    - **short-title-description**: A brief description of the thought/improvement
+
+- `design/` — Long-lived system-level design documentation.
+  - Files: `00_context.md`, `10_needs.md`, `20_requirements.md`, `30_architecture.md`, `40_vnv.md`, `50_decisions.md`
+  - Purpose: Architecture, requirements, verification/validation, and decision history maintained outside individual thoughts.
+
+- `agentops/` — AgentOps workflow guide and thought templates used by `make new-thought`.
+  - Files: `AGENTOPS.md` (system prompt and workflow), `tgs/*` (scaffold templates)
+  - Purpose: Canonical workflow and the files used to scaffold new thought directories.
+
+- `adapters/` — External model/tool adapters invoked by `tgs agent exec`.
+  - Files: `claude-code.sh` (default Claude Code adapter)
+  - Purpose: Bridge between the TGS CLI and external AI/automation tools. Default path used by the CLI: `tgs/adapters/claude-code.sh` (override with `--adapter-path`).
 
 ## Thought Structure
 
@@ -36,7 +47,7 @@ This organizational structure provides:
 When starting a new thought/improvement in a decorated or bootstrapped repo:
 
 1. Get the current git HEAD hash: `git rev-parse --short HEAD`
-2. Create directory: `tgs/<hash>-<short-description>/`
+2. Create directory: `tgs/thoughts/<hash>-<short-description>/`
 3. Conduct research and create `research.md`
 4. Develop plan and create `plan.md`
 5. **Get human approval** for both research and plan
@@ -60,15 +71,15 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 
 ## Current Thoughts
 - Base `be75a85` — Fix EARS regression tests — 2025-09-16 — Status: Implemented
-  - Dir: `tgs/3829798-fix-ears-regression-tests/`
+  - Dir: `tgs/thoughts/3829798-fix-ears-regression-tests/`
   - Docs: `research.md`, `plan.md`, `implementation.md`
 
 | Thought Directory | Base Hash | Date | Status | Description |
 |------------------|-----------|------|--------|-------------|
-| [612a57f-decorate-existing-software-project-repository](./612a57f-decorate-existing-software-project-repository/) | 612a57f | 2025-09-11 | ✅ Completed | Add decorate mode to inject TGS workflow into existing repos |
-| [b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought](./b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought/) | b4552ea | 2025-09-11 | ✅ Completed | Standardize AGENTOPS workflow and enrich new-thought scaffolding |
-| [f0d3f9a-add-agent-parent-command](./f0d3f9a-add-agent-parent-command/) | f0d3f9a | 2025-09-14 | ✅ Completed | Add `tgs agent` parent command delegating to `agent exec` |
-| [5d12c3a-tiny-invisible-tgs-cli-for-huge-teams](./5d12c3a-tiny-invisible-tgs-cli-for-huge-teams/) | 5d12c3a | (prior) | ✅ Completed | Minimal TGS CLI scaffolding for large teams |
-| [b48976e-refactor-cli-to-cobra-viper](./b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
-| [43ec077-automate-releases-with-goreleaser-and-homebrew](./43ec077-automate-releases-with-goreleaser-and-homebrew/) | 43ec077 | 2025-09-14 | ✅ Completed | Automate releases with GoReleaser, GitHub Actions and Homebrew |
-| [f71f872-ears-linter-core-and-verify-integration](./f71f872-ears-linter-core-and-verify-integration/) | f71f872 | 2025-09-15 | ✅ Completed | Implement EARS linter and integrate with verify |
+| [612a57f-decorate-existing-software-project-repository](./thoughts/612a57f-decorate-existing-software-project-repository/) | 612a57f | 2025-09-11 | ✅ Completed | Add decorate mode to inject TGS workflow into existing repos |
+| [b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought](./thoughts/b4552ea-standardize-agentops-intake-to-pr-and-enrich-new-thought/) | b4552ea | 2025-09-11 | ✅ Completed | Standardize AGENTOPS workflow and enrich new-thought scaffolding |
+| [f0d3f9a-add-agent-parent-command](./thoughts/f0d3f9a-add-agent-parent-command/) | f0d3f9a | 2025-09-14 | ✅ Completed | Add `tgs agent` parent command delegating to `agent exec` |
+| [5d12c3a-tiny-invisible-tgs-cli-for-huge-teams](./thoughts/5d12c3a-tiny-invisible-tgs-cli-for-huge-teams/) | 5d12c3a | (prior) | ✅ Completed | Minimal TGS CLI scaffolding for large teams |
+| [b48976e-refactor-cli-to-cobra-viper](./thoughts/b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
+| [43ec077-automate-releases-with-goreleaser-and-homebrew](./thoughts/43ec077-automate-releases-with-goreleaser-and-homebrew/) | 43ec077 | 2025-09-14 | ✅ Completed | Automate releases with GoReleaser, GitHub Actions and Homebrew |
+| [f71f872-ears-linter-core-and-verify-integration](./thoughts/f71f872-ears-linter-core-and-verify-integration/) | f71f872 | 2025-09-15 | ✅ Completed | Implement EARS linter and integrate with verify |

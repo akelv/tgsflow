@@ -52,4 +52,4 @@ You are an AI code agent collaborating with a human. Follow this exact, approval
 - After Summarize: "Please test and review the code `implementation.md` in `tgs/<dir>`. Reply: Proceed to PR | Error: <notes>."
 
 ### File Templates
-- Example templates available in `agentops/tgs/`.
+- Example templates available in `tgs/agentops/tgs/`.
