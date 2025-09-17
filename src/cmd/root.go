@@ -73,9 +73,6 @@ func NewRootCommand(version, commit, date string) *cobra.Command {
 	root.AddCommand(
 		newInitCommand(),
 		newContextCommand(),
-		newSpecifyCommand(),
-		newTasksCommand(),
-		newApproveCommand(),
 		newVerifyCommand(),
 		newAgentCommand(),
 	)
