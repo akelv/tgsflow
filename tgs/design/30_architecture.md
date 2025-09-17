@@ -16,7 +16,7 @@
 - Repository workspace — contains `tgs/` thought directories, design docs, templates, and source.
 - Templates (embedded via `embed.FS`) — Markdown and CI stubs used by `init`/writers.
 - EARS Linter and Parser — generated ANTLR artifacts in `src/core/ears/gen/...` consumed at runtime.
-- Adapter process (`adapters/claude-code.sh`) — spawned by `tgs agent exec` to call external AI.
+- Adapter process (`tgs/adapters/claude-code.sh`) — spawned by `tgs agent exec` to call external AI.
 - CI pipelines — optional GitHub/GitLab workflows seeded by `init`.
 
 ## Components (C4 Level 3)

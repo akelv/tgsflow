@@ -26,8 +26,17 @@ By bringing them into our AI-driven software development, we treat our work with
 Bootstrap a new project or apply on top of any existing project with TGSFlow in seconds:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/bootstrap.sh | bash
+curl -sSL https://raw.githubusercontent.com/akelv/tgsflow/main/scripts/bootstrap.sh | bash
 ```
+
+What this does (safe, idempotent):
+- Decorates the current repo or scaffolds a new one with the TGS workflow.
+- Adds a `make new-thought` target (via `tgs.mk`) to scaffold thought folders.
+- Writes core docs and directories under `tgs/`:
+  - `tgs/thoughts/` — per-thought dirs created by `make new-thought`.
+  - `tgs/design/` — long-lived system design docs (context, needs, architecture, V&V).
+  - `tgs/agentops/` — workflow guide (`AGENTOPS.md`) and thought templates (`tgs/*`).
+  - `tgs/adapters/` — model/tool adapters (default: `claude-code.sh`).
 
 ## Install the tiny invisible tgs cli to improve thought quality 
 
@@ -71,7 +80,7 @@ tgs --version
 
 ### Claude Code / Cursor Integration
 
-1. Copy the system prompt from `agentops/AGENTOPS.md`
+1. Copy the system prompt from `tgs/agentops/AGENTOPS.md`
 2. Use it as your AI assistant's system prompt (CLAUDE.md or AGENTS.md) 
 3. The AI will automatically follow the TGS workflow
 
@@ -95,9 +104,19 @@ Simple bootstrap project to bootstrap new project available in `templates/`:
 
 ## Documentation
 
-- **TGS Workflow Guide**: [agentops/AGENTOPS.md](./agentops/AGENTOPS.md)
+- **TGS Workflow Guide**: [tgs/agentops/AGENTOPS.md](./tgs/agentops/AGENTOPS.md)
 - **Thought Organization**: [tgs/README.md](./tgs/README.md)
 - **Template Reference**: [templates/README.md](./templates/README.md)
+
+## TGS directories
+
+- `tgs/thoughts/`: Per-thought working directories created by `make new-thought`.
+  - Naming: `<BASE_HASH>-<kebab-title>/`
+  - Contents: `research.md`, `plan.md`, `implementation.md`, `README.md`
+  - Purpose: End-to-end traceability for each change, with approval gates.
+- `tgs/design/`: System-level design docs kept outside individual thoughts.
+  - Contents: `00_context.md`, `10_needs.md`, `20_requirements.md`, `30_architecture.md`, `40_vnv.md`, `50_decisions.md`
+  - Purpose: Long-lived architecture, requirements, verification/validation, and decision history.
 
 ## Why TGSFlow?
 

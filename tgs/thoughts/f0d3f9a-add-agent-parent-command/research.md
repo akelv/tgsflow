@@ -41,7 +41,7 @@ Implement A) a thin `CmdAgent(args []string) int` using stdlib `flag` with two m
 
 ## 7. References & Links
 - Code paths: `src/main.go`, `src/cmd/agent_exec.go`, other `src/cmd/*.go` for style.
-- Adapter script default path: `adapters/claude-code.sh` (ensure existence/runtime checks handled in `agent_exec.go`).
+- Adapter script default path: `tgs/adapters/claude-code.sh` (ensure existence/runtime checks handled in `agent_exec.go`).
 
 ---
 Approval checkpoint: Please review this research and reply one of:

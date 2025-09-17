@@ -118,16 +118,16 @@ write_tgs_mk() {
 new-thought:
 	@if ! command -v git >/dev/null; then echo "git not found in PATH"; exit 2; fi; \
 	if [ -z "$(title)" ]; then echo "Usage: make new-thought title=\"short title\" [spec=\"idea\"]"; exit 1; fi; \
-	if [ ! -d "agentops/tgs" ]; then echo "Templates missing at agentops/tgs"; exit 2; fi; \
+	if [ ! -d "tgs/agentops/tgs" ]; then echo "Templates missing at tgs/agentops/tgs"; exit 2; fi; \
 	HASH=$$(git rev-parse --short HEAD); \
 	SLUG=$$(printf "%s" "$(title)" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-zA-Z0-9]+/-/g' | sed -E 's/^-+|-+$$//g'); \
-	DIR="tgs/$$HASH-$$SLUG"; \
+	DIR="tgs/thoughts/$$HASH-$$SLUG"; \
 	mkdir -p "$$DIR"; \
-	for f in agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
+	for f in tgs/agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
 	if [ ! -f "$$DIR/README.md" ]; then \
 		{ \
 			printf "# %s - %s\n\n" "$$HASH" "$(title)"; \
-			printf "- Base Hash: \`%s\`\n\n" "$$HASH"; \
+			printf -- "- Base Hash: \`%s\`\n\n" "$$HASH"; \
 			printf "## Quick Links\n- [research.md](./research.md)\n- [plan.md](./plan.md)\n- [implementation.md](./implementation.md)\n\n"; \
 			if [ -n "$(spec)" ]; then printf "## Idea Spec\n%s\n" "$(spec)"; fi; \
 		} > "$$DIR/README.md"; \
@@ -393,13 +393,13 @@ decorate_current_directory() {
     local src_root="$TEMP_DIR"
 
     # Essential files
-    safe_copy "$src_root/agentops/AGENTOPS.md" "agentops/AGENTOPS.md"
+    safe_copy "$src_root/tgs/agentops/AGENTOPS.md" "tgs/agentops/AGENTOPS.md"
     safe_copy "$src_root/tgs/README.md" "tgs/README.md"
-    safe_mkdir_p "agentops/tgs"
-    if [[ -d "$src_root/agentops/tgs" ]]; then
-        for f in "$src_root"/agentops/tgs/*; do
+    safe_mkdir_p "tgs/agentops/tgs"
+    if [[ -d "$src_root/tgs/agentops/tgs" ]]; then
+        for f in "$src_root"/tgs/agentops/tgs/*; do
             local_name=$(basename "$f")
-            safe_copy "$f" "agentops/tgs/$local_name"
+            safe_copy "$f" "tgs/agentops/tgs/$local_name"
         done
     fi
 
@@ -609,7 +609,7 @@ main() {
     echo "1. cd $project_name"
     echo "2. Review the README.md for project-specific instructions"
     echo "3. Start your first TGS thought: make new-thought title=\"My First Feature\""
-    echo "4. Follow the AgentOps workflow in agentops/AGENTOPS.md"
+    echo "4. Follow the AgentOps workflow in tgs/agentops/AGENTOPS.md"
     echo
     echo -e "${PURPLE}Happy coding! 🚀${NC}"
 }
