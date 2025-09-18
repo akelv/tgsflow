@@ -18,6 +18,8 @@ Format: Use simple, outcome-focused sentences (EARS style if possible).
 - **N-013**: While starting new services, the Team needs ready-to-use templates (React, Python, Go, CLI) to bootrap work.
 - **N-014**: While maintaining safety for human use, the Team needs a specification driven development process emphasizing precision, accountability, and rollback.
 
+- **N-015**: When bootstrapping or decorating a repository, the Human Engineer needs the script to initialize a clean, minimal `tgs/` directory from generic templates (not repo-specific documents or history).
+
 ---
 
 ### Checklist

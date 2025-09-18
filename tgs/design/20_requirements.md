@@ -18,6 +18,8 @@ Use **“The system shall …”** style. One “shall” per requirement.
 - **SR-013**: While starting new services, the system shall provide ready-to-use templates for React, Python, Go, and CLI under `templates/`. (Verification: Inspection)
 - **SR-014**: While maintaining safety for human use, the system shall enforce an approval-gated workflow with phases: Research → Plan → Human Approval → Implement → Document. (Verification: Demonstration)
 
+- **SR-015**: When initializing or decorating a project via the bootstrap script, the system shall scaffold a minimal `tgs/` directory using repository-agnostic templates under `templates/data/tgs/`, excluding project-specific thought history. (Verification: Test)
+
 ## Non-Functional Requirements
 - **NFR-001**: The system shall ensure traceability such that each implemented change is linked to its originating thought directory. (Verification: Inspection)
 - **NFR-002**: The system shall operate on macOS and Linux environments commonly used by developers. (Verification: Test)

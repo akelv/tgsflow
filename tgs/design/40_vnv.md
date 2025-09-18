@@ -27,6 +27,7 @@
 | SR-012 | D      | Commands (`tgs init`, `tgs verify`, `tgs agent exec`) run with flags non-interactively (no prompts). | Command runs/logs |
 | SR-013 | I      | Templates exist under `templates/{react,python,go,cli}/` and are buildable or runnable per their readmes. | Directory listing |
 | SR-014 | I/D    | Workflow phases are followed: Research → Plan → Approval → Implement → Document; evidence in thought directories. | Thought documentation trail |
+| SR-015 | T      | Running decorate mode installs only minimal `tgs/` from templates under `templates/data/tgs/`; no repo-specific thought dirs are copied. | `./scripts/bootstrap.sh --decorate --dry-run` output and filesystem check |
 | NFR-001 | I     | Every code change is traceable to a thought directory (commit/PR references `tgs/<hash>-*/`). | Repo history & PRs |
 | NFR-002 | T     | Build and basic commands succeed on macOS and Linux. | `make build && ./bin/tgs --version` on both OSes |
 | NFR-003 | T     | `tgs verify` returns exit code 0/!=0 appropriately. | CI job or local script |

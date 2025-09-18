@@ -392,15 +392,38 @@ decorate_current_directory() {
 
     local src_root="$TEMP_DIR"
 
-    # Essential files
-    safe_copy "$src_root/tgs/agentops/AGENTOPS.md" "tgs/agentops/AGENTOPS.md"
-    safe_copy "$src_root/tgs/README.md" "tgs/README.md"
-    safe_mkdir_p "tgs/agentops/tgs"
-    if [[ -d "$src_root/tgs/agentops/tgs" ]]; then
-        for f in "$src_root"/tgs/agentops/tgs/*; do
-            local_name=$(basename "$f")
-            safe_copy "$f" "tgs/agentops/tgs/$local_name"
-        done
+    # Essential files: install a clean, minimal tgs/ from repository-agnostic templates
+    # Prefer local templates when developing; otherwise use fetched repo copy
+    local local_tmpl_root="src/templates/data/tgs"
+    local tmpl_tgs_root=""
+    if [[ -d "$local_tmpl_root" ]]; then
+        tmpl_tgs_root="$local_tmpl_root"
+    else
+        tmpl_tgs_root="$src_root/src/templates/data/tgs"
+    fi
+    if [[ -d "$tmpl_tgs_root" ]]; then
+        log_info "Installing minimal TGS scaffolding from $tmpl_tgs_root"
+        # Create directories first
+        while IFS= read -r -d '' d; do
+            rel_path="${d#"$tmpl_tgs_root/"}"
+            safe_mkdir_p "tgs/$rel_path"
+        done < <(find "$tmpl_tgs_root" -type d -print0)
+        # Copy files
+        while IFS= read -r -d '' f; do
+            rel_path="${f#"$tmpl_tgs_root/"}"
+            safe_copy "$f" "tgs/$rel_path"
+        done < <(find "$tmpl_tgs_root" -type f -print0)
+    else
+        log_warning "Template tgs root not found at $tmpl_tgs_root; falling back to repo tgs minimal files"
+        safe_copy "$src_root/tgs/agentops/AGENTOPS.md" "tgs/agentops/AGENTOPS.md"
+        safe_copy "$src_root/tgs/README.md" "tgs/README.md"
+        safe_mkdir_p "tgs/agentops/tgs"
+        if [[ -d "$src_root/tgs/agentops/tgs" ]]; then
+            for f in "$src_root"/tgs/agentops/tgs/*; do
+                local_name=$(basename "$f")
+                safe_copy "$f" "tgs/agentops/tgs/$local_name"
+            done
+        fi
     fi
 
     # Optional template overlay
