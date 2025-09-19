@@ -1,23 +1,23 @@
 # System Requirements
 
-Use “The system shall …” style.
+Use **“The system shall …”** style. One “shall” per requirement.  
 
 ## Functional Requirements
-- The system shall scaffold a minimal `tgs/` directory from templates.
-- The system shall provide `make new-thought` to create thought directories.
-- The system shall include AgentOps workflow docs.
+- **SR-001**: The system shall <behavior> <quantified criteria>.
+- **SR-002**: …
 
 ## Non-Functional Requirements
-- The system shall operate on macOS/Linux.
-- The system shall keep production code out of `tgs/`.
+- **NFR-001**: The system shall <performance/security/reliability> <measure>.
+- **NFR-002**: …
 
 ## Interfaces
-- Make target: `new-thought`
-- Script: `scripts/bootstrap.sh` (decorate mode)
+- **IF-001**: The system shall communicate with <external system> using <protocol>.
+- **IF-002**: …
 
 ---
 
 ### Checklist
-- [ ] Singular, testable
-- [ ] Uses “shall”
-- [ ] Verification method assigned
+- [ ] Each requirement is singular and testable  
+- [ ] Uses “shall” (no “should/may”)  
+- [ ] Quantified criteria included (units, thresholds)  
+- [ ] Verification method assigned (Inspection / Demonstration / Test / Analysis)  

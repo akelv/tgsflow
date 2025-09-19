@@ -1,9 +1,22 @@
 # Verification & Validation Plan
 
 ## Approach
-- I = Inspection, D = Demonstration, T = Test, A = Analysis
+- Verification: prove requirements are built right  
+- Validation: prove solution meets stakeholder needs  
 
-## Matrix (example)
-- FR: Scaffold minimal `tgs/` — D/T: run bootstrap decorate; check files present
-- FR: new-thought — T: run make target; files exist
-- NFR: No code under `tgs/` — I/A: repo scan
+## V&V Matrix
+| Req ID | Verification Method (I/D/T/A) | Acceptance Criteria | Artifact/Test |
+|--------|-------------------------------|---------------------|---------------|
+| SR-001 | Test                          | <criterion>         | <artifact>    |
+| SR-002 | Inspection                    | <criterion>         | <artifact>    |
+
+## Test Environments
+- Hardware, datasets, simulators, etc.
+
+---
+
+### Checklist
+- [ ] Each requirement has a V&V method  
+- [ ] Acceptance criteria are objective/measurable  
+- [ ] Traceability from requirement → test case is clear  
+- [ ] Validation plan covers real stakeholder scenarios  

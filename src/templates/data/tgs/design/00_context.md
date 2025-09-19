@@ -1,27 +1,29 @@
 # Context Pack
 
 ## Personas
-- Human Engineer/Developer — implements with AI under guardrails
-- Technical Lead/Reviewer — approves research/plan
-- AI Code Agent — executes approved plan precisely
-- Compliance/Auditor — needs clear audit trail
+- **Persona A** — [short description, goals, pain points]
+- **Persona B** — …
 
 ## Scope
-- In scope: Approval-gated TGS workflow; thought structure; design docs
-- Out of scope: Product-specific features; secrets; vendor-specific setups
+- **In scope:** …
+- **Out of scope:** …
 
 ## Scenarios
-- Bootstrap/decorate repo to add minimal TGS workflow
-- Create new thought via `make new-thought`
-- Use AgentOps prompt to guide AI agents
+- Scenario 1: [When <trigger>, the system shall <expected outcome>]
+- Scenario 2: …
 
 ## Constraints
-- macOS/Linux; non-interactive commands; no production code under `tgs/`
+- Technical: [e.g., runs cross platforms both Linux and Windows]
+- Business: [e.g., must meet <$500 monhtly infrastructure cloud cost]
+- Regulatory: [e.g., comply with GDPR]
+
+## Contracts / Interfaces
+- External systems and what they provide/expect.
 
 ---
 
 ### Checklist
-- [ ] Personas defined
-- [ ] Scope explicit
-- [ ] Scenarios outcome-focused
-- [ ] Constraints documented
+- [ ] Personas cover all primary user types  
+- [ ] Scope is explicit (what’s in / what’s out)  
+- [ ] Key scenarios written in outcome-focused language  
+- [ ] Constraints documented and understood  

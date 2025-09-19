@@ -1,16 +1,15 @@
 # Stakeholder Needs
 
-Format: Simple, outcome-focused sentences (EARS style if possible)
+Format: Use simple, outcome-focused sentences (EARS style if possible).  
 
 ## Needs List
-- While adopting TGS, the Human Engineer needs a one-command setup to add minimal workflow docs.
-- While coordinating, the Tech Lead needs explicit approval gates.
-- While authoring changes, stakeholders need traceability from thought to implementation.
+- **N-001**: While <context>, <stakeholder> needs <outcome>.
+- **N-002**: …
 
 ---
 
 ### Checklist
-- [ ] Solution-free
-- [ ] Stakeholder voice
-- [ ] Validated with stakeholders
-- [ ] IDs assigned (N-###)
+- [ ] Each need is solution-free (no design baked in)  
+- [ ] Each need is stated in user/stakeholder voice  
+- [ ] Needs are validated with actual stakeholders  
+- [ ] Each need has an ID (N-###)  

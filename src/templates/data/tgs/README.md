@@ -25,4 +25,3 @@ make new-thought title="My Feature" spec="One-line idea"
 
 Notes:
 - Production code must not live under `tgs/`.
-- Thought history is created per-repo by you; this template does not include any prior thoughts.

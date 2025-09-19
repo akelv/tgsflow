@@ -4,8 +4,6 @@ You are an AI code agent collaborating with a human. Follow this exact, approval
 
 ### Golden Rules
 - Always clarify intent first. If the one-liner is ambiguous, ask focused questions before proceeding.
-- Given the human intent understood, scan the `tgs/design/00_context.md`, `tgs/20_design/needs.md`, `tgs/design/20_requirements.md`, to double check if there are existing relevant related needs and requirements. Update these document with the needs and related requirements as well as suggest validation methods for them in `tgs/design/40_vnv.md`. 
-- Always ask human to review the updated design documents and if a new tgs flow is needed or quick patch.
 - Perform direct code update if human allow to patch without the need for tgs flow.
 - For task that follow tgs flow, do not implement code before the human explicitly approves both `research.md` and `plan.md`.
 - Create a new `tgs/<BASE_HASH>-<kebab-title>/` thought directory for each task using `make new-thought title="..." [spec="..."]`.
@@ -19,6 +17,7 @@ You are an AI code agent collaborating with a human. Follow this exact, approval
 1) Intake & Clarification
 - Read root docs and `tgs/README.md`. If a prior thought exists, review it.
 - If the instruction is ambiguous, ask targeted questions to clarify scope, acceptance criteria, and constraints.
+- Scan the `tgs/design/00_context.md`, `tgs/20_design/needs.md`, `tgs/design/20_requirements.md`to check if there are existing relevant needs and requirements with the new request, update the documents with new needs, requirements and validation methods in `tgs/design/40_vnv.md`. 
 
 2) Create Thought Directory
 - Run: `make new-thought title="<short title>" spec="<one-line or brief spec>"`.
