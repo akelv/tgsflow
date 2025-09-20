@@ -1,18 +1,111 @@
-# tgs.yaml
-approver_roles:
-  - EM
-  - TechLead
+version: 0.1
+project: tgsflow
 
-agent_order:
-  - claude
-  - gemini
+# --- 1) TGS "AI brain" (intelligence for TGS commands only) ---
+# Thin default: shelling out to a single provider endpoint (usually OpenAI-compatible).
+# You can later switch ai.mode to `proxy` or `mcp` without touching command code.
+ai:
+  mode: shell                 # shell | proxy | mcp | sdk  (default = shell)
+  provider: openai            # hint for shell script; not used by mcp
+  model: gpt-4o-mini
+  endpoint: ""                # optional; leave blank for provider default (e.g., OpenAI). Set to custom OpenAI-compatible URL if needed.
+  api_key_env: OPENAI_API_KEY # TGS reads API key from env; keep secrets out of YAML
+  timeout_ms: 45000
+  retry:
+    max_attempts: 2
+    backoff_ms: 800
 
-branch_prefix: "tgs/"
+  # Toolpack governs which TGS commands are allowed to call the AI "brain".
+  # These are one-shot, concise tasks (e.g., context packing, tracing).
+  toolpack:
+    enabled: true
+    allow_for: [context_pack, need_trace, plan_summarize, classify_issue]
+    budgets:
+      context_pack_tokens: 1200
+      summary_tokens: 400
+    # Optional model routing (same provider family) per task:
+    routes:
+      context_pack_model: gpt-4o-mini
+      summarize_model: gpt-4o-mini
+    # Tools that TGS *could* expose to the model when needed (shell mode may ignore).
+    tools:
+      - name: fetch_repo_text
+        desc: "Read small text slices by path+line range for ranking/quotes."
+      - name: list_candidates
+        desc: "Return candidate doc sections with path, anchor, and score."
+      - name: propose_brief
+        desc: "Return ordered brief sections within a token budget."
+    redaction:
+      redact_env_keys: [API_KEY, TOKEN, PASSWORD]
+      redact_patterns: ["(?i)secret\\s*[:=]\\s*['\\\"][^'\\\"]+['\\\"]"]
 
-policies:
-  max_patch_loc: 300
-  enforce_nfr: false
+# --- 2) Triggers and guardrails (policy; used by guardrails check & agent runs) ---
+triggers:
+  issue_labels: [good-first-agent, agent:fix, agent:docs]
+  pr_labels: [agent:auto, needs:reviewer]
 
-  ears:
-    enable: true          # enable EARS linting during `tgs verify`
-    require_shall: false  # future semantic rule toggle
+guardrails:
+  allow_paths: ["cmd/", "internal/", "pkg/", "src/", "docs/", "tgs/"]
+  deny_paths:  ["infra/prod/", "deploy/", "secrets/"]
+  max_diff_lines: 800
+  required_checks: ["lint", "unit", "sast"]
+  pr_template: ".github/PULL_REQUEST_TEMPLATE.md"
+  commit_convention: "conventional"
+
+# --- 3) Code agents (background editors/reviewers). Many can be registered. ---
+# Keep these provider-agnostic. Headless editors read MODEL/API from env as needed.
+agents:
+  - name: aider-main
+    type: cli_editor                 # cli_editor | hosted_reviewer | api_orchestrated
+    enabled: true
+    capabilities: [edit_files, run_tests, open_pr]
+    selector:
+      labels_any: ["agent:aider", "agent:fix"]
+      paths_any:  ["cmd/", "internal/"]
+    runtime:
+      bin: "aider"
+      args: ["--no-gitignore", "--read"]
+      # aider can use the same API key/model env vars (e.g., ANTHROPIC_API_KEY / OPENAI_API_KEY) outside this YAML.
+
+  - name: hosted-github-review
+    type: hosted_reviewer
+    enabled: true
+    capabilities: [review_pr, suggest_diffs]
+    selector:
+      labels_any: ["agent:review", "agent:docs"]
+    runtime:
+      provider: github_app
+      events:
+        on_pr: true
+        on_comment_commands: ["/tgs-brief", "/tgs-context"]
+
+  # Example placeholder for a future orchestrated agent (disabled by default).
+  - name: openhands-staging
+    type: api_orchestrated
+    enabled: false
+    capabilities: [plan, propose_patches]
+    selector:
+      labels_any: ["agent:openhands"]
+    runtime:
+      endpoint: "http://openhands.local:4000"
+      auth_env: "OPENHANDS_TOKEN"
+
+# --- 4) Steps & prompts (TGS-owned; fed to both brain and agents as needed) ---
+steps:
+  plan_prompt: tgs/prompts/plan.md
+  impl_prompt: tgs/prompts/impl.md
+  review_prompt: tgs/prompts/review.md
+
+# --- 5) Telemetry & audit ---
+telemetry:
+  log_dir: tgs/.tgs/logs
+  redact_rules: ["api_key", "token", "password"]
+
+# --- 6) Context packing inputs (where the brain can look) ---
+context:
+  pack_dir: tgs/design/            # long-lived specs/context/needs
+  thoughts_dir: tgs/thoughts/      # per-thought research/plan/impl
+  include_globs:
+    - README.md
+    - docs/**/*.md
+    - tgs/**/*.md
