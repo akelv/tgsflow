@@ -20,6 +20,11 @@ Use **“The system shall …”** style. One “shall” per requirement.
 
 - **SR-015**: When initializing or decorating a project via the bootstrap script, the system shall scaffold a minimal `tgs/` directory using repository-agnostic templates under `templates/data/tgs/`, excluding project-specific thought history. (Verification: Test)
 
+- **SR-016**: When running `tgs init`, the system shall mirror an organization-approved `tgs/` scaffolding from either embedded templates, a local directory, a remote archive, or a standard git repository (optionally at a specified ref and subdirectory). (Verification: Test)
+- **SR-017**: While rendering scaffolding, the system shall apply `.tmpl` templates and copy non-template files as-is, preserving existing files for idempotency. (Verification: Test)
+- **SR-018**: While sourcing templates remotely, the system shall clean up temporary files and directories after completion. (Verification: Inspection)
+- **SR-019**: While applying guardrails, the system shall include `tgs/agentops/AGENTOPS.md` and design docs under `tgs/design/` to enforce the approval-gated workflow for AI agent collaboration. (Verification: Inspection)
+
 ## Non-Functional Requirements
 - **NFR-001**: The system shall ensure traceability such that each implemented change is linked to its originating thought directory. (Verification: Inspection)
 - **NFR-002**: The system shall operate on macOS and Linux environments commonly used by developers. (Verification: Test)
