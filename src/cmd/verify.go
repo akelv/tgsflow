@@ -32,7 +32,7 @@ func CmdVerify(args []string) int {
 		}
 	}
 
-	// Optional: EARS linter gate (placeholder; actual linter wired in implementation phase)
+	// Optional: EARS linter gate (legacy-compatible via policies.ears.enable)
 	if cfg.Policies.EARS.Enable {
 		issues := verifyEARS(*repoRoot)
 		for _, is := range issues {

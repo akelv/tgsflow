@@ -6,7 +6,9 @@ build:
 	go build -o ./bin/tgs ./src
 
 test:
-	go test ./...
+	go test -coverprofile=coverage.out -covermode=atomic -coverpkg=./... ./...
+	@go tool cover -func=coverage.out | tee coverage.txt
+	@go tool cover -html=coverage.out -o coverage.html
 
 tidy:
 	go mod tidy

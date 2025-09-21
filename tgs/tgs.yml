@@ -92,9 +92,9 @@ agents:
 
 # --- 4) Steps & prompts (TGS-owned; fed to both brain and agents as needed) ---
 steps:
-  plan_prompt: tgs/prompts/plan.md
-  impl_prompt: tgs/prompts/impl.md
-  review_prompt: tgs/prompts/review.md
+  plan_prompt: tgs/agentops/prompts/plan.md
+  impl_prompt: tgs/agentops/prompts/impl.md
+  review_prompt: tgs/agentops/prompts/review.md
 
 # --- 5) Telemetry & audit ---
 telemetry:
