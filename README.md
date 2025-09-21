@@ -59,6 +59,38 @@ Once installed, verify:
 tgs --version
 ```
 
+## 5-minute Quickstart: Idea → PR
+
+1) Create a thought (scaffolds docs under `tgs/thoughts/`):
+```bash
+make new-thought title="<short title>" spec="<one-line spec>"
+```
+
+2) Pack context into an AI brief for your agent:
+```bash
+./bin/tgs context pack "<your goal>"
+# Opens/updates <thought>/aibrief.md with the most relevant design/context
+```
+
+3) Draft research and plan using your AI assistant, then get approval:
+- Edit `<thought>/research.md` → Human: APPROVE research
+- Edit `<thought>/plan.md` → Human: APPROVE plan
+
+4) Implement exactly the approved plan (code under `src/`, `cmd/`, etc.).
+
+5) Verify documentation with EARS checks for design docs:
+```bash
+./bin/tgs verify ears --repo . --ci
+```
+
+6) Commit and open a PR from your fork:
+```bash
+git checkout -b feat/<short-title>
+git add -A && git commit -m "feat: <short title>"
+git push -u fork HEAD
+```
+Then open the PR link shown in the push output.
+
 ## The TGS Workflow
 
 **TGS (Thought-Guided Software)** is an approval-gated workflow that ensures thoughtful development:
@@ -146,19 +178,22 @@ export CLASSPATH="$(brew --prefix)/libexec/antlr-4.13.1-complete.jar:$CLASSPATH"
 make ears-gen
 ```
 
-Enable in `tgs.yaml`:
+Enable in `tgs/tgs.yml`:
 
 ```yaml
-policies:
+guardrails:
   ears:
     enable: true
     require_shall: false
+    paths:
+      - tgs/design/10_needs.md
+      - tgs/design/20_requirements.md
 ```
 
-Run verify (will lint Markdown bullets when enabled):
+Run verify (EARS design-doc lints):
 
 ```bash
-./bin/tgs verify --repo .
+./bin/tgs verify ears --repo . --ci
 ```
 ---
 **Start engineering serious software for human and AI**
