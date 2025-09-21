@@ -83,3 +83,4 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 | [b48976e-refactor-cli-to-cobra-viper](./thoughts/b48976e-refactor-cli-to-cobra-viper/) | b48976e | 2025-09-14 | ✅ Completed | Refactor CLI to Cobra/Viper; add completion and preserve behavior |
 | [43ec077-automate-releases-with-goreleaser-and-homebrew](./thoughts/43ec077-automate-releases-with-goreleaser-and-homebrew/) | 43ec077 | 2025-09-14 | ✅ Completed | Automate releases with GoReleaser, GitHub Actions and Homebrew |
 | [f71f872-ears-linter-core-and-verify-integration](./thoughts/f71f872-ears-linter-core-and-verify-integration/) | f71f872 | 2025-09-15 | ✅ Completed | Implement EARS linter and integrate with verify |
+| [1fd687a-implement-shell-transport-for-brain](./thoughts/1fd687a-implement-shell-transport-for-brain/) | 1fd687a | 2025-09-21 | ✅ Completed | Implement Shell Transport (Claude shell adapter) with tests |

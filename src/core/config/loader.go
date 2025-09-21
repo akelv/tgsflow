@@ -28,6 +28,9 @@ func Default() Config {
 			Endpoint:  "",
 			APIKeyEnv: "OPENAI_API_KEY",
 			TimeoutMS: 45000,
+			// Shell transport specific defaults
+			ShellAdapterPath: "tgs/adapters/claude-code.sh",
+			ShellClaudeCmd:   "claude",
 			Retry: AIRetry{
 				MaxAttempts: 2,
 				BackoffMS:   800,
@@ -114,14 +117,17 @@ func Load(repoRoot string) (Config, error) {
 
 // AI defines the intelligence configuration for TGS commands.
 type AI struct {
-	Mode      string     `yaml:"mode"`
-	Provider  string     `yaml:"provider"`
-	Model     string     `yaml:"model"`
-	Endpoint  string     `yaml:"endpoint"`
-	APIKeyEnv string     `yaml:"api_key_env"`
-	TimeoutMS int        `yaml:"timeout_ms"`
-	Retry     AIRetry    `yaml:"retry"`
-	Toolpack  AIToolpack `yaml:"toolpack"`
+	Mode      string `yaml:"mode"`
+	Provider  string `yaml:"provider"`
+	Model     string `yaml:"model"`
+	Endpoint  string `yaml:"endpoint"`
+	APIKeyEnv string `yaml:"api_key_env"`
+	TimeoutMS int    `yaml:"timeout_ms"`
+	// Shell transport customization
+	ShellAdapterPath string     `yaml:"shell_adapter_path"`
+	ShellClaudeCmd   string     `yaml:"shell_claude_cmd"`
+	Retry            AIRetry    `yaml:"retry"`
+	Toolpack         AIToolpack `yaml:"toolpack"`
 }
 
 type AIRetry struct {

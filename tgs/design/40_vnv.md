@@ -38,6 +38,7 @@
 | IF-003 | T      | `./bin/tgs verify --repo .` runs and prints hook results and EARS issues when enabled. | Command output |
 | IF-004 | D      | `bootstrap.sh` can be invoked to apply TGSFlow structure in a clean workspace. | Script run |
 | IF-005 | I      | `agentops/AGENTOPS.md` present and referenced by assistants (`AGENTS.md`/`CLAUDE.md`). | File presence and linkage |
+| SR-020 | T      | `shellTransport.Chat` invokes the adapter and returns output text; errors on non-zero exit; respects context deadline. | `go test ./src/core/brain -run TestShellTransport*` |
 
 ## Test Environments
 - OS: macOS (darwin), Linux (ubuntu-latest).  

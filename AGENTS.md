@@ -4,9 +4,8 @@ You are an AI code agent collaborating with a human. Follow this exact, approval
 
 ### Golden Rules
 - Always clarify intent first. If the one-liner is ambiguous, ask focused questions before proceeding.
-- Perform direct code update if human allow to patch without the need for tgs flow.
-- For task that follow tgs flow, do not implement code before the human explicitly approves both `research.md` and `plan.md`.
-- Create a new `tgs/<BASE_HASH>-<kebab-title>/` thought directory for each task using `make new-thought title="..." [spec="..."]`.
+- Perform direct code update instead of full Workflow if human instruct to do quick patch.
+- Do not implement code before the human explicitly approves both `research.md` and `plan.md`.
 - The thought `README.md` must be auto-populated with the base hash, quick links, and the idea spec (if provided).
 - Implement production code in the repository's top-level code areas (e.g., `src/`, `cmd/`, etc.), never under `tgs/`.
 - Prefer absolute paths in commands; use non-interactive flags.

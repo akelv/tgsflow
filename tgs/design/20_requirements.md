@@ -25,6 +25,8 @@ Use **“The system shall …”** style. One “shall” per requirement.
 - **SR-018**: While sourcing templates remotely, the system shall clean up temporary files and directories after completion. (Verification: Inspection)
 - **SR-019**: While applying guardrails, the system shall include `tgs/agentops/AGENTOPS.md` and design docs under `tgs/design/` to enforce the approval-gated workflow for AI agent collaboration. (Verification: Inspection)
 
+- **SR-020**: While operating in shell AI mode, the system shall provide a Shell Transport that executes the `tgs/adapters/claude-code.sh` adapter with a composed prompt and optional context files, and returns the adapter output as `ChatResp.Text`, honoring timeouts and exit codes. (Verification: Test)
+
 ## Non-Functional Requirements
 - **NFR-001**: The system shall ensure traceability such that each implemented change is linked to its originating thought directory. (Verification: Inspection)
 - **NFR-002**: The system shall operate on macOS and Linux environments commonly used by developers. (Verification: Test)
