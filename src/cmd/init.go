@@ -378,7 +378,6 @@ func unzipFile(zipPath string, destDir string) error {
 		if err != nil {
 			return err
 		}
-		defer rc.Close()
 		// Use file mode if available, else default
 		mode := f.Mode()
 		if mode == 0 {
@@ -386,16 +385,20 @@ func unzipFile(zipPath string, destDir string) error {
 		}
 		w, err := os.OpenFile(outPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, mode)
 		if err != nil {
-			rc.Close()
 			return err
 		}
-		if _, err := io.Copy(w, rc); err != nil {
-			w.Close()
-			rc.Close()
+		copyErr := func() error {
+			defer w.Close()
+			_, err := io.Copy(w, rc)
 			return err
+		}()
+		cerr := rc.Close()
+		if copyErr != nil {
+			return copyErr
 		}
-		w.Close()
-		rc.Close()
+		if cerr != nil {
+			return cerr
+		}
 	}
 	return nil
 }
