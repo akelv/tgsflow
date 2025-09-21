@@ -20,6 +20,10 @@ Format: Use simple, outcome-focused sentences (EARS style if possible).
 
 - **N-015**: When bootstrapping or decorating a repository, the Human Engineer needs the script to initialize a clean, minimal `tgs/` directory from generic templates (not repo-specific documents or history).
 
+- **N-016**: While bootstrapping work with AI agents, the Human Engineer needs a standard, organization-approved scaffolding to start quickly while staying within team guardrails.
+- **N-017**: While standardizing across repositories, the Team needs the scaffolding templates to come from a shared source (git repo, local directory, or remote archive) without changing CLI code.
+- **N-018**: While re-running initialization, the Human Engineer needs idempotent, non-destructive behavior that preserves any existing files.
+
 ---
 
 ### Checklist
