@@ -39,6 +39,11 @@
 | IF-004 | D      | `bootstrap.sh` can be invoked to apply TGSFlow structure in a clean workspace. | Script run |
 | IF-005 | I      | `agentops/AGENTOPS.md` present and referenced by assistants (`AGENTS.md`/`CLAUDE.md`). | File presence and linkage |
 | SR-020 | T      | `shellTransport.Chat` invokes the adapter and returns output text; errors on non-zero exit; respects context deadline. | `go test ./src/core/brain -run TestShellTransport*` |
+| SR-021 | T      | `tgs context pack "auth"` creates `aibrief.md` under active thought with merged context/requirements. | CLI run, file exists and includes sources |
+| SR-022 | I      | Prompt templates for search and brief exist under `templates/data/tgs/` and are referenced by the command. | File presence and code reference |
+| SR-023 | I      | `aibrief.md` items include path and anchor/line ranges to source material. | Inspect generated brief |
+| SR-024 | T      | Token count in generated brief is <= configured `context_pack_tokens`. | Measure tokens or approximate count |
+| SR-025 | A/I    | Secrets are redacted per configured patterns; no raw secrets appear in output. | Rule inspection and sample runs |
 
 ## Test Environments
 - OS: macOS (darwin), Linux (ubuntu-latest).  

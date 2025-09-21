@@ -24,6 +24,10 @@ Format: Use simple, outcome-focused sentences (EARS style if possible).
 - **N-017**: While standardizing across repositories, the Team needs the scaffolding templates to come from a shared source (git repo, local directory, or remote archive) without changing CLI code.
 - **N-018**: While re-running initialization, the Human Engineer needs idempotent, non-destructive behavior that preserves any existing files.
 
+- **N-019**: While initiating an AI task, the Human Engineer needs a concise, auto-generated brief that packs relevant context from `tgs/design/` and the active thought.
+- **N-020**: While controlling LLM costs, the Team needs a configurable token budget for briefs with safe defaults.
+- **N-021**: While reading briefs, the Team needs explicit source links back to original documents for verification and deeper reading.
+
 ---
 
 ### Checklist
