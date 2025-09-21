@@ -1,19 +1,19 @@
 version: 0.1
-project: tgsflow
+project: {{.ProjectName}}
 
 # --- 1) TGS "AI brain" (intelligence for TGS commands only) ---
 # Thin default: shelling out to a single provider endpoint (usually OpenAI-compatible).
 # You can later switch ai.mode to `proxy` or `mcp` without touching command code.
 ai:
   mode: shell                 # shell | proxy | mcp | sdk  (default = shell)
-  provider: openai            # hint for shell script; not used by mcp
-  model: gpt-4o-mini
+  provider: {{.Provider}}            # hint for shell script; not used by mcp
+  model: {{.Model}}
   endpoint: ""                # optional; leave blank for provider default (e.g., OpenAI). Set to custom OpenAI-compatible URL if needed.
-  api_key_env: OPENAI_API_KEY # TGS reads API key from env; keep secrets out of YAML
-  timeout_ms: 45000
+  api_key_env: {{.APIKeyEnv}} # TGS reads API key from env; keep secrets out of YAML
+  timeout_ms: {{.TimeoutMS}}
   retry:
-    max_attempts: 2
-    backoff_ms: 800
+    max_attempts: {{.MaxAttempts}}
+    backoff_ms: {{.BackoffMS}}
 
   # Toolpack governs which TGS commands are allowed to call the AI "brain".
   # These are one-shot, concise tasks (e.g., context packing, tracing).
@@ -21,12 +21,12 @@ ai:
     enabled: true
     allow_for: [context_pack, need_trace, plan_summarize, classify_issue]
     budgets:
-      context_pack_tokens: 1200
-      summary_tokens: 400
+      context_pack_tokens: {{.ContextPackTokens}}
+      summary_tokens: {{.SummaryTokens}}
     # Optional model routing (same provider family) per task:
     routes:
-      context_pack_model: gpt-4o-mini
-      summarize_model: gpt-4o-mini
+      context_pack_model: {{.ContextPackModel}}
+      summarize_model: {{.SummarizeModel}}
     # Tools that TGS *could* expose to the model when needed (shell mode may ignore).
     tools:
       - name: fetch_repo_text
@@ -41,38 +41,38 @@ ai:
 
 # --- 2) Triggers and guardrails (policy; used by guardrails check & agent runs) ---
 triggers:
-  issue_labels: [good-first-agent, agent:fix, agent:docs]
-  pr_labels: [agent:auto, needs:reviewer]
+  issue_labels: {{.IssueLabels}}
+  pr_labels: {{.PRLabels}}
 
 guardrails:
-  allow_paths: ["cmd/", "internal/", "pkg/", "src/", "docs/", "tgs/"]
-  deny_paths:  ["infra/prod/", "deploy/", "secrets/"]
+  allow_paths: {{.AllowPaths}}
+  deny_paths:  {{.DenyPaths}}
   max_diff_lines: 800
-  required_checks: ["lint", "unit", "sast"]
-  pr_template: ".github/PULL_REQUEST_TEMPLATE.md"
-  commit_convention: "conventional"
+  required_checks: {{.RequiredChecks}}
+  pr_template: {{.PRTemplate}}
+  commit_convention: {{.CommitConvention}}
   ears:
-    enable: false
-    require_shall: false
+    enable: {{.EARS.Enable}}
+    require_shall: {{.EARS.RequireShall}}
 
 # --- 3) Code agents (background editors/reviewers). Many can be registered. ---
 # Keep these provider-agnostic. Headless editors read MODEL/API from env as needed.
 agents:
-  - name: aider-main
-    type: cli_editor                 # cli_editor | hosted_reviewer | api_orchestrated
-    enabled: true
-    capabilities: [edit_files, run_tests, open_pr]
+  - name: {{.AgentName}}
+    type: {{.AgentType}}                 # cli_editor | hosted_reviewer | api_orchestrated
+    enabled: {{.AgentEnabled}}
+    capabilities: {{.AgentCapabilities}}
     selector:
-      labels_any: ["agent:aider", "agent:fix"]
-      paths_any:  ["cmd/", "internal/"]
+      labels_any: {{.AgentLabelsAny}}
+      paths_any:  {{.AgentPathsAny}}
     runtime:
-      bin: "aider"
-      args: ["--no-gitignore", "--read"]
-      # aider can use the same API key/model env vars (e.g., ANTHROPIC_API_KEY / OPENAI_API_KEY) outside this YAML.
+      bin: {{.AgentBin}}
+      args: {{.AgentArgs}}
 
+  # Example placeholder for a future reviewer agent (disabled by default).
   - name: hosted-github-review
     type: hosted_reviewer
-    enabled: true
+    enabled: false
     capabilities: [review_pr, suggest_diffs]
     selector:
       labels_any: ["agent:review", "agent:docs"]

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/kelvin/tgsflow/src/core/config"
 	"github.com/kelvin/tgsflow/src/core/thoughts"
 	"github.com/kelvin/tgsflow/src/templates"
 	"github.com/kelvin/tgsflow/src/util/logx"
@@ -19,10 +20,12 @@ func CmdInit(args []string) int {
 	fs := flag.NewFlagSet("tgs init", flag.ContinueOnError)
 	decorate := fs.Bool("decorate", true, "Create tgs/ layout and optional CI templates")
 	ciTemplate := fs.String("ci-template", "github", "CI template: github|gitlab|none")
+	interactive := fs.Bool("interactive", false, "Interactive config setup")
 	fs.SetOutput(os.Stderr)
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
+	logx.Infof("initializing TGS (decorate=%v, ci-template=%s, interactive=%v)", *decorate, *ciTemplate, *interactive)
 	if !*decorate {
 		logx.Infof("Nothing to do (decorate=false)")
 		return 0
@@ -106,9 +109,31 @@ func CmdInit(args []string) int {
 		}
 	case "none":
 		// no-op
+		logx.Infof("skipping CI templates (ci-template=none)")
 	default:
 		fmt.Fprintln(os.Stderr, "unknown --ci-template value; expected github|gitlab|none")
 		return 2
+	}
+
+	// Ensure tgs/tgs.yml configuration (idempotent)
+	data := config.DefaultTemplateData("")
+	if *interactive {
+		data = config.PromptInteractive(os.Stdin, os.Stdout, data)
+	}
+	yaml, err := config.RenderConfigYAML(data)
+	if err != nil {
+		logx.Errorf("render config: %v", err)
+		return 1
+	}
+	created, outPath, err := config.EnsureConfigFile(".", yaml)
+	if err != nil {
+		logx.Errorf("write config: %v", err)
+		return 1
+	}
+	if created {
+		logx.Infof("created %s", outPath)
+	} else {
+		logx.Infof("config exists: %s (skipped)", outPath)
 	}
 	logx.Infof("tgs init complete (idempotent)")
 	return 0
@@ -116,13 +141,42 @@ func CmdInit(args []string) int {
 
 // Cobra command constructor colocated for cleanliness
 func newInitCommand() *cobra.Command {
+	var (
+		flagDecorate    bool
+		flagCITemplate  string
+		flagInteractive bool
+	)
 	cmd := &cobra.Command{
-		Use:   "init",
-		Short: "Initialize TGS layout (idempotent)",
+		Use:     "init",
+		Short:   "Initialize TGS layout (idempotent)",
+		Long:    "Create the standard TGS thought scaffolding and ensure tgs/tgs.yml exists. Optionally seed CI templates.",
+		Example: "  tgs init\n  tgs init --ci-template gitlab\n  tgs init --interactive\n  tgs init --decorate=false",
 		RunE: func(c *cobra.Command, args []string) error {
-			code := CmdInit(args)
+			// Reconstruct args for CmdInit which uses the stdlib flag parser to keep behavior consistent with tests.
+			forward := []string{}
+			if c.Flags().Changed("decorate") {
+				if flagDecorate {
+					forward = append(forward, "--decorate")
+				} else {
+					forward = append(forward, "--decorate=false")
+				}
+			}
+			if c.Flags().Changed("ci-template") {
+				forward = append(forward, "--ci-template", flagCITemplate)
+			}
+			if c.Flags().Changed("interactive") {
+				if flagInteractive {
+					forward = append(forward, "--interactive")
+				} else {
+					forward = append(forward, "--interactive=false")
+				}
+			}
+			code := CmdInit(forward)
 			return codeToErr(code)
 		},
 	}
+	cmd.Flags().BoolVar(&flagDecorate, "decorate", true, "Create tgs/ layout and optional CI templates")
+	cmd.Flags().StringVar(&flagCITemplate, "ci-template", "github", "CI template: github|gitlab|none")
+	cmd.Flags().BoolVar(&flagInteractive, "interactive", false, "Interactive config setup")
 	return cmd
 }
