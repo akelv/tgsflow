@@ -33,6 +33,8 @@ Use **“The system shall …”** style. One “shall” per requirement.
 - **SR-024**: The system shall enforce a configurable token budget for the brief content via `ai.toolpack.budgets.context_pack_tokens`. (Verification: Test)
 - **SR-025**: The system shall avoid including secrets or sensitive tokens by applying configured redaction rules. (Verification: Analysis)
 
+- **SR-026**: When verifying design documentation, the system shall lint `tgs/design/10_needs.md` and `tgs/design/20_requirements.md` for EARS compliance (ignoring code fences and allowing bullet response sections), and report findings with `path:line: message`. (Verification: Test)
+
 ## Non-Functional Requirements
 - **NFR-001**: The system shall ensure traceability such that each implemented change is linked to its originating thought directory. (Verification: Inspection)
 - **NFR-002**: The system shall operate on macOS and Linux environments commonly used by developers. (Verification: Test)

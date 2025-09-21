@@ -28,6 +28,8 @@ Format: Use simple, outcome-focused sentences (EARS style if possible).
 - **N-020**: While controlling LLM costs, the Team needs a configurable token budget for briefs with safe defaults.
 - **N-021**: While reading briefs, the Team needs explicit source links back to original documents for verification and deeper reading.
 
+- **N-022**: When verifying core design docs, the Team needs focused linting of `tgs/design/10_needs.md` and `tgs/design/20_requirements.md` to enforce EARS patterns and ID formatting.
+
 ---
 
 ### Checklist

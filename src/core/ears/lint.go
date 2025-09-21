@@ -46,6 +46,14 @@ func ParseRequirement(line string) (Result, error) {
 	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 	parser := earsp.NewearsParser(stream)
 
+	// Suppress default console error messages from ANTLR; we'll return structured errors instead
+	silent := antlr.NewConsoleErrorListener() // placeholder; we'll remove console and add a no-op
+	_ = silent
+	lexer.RemoveErrorListeners()
+	parser.RemoveErrorListeners()
+	parser.AddErrorListener(silentNoop{})
+	lexer.AddErrorListener(silentNoop{})
+
 	root := parser.Requirement()
 	if parser.HasError() {
 		return Result{}, errors.New("syntax error")
@@ -153,6 +161,18 @@ func ParseRequirement(line string) (Result, error) {
 	}
 
 	return Result{}, errors.New("does not match an allowed EARS form")
+}
+
+// silentNoop is an ANTLR error listener that does nothing, preventing noisy console output.
+type silentNoop struct{}
+
+func (silentNoop) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
+}
+func (silentNoop) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs *antlr.ATNConfigSet) {
+}
+func (silentNoop) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs *antlr.ATNConfigSet) {
+}
+func (silentNoop) ReportContextSensitivity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs *antlr.ATNConfigSet) {
 }
 
 func textFrom(ctx antlr.ParserRuleContext) string {

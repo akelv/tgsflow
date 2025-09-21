@@ -71,6 +71,7 @@ func Default() Config {
 			EARS: EARSConfig{
 				Enable:       false,
 				RequireShall: false,
+				Paths:        []string{"tgs/design/10_needs.md", "tgs/design/20_requirements.md"},
 			},
 		},
 		Agents: []Agent{},
@@ -218,6 +219,7 @@ type Context struct {
 }
 
 type EARSConfig struct {
-	Enable       bool `yaml:"enable"`
-	RequireShall bool `yaml:"require_shall"`
+	Enable       bool     `yaml:"enable"`
+	RequireShall bool     `yaml:"require_shall"`
+	Paths        []string `yaml:"paths"`
 }
