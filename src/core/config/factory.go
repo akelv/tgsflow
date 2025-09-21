@@ -53,6 +53,7 @@ type TemplateData struct {
 type EARSFields struct {
 	Enable       bool
 	RequireShall bool
+	Paths        []string
 }
 
 // DefaultTemplateData returns sane beginner-friendly defaults.
@@ -88,6 +89,7 @@ func DefaultTemplateData(projectName string) TemplateData {
 		EARS: EARSFields{
 			Enable:       false,
 			RequireShall: false,
+			Paths:        []string{"tgs/design/10_needs.md", "tgs/design/20_requirements.md"},
 		},
 
 		AgentName:         "aider-main",
