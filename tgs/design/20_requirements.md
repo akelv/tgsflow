@@ -27,12 +27,19 @@ Use **“The system shall …”** style. One “shall” per requirement.
 
 - **SR-020**: While operating in shell AI mode, the system shall provide a Shell Transport that executes the `tgs/adapters/claude-code.sh` adapter with a composed prompt and optional context files, and returns the adapter output as `ChatResp.Text`, honoring timeouts and exit codes. (Verification: Test)
 
+- **SR-021**: When running `tgs context pack "<query>"`, the system shall collect relevant sections from `tgs/design/` and the active thought directory into `aibrief.md`. (Verification: Test)
+- **SR-022**: The system shall construct the brief using templated prompts to guide a repository-aware search via the brain shell agent. (Verification: Inspection)
+- **SR-023**: The system shall include source pointers (path and anchor/line range) for each extracted requirement/context item. (Verification: Inspection)
+- **SR-024**: The system shall enforce a configurable token budget for the brief content via `ai.toolpack.budgets.context_pack_tokens`. (Verification: Test)
+- **SR-025**: The system shall avoid including secrets or sensitive tokens by applying configured redaction rules. (Verification: Analysis)
+
 ## Non-Functional Requirements
 - **NFR-001**: The system shall ensure traceability such that each implemented change is linked to its originating thought directory. (Verification: Inspection)
 - **NFR-002**: The system shall operate on macOS and Linux environments commonly used by developers. (Verification: Test)
 - **NFR-003**: The `verify` command shall return exit code 0 on success and non-zero on failure. (Verification: Test)
 - **NFR-004**: The system shall require each thought to include `research.md`, `plan.md`, and `implementation.md` before marking it complete. (Verification: Inspection)
 - **NFR-005**: The system shall prevent production code from being implemented under `tgs/`, restricting that directory to thought documentation. (Verification: Inspection)
+ - **NFR-006**: The `tgs context pack` command shall complete within 30 seconds under default settings on a medium repo. (Verification: Demonstration)
 
 ## Interfaces
 - **IF-001**: The system shall expose a `make new-thought` target that creates `tgs/<BASE_HASH>-<kebab-title>/` with pre-populated templates. (Verification: Test)

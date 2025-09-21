@@ -1,96 +1,239 @@
+//CmdContext implements the `tgs context` command.
+//It allows the user to pack context files into a single brief for the AI agent.
+
 package cmd
 
 import (
-	"encoding/json"
-	"flag"
+	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
-	"time"
+	"strings"
 
+	"github.com/kelvin/tgsflow/src/core/brain"
+	"github.com/kelvin/tgsflow/src/core/config"
 	"github.com/kelvin/tgsflow/src/core/thoughts"
-	"github.com/kelvin/tgsflow/src/templates"
-	"github.com/kelvin/tgsflow/src/util/logx"
 	"github.com/spf13/cobra"
 )
-
-type repoContext struct {
-	GeneratedAt string   `json:"generated_at"`
-	Languages   []string `json:"languages"`
-	Files       int      `json:"files"`
-}
-
-// CmdContext performs a lightweight scan and writes tgs/.context.json and seeds 00_research.md.
-func CmdContext(args []string) int {
-	fs := flag.NewFlagSet("tgs context", flag.ContinueOnError)
-	fs.SetOutput(os.Stderr)
-	if err := fs.Parse(args); err != nil {
-		return 2
-	}
-	// simple heuristic: count files and detect langs by extension
-	langs := map[string]bool{}
-	files := 0
-	_ = filepath.WalkDir(".", func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-		if d.IsDir() {
-			if d.Name() == ".git" || d.Name() == "node_modules" || d.Name() == "vendor" {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-		files++
-		ext := filepath.Ext(path)
-		switch ext {
-		case ".go":
-			langs["go"] = true
-		case ".ts", ".tsx":
-			langs["typescript"] = true
-		case ".js":
-			langs["javascript"] = true
-		case ".py":
-			langs["python"] = true
-		}
-		return nil
-	})
-	var langsList []string
-	for k := range langs {
-		langsList = append(langsList, k)
-	}
-	ctx := repoContext{GeneratedAt: time.Now().Format(time.RFC3339), Languages: langsList, Files: files}
-	active := thoughts.LocateActiveDir(".")
-	if err := os.MkdirAll(active, 0o755); err != nil {
-		logx.Errorf("mkdir thought: %v", err)
-		return 1
-	}
-	f, err := os.Create(filepath.Join(active, ".context.json"))
-	if err != nil {
-		logx.Errorf("write context: %v", err)
-		return 1
-	}
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "  ")
-	_ = enc.Encode(ctx)
-	_ = f.Close()
-
-	// seed research file if missing
-	researchPath := filepath.Join(active, "00_research.md")
-	if _, err := os.Stat(researchPath); os.IsNotExist(err) {
-		if content, rerr := templates.Render("thought/00_research.md.tmpl", nil); rerr == nil {
-			_ = os.WriteFile(researchPath, []byte(content), 0o644)
-		}
-	}
-	logx.Infof("context written to %s/.context.json (%d files)", active, files)
-	return 0
-}
 
 func newContextCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "context",
-		Short: "Scan repo context and seed research",
+		Short: "Context-related utilities",
 		RunE: func(c *cobra.Command, args []string) error {
-			return codeToErr(CmdContext(args))
+			return c.Help()
 		},
 	}
+	cmd.AddCommand(newContextPackCommand())
 	return cmd
+}
+
+func newContextPackCommand() *cobra.Command {
+	var (
+		flagOut     string
+		flagVerbose bool
+	)
+
+	cmd := &cobra.Command{
+		Use:   "pack <query>",
+		Short: "Pack relevant design and thought context into an AI brief",
+		Args:  cobra.MinimumNArgs(1),
+		RunE: func(c *cobra.Command, args []string) error {
+			repoRoot, err := os.Getwd()
+			if err != nil {
+				return err
+			}
+			cfg, err := config.Load(repoRoot)
+			if err != nil {
+				return fmt.Errorf("load config: %w", err)
+			}
+
+			query := strings.TrimSpace(strings.Join(args, " "))
+			if query == "" {
+				return exitCodeError{code: 2}
+			}
+
+			// Locate active thought directory
+			activeThought := thoughts.LocateActiveDir(repoRoot)
+			if _, err := os.Stat(activeThought); err != nil {
+				return fmt.Errorf("active thought dir not found: %s", activeThought)
+			}
+
+			// Resolve output path
+			outPath := flagOut
+			if strings.TrimSpace(outPath) == "" {
+				outPath = filepath.Join(activeThought, "aibrief.md")
+			}
+			if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
+				return err
+			}
+
+			// Gather candidate context files from design and active thought
+			designDir := cfg.Context.PackDir
+			if strings.TrimSpace(designDir) == "" {
+				designDir = filepath.Join("tgs", "design")
+			}
+			designDir = filepath.Clean(designDir)
+			if !filepath.IsAbs(designDir) {
+				designDir = filepath.Join(repoRoot, designDir)
+			}
+
+			candidateGlobs := []string{
+				filepath.Join(designDir, "*.md"),
+			}
+			thoughtFiles := []string{
+				"README.md", "research.md", "plan.md", "implementation.md",
+			}
+			for _, spec := range thoughts.SpecFileCandidates() {
+				thoughtFiles = append(thoughtFiles, spec)
+			}
+
+			var ctxFiles []string
+			for _, g := range candidateGlobs {
+				matches, _ := filepath.Glob(g)
+				ctxFiles = append(ctxFiles, matches...)
+			}
+			for _, f := range thoughtFiles {
+				p := filepath.Join(activeThought, f)
+				if st, err := os.Stat(p); err == nil && !st.IsDir() {
+					ctxFiles = append(ctxFiles, p)
+				}
+			}
+			// De-duplicate preserving order
+			seen := make(map[string]struct{}, len(ctxFiles))
+			finalCtx := make([]string, 0, len(ctxFiles))
+			for _, p := range ctxFiles {
+				if _, ok := seen[p]; ok {
+					continue
+				}
+				seen[p] = struct{}{}
+				finalCtx = append(finalCtx, p)
+			}
+			if len(finalCtx) == 0 {
+				return fmt.Errorf("no context files found in %s or %s", designDir, activeThought)
+			}
+
+			// Load prompt templates (fallback to embedded defaults)
+			searchPrompt := mustLoadPrompt(repoRoot, filepath.Join("tgs", "agentops", "prompts", "context_search.md"), defaultSearchPrompt())
+			briefTemplate := mustLoadPrompt(repoRoot, filepath.Join("tgs", "agentops", "prompts", "context_brief.md"), defaultBriefTemplate())
+
+			// Fill variables
+			budget := brain.Budget(cfg, "context_pack_tokens", 1200)
+			prompt := strings.ReplaceAll(searchPrompt, "{{QUERY}}", query)
+			prompt = strings.ReplaceAll(prompt, "{{TOKEN_BUDGET}}", fmt.Sprintf("%d", budget))
+			prompt = strings.ReplaceAll(prompt, "{{BRIEF_TEMPLATE}}", briefTemplate)
+
+			// Prepare adapter exec (reuse adapter contract)
+			adapterPath := cfg.AI.ShellAdapterPath
+			if strings.TrimSpace(adapterPath) == "" {
+				adapterPath = filepath.Join("tgs", "adapters", "claude-code.sh")
+			}
+			if _, err := os.Stat(adapterPath); err != nil {
+				return fmt.Errorf("adapter not found: %s", adapterPath)
+			}
+
+			execArgs := []string{
+				"--return-mode", "text",
+				"--claude-cmd", cfg.AI.ShellClaudeCmd,
+				"--prompt-text", prompt,
+				"--out", outPath,
+				"--suggestions-dir", filepath.Join("tgs", "suggestions"),
+			}
+			// Timeout (seconds) derived from config, if set
+			if cfg.AI.TimeoutMS > 0 {
+				sec := cfg.AI.TimeoutMS / 1000
+				if sec > 0 {
+					execArgs = append(execArgs, "--timeout", fmt.Sprintf("%d", sec))
+				}
+			}
+
+			// Environment: CONTEXT_FILES newline separated
+			env := os.Environ()
+			env = append(env,
+				"CLAUDE_CMD="+cfg.AI.ShellClaudeCmd,
+				"RETURN_MODE=text",
+				"CONTEXT_FILES="+strings.Join(finalCtx, "\n"),
+			)
+
+			execCmd := exec.Command(adapterPath, execArgs...)
+			execCmd.Env = env
+			execCmd.Stdout = os.Stdout
+			execCmd.Stderr = os.Stderr
+
+			if flagVerbose {
+				fmt.Fprintf(os.Stderr, "tgs: context pack using %s with %d context files\n", adapterPath, len(finalCtx))
+			}
+
+			if err := execCmd.Run(); err != nil {
+				return exitCodeError{code: 1}
+			}
+
+			if flagVerbose {
+				fmt.Fprintf(os.Stderr, "wrote brief: %s\n", outPath)
+			}
+			return nil
+		},
+	}
+
+	cmd.Flags().StringVar(&flagOut, "out", "", "Output path for brief (default: <active-thought>/aibrief.md)")
+	cmd.Flags().BoolVar(&flagVerbose, "verbose", false, "Verbose logs")
+	return cmd
+}
+
+func mustLoadPrompt(repoRoot, relPath, fallback string) string {
+	p := relPath
+	if !filepath.IsAbs(p) {
+		p = filepath.Join(repoRoot, relPath)
+	}
+	if b, err := os.ReadFile(p); err == nil {
+		if s := strings.TrimSpace(string(b)); s != "" {
+			return s
+		}
+	}
+	return fallback
+}
+
+func defaultSearchPrompt() string {
+	return strings.TrimSpace(`You are an engineering assistant. Given a user query, analyze the provided repository context files to extract only the most relevant information. Focus on:
+
+1) A short problem framing for the query.
+2) Key stakeholder needs and system requirements directly related to the query.
+3) Pointers to exact sources (file path plus anchor/section or line range) for verification.
+
+Constraints:
+- Keep the final brief within {{TOKEN_BUDGET}} tokens.
+- Do not include secrets or credentials; if present, redact.
+- Prefer EARS-style needs and “The system shall …” requirements.
+
+Output:
+Return ONLY the brief using the following structure and style. Do not add any preamble or commentary:
+
+{{BRIEF_TEMPLATE}}
+
+User query: "{{QUERY}}"`)
+}
+
+func defaultBriefTemplate() string {
+	return strings.TrimSpace(`# AI Brief
+
+## Query
+"{{QUERY}}"
+
+## Context Summary (<= 6 bullets)
+- ...
+
+## Key Needs (EARS-style, with sources)
+- [ID or tag] One-line need statement. (Source: path#anchor)
+- ...
+
+## Key System Requirements (with sources)
+- [SR-###] The system shall … (Source: path#anchor)
+- ...
+
+## Links & Pointers
+- path:anchor – why relevant
+- ...
+
+## Notes
+- Token budget: {{TOKEN_BUDGET}}`)
 }
