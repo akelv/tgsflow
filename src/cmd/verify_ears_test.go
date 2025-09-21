@@ -20,7 +20,7 @@ func writeFile(t *testing.T, path string, content string) {
 func TestVerify_EARS_AllValid(t *testing.T) {
 	dir := t.TempDir()
 	// Enable EARS
-	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
+	writeFile(t, filepath.Join(dir, "tgs", "tgs.yml"), "guardrails:\n  ears:\n    enable: true\n")
 	// Use fixture files from core testdata
 	fixtures := []string{
 		"src/core/ears/testdata/positive_ubiquitous.md",
@@ -49,7 +49,7 @@ func TestVerify_EARS_AllValid(t *testing.T) {
 
 func TestVerify_EARS_WithInvalid(t *testing.T) {
 	dir := t.TempDir()
-	writeFile(t, filepath.Join(dir, "tgs.yaml"), "policies:\n  ears:\n    enable: true\n")
+	writeFile(t, filepath.Join(dir, "tgs", "tgs.yml"), "guardrails:\n  ears:\n    enable: true\n")
 	fixtures := []string{
 		"src/core/ears/testdata/negative_missing_system.md",
 		"src/core/ears/testdata/negative_wrong_order.md",

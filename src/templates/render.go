@@ -16,7 +16,7 @@ var tmplFS embed.FS
 // name is a path relative to data/ (e.g., "thought/10_spec.md.tmpl").
 func Render(name string, data any) (string, error) {
 	normalized := filepath.ToSlash(name)
-	if !strings.HasPrefix(normalized, "thought/") && !strings.HasPrefix(normalized, "ci/") {
+	if !strings.HasPrefix(normalized, "thought/") && !strings.HasPrefix(normalized, "ci/") && !strings.HasPrefix(normalized, "tgs/") {
 		// allow bare names under thought/
 		normalized = filepath.ToSlash(filepath.Join("thought", normalized))
 	}

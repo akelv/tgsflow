@@ -17,8 +17,6 @@ type Config struct {
 	Steps      Steps      `yaml:"steps"`
 	Telemetry  Telemetry  `yaml:"telemetry"`
 	Context    Context    `yaml:"context"`
-	// Backward compatibility with legacy root-level tgs.yaml
-	Policies Policies `yaml:"policies"`
 }
 
 func Default() Config {
@@ -67,6 +65,10 @@ func Default() Config {
 			RequiredChecks:   []string{"lint", "unit", "sast"},
 			PRTemplate:       ".github/PULL_REQUEST_TEMPLATE.md",
 			CommitConvention: "conventional",
+			EARS: EARSConfig{
+				Enable:       false,
+				RequireShall: false,
+			},
 		},
 		Agents: []Agent{},
 		Steps: Steps{
@@ -82,15 +84,6 @@ func Default() Config {
 			PackDir:      "tgs/design/",
 			ThoughtsDir:  "tgs/thoughts/",
 			IncludeGlobs: []string{"README.md", "docs/**/*.md", "tgs/**/*.md"},
-		},
-		Policies: Policies{
-			ForbidPaths: []string{"infra/prod/", "secrets/"},
-			MaxPatchLOC: 300,
-			EnforceNFR:  false,
-			EARS: EARSConfig{
-				Enable:       false,
-				RequireShall: false,
-			},
 		},
 	}
 }
@@ -161,12 +154,13 @@ type Triggers struct {
 }
 
 type Guardrails struct {
-	AllowPaths       []string `yaml:"allow_paths"`
-	DenyPaths        []string `yaml:"deny_paths"`
-	MaxDiffLines     int      `yaml:"max_diff_lines"`
-	RequiredChecks   []string `yaml:"required_checks"`
-	PRTemplate       string   `yaml:"pr_template"`
-	CommitConvention string   `yaml:"commit_convention"`
+	AllowPaths       []string   `yaml:"allow_paths"`
+	DenyPaths        []string   `yaml:"deny_paths"`
+	MaxDiffLines     int        `yaml:"max_diff_lines"`
+	RequiredChecks   []string   `yaml:"required_checks"`
+	PRTemplate       string     `yaml:"pr_template"`
+	CommitConvention string     `yaml:"commit_convention"`
+	EARS             EARSConfig `yaml:"ears"`
 }
 
 type Agent struct {
@@ -217,15 +211,6 @@ type Context struct {
 	IncludeGlobs []string `yaml:"include_globs"`
 }
 
-// Legacy policy structures for backward compatibility
-type Policies struct {
-	ForbidPaths []string   `yaml:"forbid_paths"`
-	MaxPatchLOC int        `yaml:"max_patch_loc"`
-	EnforceNFR  bool       `yaml:"enforce_nfr"`
-	EARS        EARSConfig `yaml:"ears"`
-}
-
-// EARSConfig controls EARS linter behavior.
 type EARSConfig struct {
 	Enable       bool `yaml:"enable"`
 	RequireShall bool `yaml:"require_shall"`
