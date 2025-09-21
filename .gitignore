@@ -1,9 +1,14 @@
 # Build artifacts
 bin/
+coverage.out
+coverage.txt
+coverage.html
 
 # OS/editor junk
 .DS_Store
 .idea/
 .vscode/
+
+
 
 
