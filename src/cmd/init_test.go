@@ -16,11 +16,18 @@ func TestInitSeedsFiles(t *testing.T) {
 		t.Fatalf("CmdInit returned %d", code)
 	}
 	checks := []string{
-		filepath.Join("tgs", "00_research.md"),
-		filepath.Join("tgs", "10_spec.md"),
-		filepath.Join("tgs", "20_plan.md"),
-		filepath.Join("tgs", "30_tasks.md"),
-		filepath.Join("tgs", "40_approval.md"),
+		filepath.Join("tgs", "README.md"),
+		filepath.Join("tgs", "tgs.yml"),
+		filepath.Join("tgs", "design", "00_context.md"),
+		filepath.Join("tgs", "design", "10_needs.md"),
+		filepath.Join("tgs", "design", "20_requirements.md"),
+		filepath.Join("tgs", "design", "30_architecture.md"),
+		filepath.Join("tgs", "design", "40_vnv.md"),
+		filepath.Join("tgs", "design", "50_decisions.md"),
+		filepath.Join("tgs", "agentops", "AGENTOPS.md"),
+		filepath.Join("tgs", "agentops", "tgs", "research.md"),
+		filepath.Join("tgs", "agentops", "tgs", "plan.md"),
+		filepath.Join("tgs", "agentops", "tgs", "implementation.md"),
 	}
 	for _, p := range checks {
 		if _, err := os.Stat(p); err != nil {
