@@ -71,14 +71,15 @@ func NewRootCommand(version, commit, date string) *cobra.Command {
 
 	// Subcommands
 	root.AddCommand(
+		newHelpCommand(),
 		newInitCommand(),
 		newContextCommand(),
 		newVerifyCommand(),
 		newAgentCommand(),
 	)
 
-	// Also support `help` explicitly (Cobra handles by default too)
-	root.SetHelpCommand(&cobra.Command{Use: "help", Hidden: false})
+	// Use our custom help command
+	root.SetHelpCommand(newHelpCommand())
 
 	return root
 }
