@@ -173,7 +173,7 @@ for f in "${CONTEXT_FILES_ARR[@]:-}"; do
   FINAL_CTX+=("$f")
 done
 
-[ ${#FINAL_CTX[@]:-0} -gt 0 ] || die "No context files provided (use --context-list, --context-glob, or CONTEXT_FILES)"
+[ ${#FINAL_CTX[@]} -gt 0 ] || die "No context files provided (use --context-list, --context-glob, or CONTEXT_FILES)"
 
 # Verify existence
 for f in "${FINAL_CTX[@]:-}"; do
