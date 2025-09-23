@@ -21,8 +21,8 @@ This `tgs/` area is organized into two primary subdirectories:
   - Purpose: Canonical workflow and the files used to scaffold new thought directories.
 
 - `adapters/` — External model/tool adapters invoked by `tgs agent exec`.
-  - Files: `claude-code.sh` (default Claude Code adapter)
-  - Purpose: Bridge between the TGS CLI and external AI/automation tools. Default path used by the CLI: `tgs/adapters/claude-code.sh` (override with `--adapter-path`).
+  - Files: `claude-code.sh` (default Claude Code adapter), `gemini-code.sh` (Gemini CLI adapter)
+  - Purpose: Bridge between the TGS CLI and external AI/automation tools. Default path used by the CLI: `tgs/adapters/claude-code.sh` (override with `--adapter-path`, e.g. `tgs/adapters/gemini-code.sh`).
 
 ## Thought Structure
 
