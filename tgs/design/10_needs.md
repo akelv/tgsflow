@@ -30,6 +30,8 @@ Format: Use simple, outcome-focused sentences (EARS style if possible).
 
 - **N-022**: When verifying core design docs, the Team needs focused linting of `tgs/design/10_needs.md` and `tgs/design/20_requirements.md` to enforce EARS patterns and ID formatting.
 
+- **N-023**: While integrating different AI vendor CLIs, the AI Code Agent needs consistent, adapter-based invocation and context passing so workflows remain uniform across providers.
+
 ---
 
 ### Checklist
