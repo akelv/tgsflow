@@ -84,3 +84,4 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 | [43ec077-automate-releases-with-goreleaser-and-homebrew](./thoughts/43ec077-automate-releases-with-goreleaser-and-homebrew/) | 43ec077 | 2025-09-14 | ✅ Completed | Automate releases with GoReleaser, GitHub Actions and Homebrew |
 | [f71f872-ears-linter-core-and-verify-integration](./thoughts/f71f872-ears-linter-core-and-verify-integration/) | f71f872 | 2025-09-15 | ✅ Completed | Implement EARS linter and integrate with verify |
 | [1fd687a-implement-shell-transport-for-brain](./thoughts/1fd687a-implement-shell-transport-for-brain/) | 1fd687a | 2025-09-21 | ✅ Completed | Implement Shell Transport (Claude shell adapter) with tests |
+| [af66921-extend-init-adapters-subcmd-make-target](./thoughts/af66921-extend-init-adapters-subcmd-make-target/) | af66921 | 2025-09-24 | ✅ Completed | Extend init: adapters, vendor subcmd, Makefile `new-thought` |

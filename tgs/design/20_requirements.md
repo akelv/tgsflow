@@ -29,6 +29,10 @@ Use **“The system shall …”** style. One “shall” per requirement.
 
 - **SR-027**: While operating in shell AI mode, the system shall support a Gemini adapter script (`tgs/adapters/gemini-code.sh`) with the same interface as the Claude adapter (prompt via `--prompt-text|--prompt-file`, deterministic context file expansion, optional timeout, suggestions routing), returning text to stdout and non-zero on error. (Verification: Test)
 
+- **SR-028**: When running `tgs init`, the system shall also ensure adapter scripts exist under `tgs/adapters/` (at least `claude-code.sh` and `gemini-code.sh`), copying from embedded templates if missing. (Verification: Test)
+- **SR-029**: The system shall support `tgs init claude` and `tgs init gemini` subcommands that perform additional decoration such as copying `tgs/agentops/AGENTOPS.md` to the repository root as `CLAUDE.md` or `GEMINI.md` only if absent, otherwise exit with a clear error instructing manual override. (Verification: Test)
+- **SR-030**: When initializing a repository, if the root `Makefile` lacks a `new-thought` target, the system shall append or create it with the standard implementation to enable the TGS workflow. (Verification: Test)
+
 - **SR-021**: When running `tgs context pack "<query>"`, the system shall collect relevant sections from `tgs/design/` and the active thought directory into `aibrief.md`. (Verification: Test)
 - **SR-022**: The system shall construct the brief using templated prompts to guide a repository-aware search via the brain shell agent. (Verification: Inspection)
 - **SR-023**: The system shall include source pointers (path and anchor/line range) for each extracted requirement/context item. (Verification: Inspection)
