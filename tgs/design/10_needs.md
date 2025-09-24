@@ -32,6 +32,10 @@ Format: Use simple, outcome-focused sentences (EARS style if possible).
 
 - **N-023**: While integrating different AI vendor CLIs, the AI Code Agent needs consistent, adapter-based invocation and context passing so workflows remain uniform across providers.
 
+- **N-024**: When initializing a repo, the Human Engineer needs adapter shell scripts (e.g., Claude, Gemini) available under `tgs/adapters/` without manual copying.
+- **N-025**: While selecting an AI vendor, the Human Engineer needs a simple `tgs init <adapter>` subcommand that performs vendor-specific decoration (e.g., root `CLAUDE.md`/`GEMINI.md`) safely.
+- **N-026**: When decorating a repo, the Human Engineer needs a ready-to-use `make new-thought` target in the repo `Makefile` to follow the gated workflow immediately.
+
 ---
 
 ### Checklist

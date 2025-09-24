@@ -47,6 +47,10 @@
 | SR-024 | T      | Token count in generated brief is <= configured `context_pack_tokens`. | Measure tokens or approximate count |
 | SR-025 | A/I    | Secrets are redacted per configured patterns; no raw secrets appear in output. | Rule inspection and sample runs |
 
+| SR-028 | T      | After `tgs init`, `tgs/adapters/claude-code.sh` and `tgs/adapters/gemini-code.sh` exist and are executable if previously missing. | Filesystem check and `test -x` |
+| SR-029 | T      | Running `tgs init claude` (or `gemini`) creates `CLAUDE.md` (`GEMINI.md`) at repo root if absent; if present, command exits non-zero with an instructive error. | CLI run and file presence/error behavior |
+| SR-030 | T      | After `tgs init` on a repo without a `new-thought` target, the root `Makefile` contains the standard `new-thought` rule. | Inspect `Makefile` content |
+
 ## Test Environments
 - OS: macOS (darwin), Linux (ubuntu-latest).  
 - Tooling: Go toolchain (per `go.mod`), Java + ANTLR for `make ears-gen` (optional), Homebrew for CLI distribution, curl for installer.  
