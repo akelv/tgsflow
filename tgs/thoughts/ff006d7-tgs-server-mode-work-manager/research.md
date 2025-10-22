@@ -21,7 +21,13 @@ This manual orchestration creates bottlenecks when multiple thoughts are ready f
 - Dequeue completed thoughts and move to the next item
 - Provide visibility into work progress and backlog status
 
-**Desired Outcome:** A "server mode" for TGS that acts as an autonomous work orchestrator, enabling continuous implementation of approved thoughts without human intervention for the execution phase (while maintaining human oversight for research/plan approval and PR review).
+Additionally, for cloud-hosted Claude Code instances or sessions triggered from the Claude app, the system should support a **pull-based model** where:
+- Claude Code sessions can query the backlog for available work
+- Sessions can claim/lock a thought to prevent concurrent processing
+- Sessions can update their progress and completion status
+- The backlog acts as a centralized work queue accessible from any context (GitHub Actions, cloud, local)
+
+**Desired Outcome:** A "server mode" for TGS that acts as an autonomous work orchestrator, supporting both **push** (automated triggering) and **pull** (self-service) models, enabling continuous implementation of approved thoughts without human intervention for the execution phase (while maintaining human oversight for research/plan approval and PR review).
 
 ## 2. Current State
 
@@ -48,6 +54,8 @@ This manual orchestration creates bottlenecks when multiple thoughts are ready f
 - No automated Claude Code session orchestration
 - No progress tracking or session state management
 - No automated queuing/dequeuing of work items
+- No API or interface for remote/cloud Claude Code sessions to pull work
+- No work claiming/locking mechanism for concurrent access prevention
 
 ## 3. Constraints & Assumptions
 
@@ -62,7 +70,9 @@ This manual orchestration creates bottlenecks when multiple thoughts are ready f
 - Approved thoughts are those with both research.md and plan.md committed and not yet implemented
 - A thought is "implemented" when implementation.md exists and PR is created
 - Only one thought should be implemented at a time initially (serial processing)
-- The server mode will run as a GitHub Actions workflow (not a persistent service)
+- The system should support both **push** (GitHub Actions triggering sessions) and **pull** (sessions querying for work) models
+- Cloud-hosted Claude Code sessions or sessions from Claude app can access the repository via git clone
+- Backlog state must be accessible from any context (local CLI, GitHub Actions, remote sessions)
 - Humans will still approve research/plan phases and review PRs
 
 ### Architectural Constraints
@@ -93,6 +103,10 @@ This manual orchestration creates bottlenecks when multiple thoughts are ready f
 5. **Resource Exhaustion**
    - Risk: Too many thoughts queued, runner costs
    - Mitigation: Backlog depth limits, cost monitoring, manual approval gate for server mode runs
+
+6. **Git Merge Conflicts (Pull Model)**
+   - Risk: Multiple remote sessions updating backlog.json simultaneously causing merge conflicts
+   - Mitigation: Optimistic locking with retry, claim timeout/expiration, atomic claim operation with test-and-set semantics
 
 ### Security Considerations
 1. **Credential Handling**
@@ -210,6 +224,10 @@ This manual orchestration creates bottlenecks when multiple thoughts are ready f
   - `add <thought-dir>`: Enqueue a thought
   - `remove <thought-dir>`: Dequeue a thought
   - `list`: Show backlog with status
+  - `next`: Claim next available thought (pull model for remote sessions)
+  - `claim <thought-dir>`: Explicitly claim a specific thought
+  - `complete <thought-dir>`: Mark thought as completed
+  - `fail <thought-dir>`: Mark thought as failed
   - `validate`: Check backlog consistency with git state
 - Backlog file: `tgs/server/backlog.json`
   ```json
@@ -222,18 +240,26 @@ This manual orchestration creates bottlenecks when multiple thoughts are ready f
         "priority": 10,
         "status": "queued",
         "added_at": "2025-10-22T10:00:00Z",
+        "claimed_by": null,
+        "claimed_at": null,
         "started_at": null,
         "completed_at": null
       }
     ]
   }
   ```
-- GitHub Action: `tgs-server-run.yml` (manual dispatch initially)
+- **Push Model (GitHub Actions)**: `tgs-server-run.yml` (manual dispatch initially)
   - Reads backlog
   - Picks highest priority thought with status "queued"
   - Invokes `tgs agent exec` with thought context
   - Updates thought status: `queued` → `in_progress` → `completed`/`failed`
   - Commits backlog updates
+- **Pull Model (Cloud/Remote Sessions)**: Support for Claude Code sessions to self-assign work
+  - Session runs `tgs server backlog next` to atomically claim next thought
+  - Returns thought context (paths to research.md, plan.md, etc.)
+  - Session implements the thought
+  - Session runs `tgs server backlog complete <thought-dir>` when done
+  - All commands handle git pull/push/merge for backlog.json synchronization
 
 #### Phase 2: Auto-Discovery & Submission
 - GitHub Action: `tgs-server-scan.yml` (runs on push to main)
