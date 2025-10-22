@@ -48,7 +48,7 @@ new-thought:
 	if [ -z "$(title)" ]; then echo "Usage: make new-thought title=\"short title\""; exit 1; fi; \
 	if [ ! -d "tgs/agentops/tgs" ]; then echo "Templates missing at tgs/agentops/tgs"; exit 2; fi; \
 	HASH=$$(git rev-parse --short HEAD); \
-	SLUG=$$(printf "%s" "$(title)" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$$//g'); \
+	SLUG=$$(printf "%s" "$(title)" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/^-*//' | sed 's/-*$$//'); \
 	DIR="tgs/$$HASH-$$SLUG"; \
 	mkdir -p "$$DIR"; \
 	for f in tgs/agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
