@@ -21,8 +21,8 @@ This `tgs/` area is organized into two primary subdirectories:
   - Purpose: Canonical workflow and the files used to scaffold new thought directories.
 
 - `adapters/` — External model/tool adapters invoked by `tgs agent exec`.
-  - Files: `claude-code.sh` (default Claude Code adapter)
-  - Purpose: Bridge between the TGS CLI and external AI/automation tools. Default path used by the CLI: `tgs/adapters/claude-code.sh` (override with `--adapter-path`).
+  - Files: `claude-code.sh` (default Claude Code adapter), `gemini-code.sh` (Gemini CLI adapter)
+  - Purpose: Bridge between the TGS CLI and external AI/automation tools. Default path used by the CLI: `tgs/adapters/claude-code.sh` (override with `--adapter-path`, e.g. `tgs/adapters/gemini-code.sh`).
 
 ## Thought Structure
 
@@ -85,3 +85,4 @@ This ensures thoughtful development with clear human-AI collaboration boundaries
 | [f71f872-ears-linter-core-and-verify-integration](./thoughts/f71f872-ears-linter-core-and-verify-integration/) | f71f872 | 2025-09-15 | ✅ Completed | Implement EARS linter and integrate with verify |
 | [1fd687a-implement-shell-transport-for-brain](./thoughts/1fd687a-implement-shell-transport-for-brain/) | 1fd687a | 2025-09-21 | ✅ Completed | Implement Shell Transport (Claude shell adapter) with tests |
 | [ff006d7-tgs-server-mode-work-manager](./thoughts/ff006d7-tgs-server-mode-work-manager/) | ff006d7 | 2025-10-22 | 📋 Planning | Work manager for hosted code agents with backlog management (push/pull models) |
+| [af66921-extend-init-adapters-subcmd-make-target](./thoughts/af66921-extend-init-adapters-subcmd-make-target/) | af66921 | 2025-09-24 | ✅ Completed | Extend init: adapters, vendor subcmd, Makefile `new-thought` |

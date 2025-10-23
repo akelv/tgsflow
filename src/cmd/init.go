@@ -32,6 +32,21 @@ func CmdInit(args []string) int {
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
+
+	// Support optional vendor argument: tgs init [claude|gemini]
+	vendor := ""
+	if rem := fs.Args(); len(rem) > 0 {
+		if len(rem) > 1 {
+			fmt.Fprintln(os.Stderr, "usage: tgs init [--flags] [claude|gemini]")
+			return 2
+		}
+		s := strings.ToLower(strings.TrimSpace(rem[0]))
+		if s != "claude" && s != "gemini" {
+			fmt.Fprintln(os.Stderr, "unknown adapter: "+s+" (expected claude|gemini)")
+			return 2
+		}
+		vendor = s
+	}
 	logx.Infof("initializing TGS (decorate=%v, ci-template=%s, interactive=%v, templates=%s, templates-ref=%s, templates-subdir=%s)", *decorate, *ciTemplate, *interactive, *templatesSrc, *templatesRef, *templatesSubdir)
 	if !*decorate {
 		logx.Infof("Nothing to do (decorate=false)")
@@ -139,6 +154,27 @@ func CmdInit(args []string) int {
 		return 2
 	}
 
+	// Ensure adapter scripts exist and are executable (idempotent)
+	// if err := ensureAdaptersExecutable(); err != nil {
+	// logx.Errorf("ensure adapters: %v", err)
+	// return 1
+	// }
+
+	// Ensure Makefile has new-thought target
+	if err := ensureMakefileNewThought(); err != nil {
+		logx.Errorf("ensure Makefile new-thought: %v", err)
+		return 1
+	}
+
+	// Optional vendor-specific decoration: copy AGENTOPS.md to root CLAUDE.md/GEMINI.md
+	if vendor != "" {
+		if err := decorateVendorReadme(vendor); err != nil {
+			logx.Errorf("decorate %s: %v", vendor, err)
+			return 1
+		}
+		logx.Infof("ensured %s.md at repo root (idempotent)", strings.ToUpper(vendor))
+	}
+
 	// tgs.yml is rendered above via templates; keep message for parity
 	logx.Infof("ensured tgs/ tree and tgs.yml (idempotent)")
 	logx.Infof("tgs init complete (idempotent)")
@@ -156,10 +192,11 @@ func newInitCommand() *cobra.Command {
 		flagTemplatesSubdir string
 	)
 	cmd := &cobra.Command{
-		Use:     "init",
+		Use:     "init [claude|gemini]",
 		Short:   "Initialize TGS layout (idempotent)",
-		Long:    "Create the standard TGS scaffolding and ensure tgs/tgs.yml exists. Optionally seed CI templates and select a remote or local templates source.",
-		Example: "  tgs init\n  tgs init --ci-template gitlab\n  tgs init --interactive\n  tgs init --decorate=false\n  tgs init --templates /path/to/templates/tgs\n  tgs init --templates https://example.com/org-tgs-templates.zip\n  tgs init --templates https://github.com/org/repo.git --templates-ref main --templates-subdir path/in/repo",
+		Long:    "Create the standard TGS scaffolding and ensure tgs/tgs.yml exists. Optionally seed CI templates and select a remote or local templates source. Optionally decorate a vendor readme at repo root via 'tgs init claude|gemini'.",
+		Example: "  tgs init\n  tgs init --ci-template gitlab\n  tgs init --interactive\n  tgs init --decorate=false\n  tgs init --templates /path/to/templates/tgs\n  tgs init --templates https://example.com/org-tgs-templates.zip\n  tgs init --templates https://github.com/org/repo.git --templates-ref main --templates-subdir path/in/repo\n  tgs init claude\n  tgs init gemini",
+		Args:    cobra.MaximumNArgs(1),
 		RunE: func(c *cobra.Command, args []string) error {
 			// Reconstruct args for CmdInit which uses the stdlib flag parser to keep behavior consistent with tests.
 			forward := []string{}
@@ -188,6 +225,10 @@ func newInitCommand() *cobra.Command {
 			}
 			if c.Flags().Changed("templates-subdir") {
 				forward = append(forward, "--templates-subdir", flagTemplatesSubdir)
+			}
+			// Pass optional vendor arg through to CmdInit
+			if len(args) == 1 {
+				forward = append(forward, args[0])
 			}
 			code := CmdInit(forward)
 			return codeToErr(code)
@@ -401,4 +442,71 @@ func unzipFile(zipPath string, destDir string) error {
 		}
 	}
 	return nil
+}
+
+// ensureMakefileNewThought appends the standard new-thought target if missing.
+func ensureMakefileNewThought() error {
+	const targetHeader = "new-thought:"
+	path := "Makefile"
+	data, err := os.ReadFile(path)
+	if err != nil {
+		// If Makefile missing, create with header and target
+		if errors.Is(err, os.ErrNotExist) {
+			return os.WriteFile(path, []byte(makefileNewThoughtBlock()), 0o644)
+		}
+		return err
+	}
+	if strings.Contains(string(data), targetHeader) {
+		return nil
+	}
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0o644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if _, err := f.WriteString("\n\n" + makefileNewThoughtBlock()); err != nil {
+		return err
+	}
+	return nil
+}
+
+func makefileNewThoughtBlock() string {
+	return `# TGSFlow: create a new thought directory
+.PHONY: new-thought
+new-thought:
+	@if ! command -v git >/dev/null; then echo "git not found in PATH"; exit 2; fi; \
+	if [ -z "$(title)" ]; then echo "Usage: make new-thought title=\"short title\" [spec=\"idea\"]"; exit 1; fi; \
+	if [ ! -d "tgs/agentops/tgs" ]; then echo "Templates missing at tgs/agentops/tgs"; exit 2; fi; \
+	HASH=$$(git rev-parse --short HEAD); \
+	SLUG=$$(printf "%s" "$(title)" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$$//g'); \
+	DIR="tgs/thoughts/$$HASH-$$SLUG"; \
+	mkdir -p "$$DIR"; \
+	for f in tgs/agentops/tgs/*; do bn=$$(basename "$$f"); if [ ! -e "$$DIR/$$bn" ]; then cp "$$f" "$$DIR/"; fi; done; \
+	if [ ! -f "$$DIR/README.md" ]; then \
+		{ \
+			printf "# %s - %s\n\n" "$$HASH" "$(title)"; \
+			printf -- "- Base Hash: ` + "`" + `%s` + "`" + `\n\n" "$$HASH"; \
+			printf "## Quick Links\n- [research.md](./research.md)\n- [plan.md](./plan.md)\n- [implementation.md](./implementation.md)\n\n"; \
+			if [ -n "$(spec)" ]; then printf "## Idea Spec\n%s\n" "$(spec)"; fi; \
+		} > "$$DIR/README.md"; \
+	fi; \
+	echo "Created $$DIR"`
+}
+
+// decorateVendorReadme copies tgs/agentops/AGENTOPS.md to root CLAUDE.md or GEMINI.md.
+func decorateVendorReadme(adapter string) error {
+	src := filepath.Join("tgs", "agentops", "AGENTOPS.md")
+	if _, err := os.Stat(src); err != nil {
+		return fmt.Errorf("source not found: %s", src)
+	}
+	dst := strings.ToUpper(adapter) + ".md"
+	if _, err := os.Stat(dst); err == nil {
+		return fmt.Errorf("%s already exists; please review and override manually", dst)
+	}
+	content, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+	_, err = thoughts.EnsureFile(dst, content)
+	return err
 }

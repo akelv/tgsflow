@@ -25,7 +25,13 @@ Use **“The system shall …”** style. One “shall” per requirement.
 - **SR-018**: While sourcing templates remotely, the system shall clean up temporary files and directories after completion. (Verification: Inspection)
 - **SR-019**: While applying guardrails, the system shall include `tgs/agentops/AGENTOPS.md` and design docs under `tgs/design/` to enforce the approval-gated workflow for AI agent collaboration. (Verification: Inspection)
 
-- **SR-020**: While operating in shell AI mode, the system shall provide a Shell Transport that executes the `tgs/adapters/claude-code.sh` adapter with a composed prompt and optional context files, and returns the adapter output as `ChatResp.Text`, honoring timeouts and exit codes. (Verification: Test)
+- **SR-020**: While operating in shell AI mode, the system shall provide a Shell Transport that executes the default adapter (`tgs/adapters/claude-code.sh`) with a composed prompt and optional context files, and returns the adapter output as `ChatResp.Text`, honoring timeouts and exit codes. (Verification: Test)
+
+- **SR-027**: While operating in shell AI mode, the system shall support a Gemini adapter script (`tgs/adapters/gemini-code.sh`) with the same interface as the Claude adapter (prompt via `--prompt-text|--prompt-file`, deterministic context file expansion, optional timeout, suggestions routing), returning text to stdout and non-zero on error. (Verification: Test)
+
+- **SR-028**: When running `tgs init`, the system shall also ensure adapter scripts exist under `tgs/adapters/` (at least `claude-code.sh` and `gemini-code.sh`), copying from embedded templates if missing. (Verification: Test)
+- **SR-029**: The system shall support `tgs init claude` and `tgs init gemini` subcommands that perform additional decoration such as copying `tgs/agentops/AGENTOPS.md` to the repository root as `CLAUDE.md` or `GEMINI.md` only if absent, otherwise exit with a clear error instructing manual override. (Verification: Test)
+- **SR-030**: When initializing a repository, if the root `Makefile` lacks a `new-thought` target, the system shall append or create it with the standard implementation to enable the TGS workflow. (Verification: Test)
 
 - **SR-021**: When running `tgs context pack "<query>"`, the system shall collect relevant sections from `tgs/design/` and the active thought directory into `aibrief.md`. (Verification: Test)
 - **SR-022**: The system shall construct the brief using templated prompts to guide a repository-aware search via the brain shell agent. (Verification: Inspection)
