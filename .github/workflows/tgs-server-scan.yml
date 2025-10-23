@@ -1,0 +1,112 @@
+name: TGS Server Scan
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'tgs/thoughts/*/research.md'
+      - 'tgs/thoughts/*/plan.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  scan-and-enqueue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history to check committed files
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Build TGS CLI
+        run: make build
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Discover Approved Thoughts
+        id: discover
+        run: |
+          # Create a script to discover and add thoughts
+          cat > /tmp/discover.sh <<'DISCOVER_EOF'
+          #!/bin/bash
+          set -e
+
+          # Load existing backlog
+          BACKLOG_PATH="tgs/server/backlog.json"
+
+          # Get list of already queued thoughts
+          EXISTING_THOUGHTS=""
+          if [ -f "$BACKLOG_PATH" ]; then
+            EXISTING_THOUGHTS=$(./bin/tgs server backlog list 2>/dev/null | tail -n +2 | awk '{print $1}' || echo "")
+          fi
+
+          # Find thoughts with research.md and plan.md committed, no implementation.md
+          ADDED_COUNT=0
+
+          for thought_dir in tgs/thoughts/*/; do
+            # Remove trailing slash
+            thought_dir=${thought_dir%/}
+
+            # Skip if not a directory
+            [ ! -d "$thought_dir" ] && continue
+
+            # Check if files exist
+            [ ! -f "$thought_dir/research.md" ] && continue
+            [ ! -f "$thought_dir/plan.md" ] && continue
+
+            # Skip if implementation.md exists
+            [ -f "$thought_dir/implementation.md" ] && continue
+
+            # Check if research.md is committed
+            if ! git ls-files --error-unmatch "$thought_dir/research.md" >/dev/null 2>&1; then
+              continue
+            fi
+
+            # Check if plan.md is committed
+            if ! git ls-files --error-unmatch "$thought_dir/plan.md" >/dev/null 2>&1; then
+              continue
+            fi
+
+            # Check if already in backlog
+            if echo "$EXISTING_THOUGHTS" | grep -q "^$thought_dir$"; then
+              echo "Already in backlog: $thought_dir"
+              continue
+            fi
+
+            # Add to backlog
+            echo "Adding to backlog: $thought_dir"
+            ./bin/tgs server backlog add "$thought_dir" --priority=0
+
+            ADDED_COUNT=$((ADDED_COUNT + 1))
+          done
+
+          echo "added_count=$ADDED_COUNT" >> $GITHUB_OUTPUT
+          DISCOVER_EOF
+
+          chmod +x /tmp/discover.sh
+          /tmp/discover.sh
+
+      - name: Summary
+        run: |
+          ADDED_COUNT="${{ steps.discover.outputs.added_count }}"
+          if [ "$ADDED_COUNT" -gt 0 ]; then
+            echo "Added $ADDED_COUNT new thought(s) to backlog"
+            ./bin/tgs server backlog list
+          else
+            echo "No new approved thoughts found"
+          fi

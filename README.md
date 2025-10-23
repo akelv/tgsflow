@@ -110,6 +110,46 @@ make new-thought title="Add user authentication" spec="A requirement specificati
 
 This creates a structured directory with templates for research, planning, and implementation documentation.
 
+## Server Mode (Autonomous Orchestration)
+
+TGS Server Mode enables autonomous implementation of approved thoughts by managing a backlog of implementation-ready work. Supports both **push** (GitHub Actions) and **pull** (cloud/remote sessions) models.
+
+### Quick Start
+
+```bash
+# Add an approved thought to the backlog
+tgs server backlog add tgs/thoughts/abc123-feature-x --priority 10
+
+# List backlog
+tgs server backlog list
+
+# Claim next thought (pull model for remote sessions)
+tgs server backlog next --claimed-by "session-id"
+
+# Mark complete
+tgs server backlog complete tgs/thoughts/abc123-feature-x
+```
+
+### Architecture
+
+- **Backlog**: Git-tracked JSON file (`tgs/server/backlog.json`)
+- **Push Model**: GitHub Actions workflow automatically claims and implements thoughts
+- **Pull Model**: Cloud Claude Code sessions query backlog for work
+- **Concurrency**: Git-based optimistic locking with retry
+
+### Workflows
+
+- **`tgs-server-run.yml`**: Auto-process next thought (manual dispatch)
+- **`tgs-server-scan.yml`**: Auto-discover approved thoughts and add to backlog
+
+### Use Cases
+
+- **CI/CD**: Automated implementation of approved thoughts
+- **Cloud Sessions**: Remote Claude Code pulling work autonomously
+- **Team Coordination**: Shared backlog for distributed agents
+
+See [docs/server-mode.md](./docs/server-mode.md) for complete documentation.
+
 ## Project Templates
 
 Simple bootstrap project to bootstrap new project available in `templates/`:

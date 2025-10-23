@@ -76,6 +76,7 @@ func NewRootCommand(version, commit, date string) *cobra.Command {
 		newContextCommand(),
 		newVerifyCommand(),
 		newAgentCommand(),
+		newServerCommand(),
 	)
 
 	// Use our custom help command

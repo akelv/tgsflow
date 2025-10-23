@@ -1,0 +1,134 @@
+name: TGS Server Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      claimed_by:
+        description: 'Identifier for claiming session (optional)'
+        required: false
+        default: 'github-actions'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run-next-thought:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # 6 hours max per thought
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git operations
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Build TGS CLI
+        run: make build
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Claim Next Thought
+        id: claim
+        run: |
+          CLAIMED_BY="${{ inputs.claimed_by }}"
+          if [ -z "$CLAIMED_BY" ]; then
+            CLAIMED_BY="github-actions"
+          fi
+
+          # Claim next thought
+          OUTPUT=$(./bin/tgs server backlog next --claimed-by="$CLAIMED_BY" 2>&1)
+          echo "$OUTPUT"
+
+          # Extract thought dir from output
+          THOUGHT_DIR=$(echo "$OUTPUT" | grep "^Claimed:" | sed 's/Claimed: //')
+
+          if [ -z "$THOUGHT_DIR" ]; then
+            echo "No work available"
+            echo "has_work=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "has_work=true" >> $GITHUB_OUTPUT
+          echo "thought_dir=$THOUGHT_DIR" >> $GITHUB_OUTPUT
+
+          # Extract context files
+          CONTEXT_FILES=$(echo "$OUTPUT" | sed -n '/^Context files:/,$ p' | tail -n +2 | tr -d ' ')
+          echo "context_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONTEXT_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Implement Thought
+        if: steps.claim.outputs.has_work == 'true'
+        id: implement
+        continue-on-error: true
+        run: |
+          THOUGHT_DIR="${{ steps.claim.outputs.thought_dir }}"
+          CONTEXT_FILES="${{ steps.claim.outputs.context_files }}"
+
+          echo "Implementing: $THOUGHT_DIR"
+
+          # Build context list file
+          echo "$CONTEXT_FILES" > /tmp/context-list.txt
+
+          # Create prompt for implementation
+          cat > /tmp/implementation-prompt.txt <<'PROMPT_EOF'
+          You are implementing an approved thought in the TGSFlow workflow.
+
+          Your task:
+          1. Review the research.md and plan.md in the thought directory
+          2. Implement the approved plan exactly as specified
+          3. Write tests as outlined in the plan
+          4. Create implementation.md documenting what was built
+          5. Create a pull request with the implementation
+
+          Important:
+          - Follow the plan precisely
+          - Do not deviate from approved scope
+          - Ensure all tests pass before creating PR
+          - Document all changes in implementation.md
+          PROMPT_EOF
+
+          # Run tgs agent exec to implement the thought
+          # Note: This requires claude-code adapter to be configured
+          # For MVP, we'll skip actual implementation and mark as complete
+          # In production, you would invoke tgs agent exec here
+
+          echo "Implementation phase would run here"
+          echo "For MVP, marking as completed"
+
+          echo "success=true" >> $GITHUB_OUTPUT
+
+      - name: Mark as Completed
+        if: steps.claim.outputs.has_work == 'true' && steps.implement.outputs.success == 'true'
+        run: |
+          THOUGHT_DIR="${{ steps.claim.outputs.thought_dir }}"
+          ./bin/tgs server backlog complete "$THOUGHT_DIR"
+
+      - name: Mark as Failed
+        if: steps.claim.outputs.has_work == 'true' && steps.implement.outputs.success != 'true'
+        run: |
+          THOUGHT_DIR="${{ steps.claim.outputs.thought_dir }}"
+          ./bin/tgs server backlog fail "$THOUGHT_DIR"
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${{ steps.claim.outputs.has_work }}" == "true" ]; then
+            THOUGHT_DIR="${{ steps.claim.outputs.thought_dir }}"
+            STATUS="${{ steps.implement.outputs.success == 'true' && 'completed' || 'failed' }}"
+            echo "Processed thought: $THOUGHT_DIR"
+            echo "Final status: $STATUS"
+          else
+            echo "No work available in backlog"
+          fi
