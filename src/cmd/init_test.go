@@ -26,6 +26,7 @@ func TestInitSeedsFiles(t *testing.T) {
 		filepath.Join(".claude", "commands", "tgs-close.md"),
 		filepath.Join("tgs", "README.md"),
 		filepath.Join("tgs", "tgs.yml"),
+		filepath.Join("tgs", "judgment-journal.md"),
 		filepath.Join("tgs", "design", "00_context.md"),
 		filepath.Join("tgs", "design", "10_needs.md"),
 		filepath.Join("tgs", "design", "20_requirements.md"),

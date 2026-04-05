@@ -14,7 +14,7 @@ Run `/design-sync` if available. Verify ADRs, needs, V&V docs updated if applica
 Ask the human:
 > Would you like to add a Judgment Journal entry? What was your reasoning for the key decisions you approved?
 
-If provided, append to `docs/judgment-journal.md`:
+If provided, append to `tgs/judgment-journal.md`:
 ```markdown
 ## [Date] — [Hash] — [Title]
 **Decision**: [What was approved/modified]

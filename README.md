@@ -129,7 +129,7 @@ Simple bootstrap project to bootstrap new project available in `templates/`:
 
 TGSFlow is built on four principles for preserving human value while leveraging AI productivity:
 
-**1. Judgment Amplification** — Humans decide *what* and *why*; AI handles *how*. TGS approval gates ensure human strategic thinking drives every change. The [Judgment Journal](./templates/judgment-journal.md) captures decision reasoning that no AI can replicate.
+**1. Judgment Amplification** — Humans decide *what* and *why*; AI handles *how*. TGS approval gates ensure human strategic thinking drives every change. The [Judgment Journal](./tgs/judgment-journal.md) captures decision reasoning that no AI can replicate.
 
 **2. Perspective Multiplexing** — Every research phase includes multi-stakeholder analysis (end-user, security, privacy, ops, future-debt) and an ethics quick-check. This ensures AI doesn't optimize for a single dimension.
 

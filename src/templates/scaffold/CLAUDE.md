@@ -50,5 +50,5 @@ Project-specific rules are loaded from `.claude/rules/` with optional path scopi
 
 ### Templates & Reference
 - Thought templates: `tgs/agentops/tgs/` (research.md, plan.md, implementation.md)
-- Judgment journal: `templates/judgment-journal.md`
+- Judgment journal: `tgs/judgment-journal.md`
 - PostCompact hook: `.claude/hooks.json` (re-injects critical rules after context compression)
